@@ -1,8 +1,8 @@
 export default function PracticeDraft() {
     return (
         <>
-            <div className="col-start-2 col-span-3 box-shadow">
-                <div className="p-2">
+            {/*<div className="col-start-2 col-span-3 box-shadow">*/}
+                <div>
                     <h4>Want to try a practice draft?</h4>
                     Caution:<br/>
                     <ul className="text-block">
@@ -17,7 +17,7 @@ export default function PracticeDraft() {
                     </ul>
                 </div>
                 <div>
-                    <h5>Click below to toggle practice mode.</h5>
+                    {/*<h5>Click below to toggle practice mode.</h5>*/}
                     {/*<form id="toggle-practice" method="POST" name="toggle-practice"*/}
                     {/*      action="@{/dashboard/{userId}/toggleTestDraft (userId=${user.userId})}">*/}
                     <form>
@@ -25,12 +25,11 @@ export default function PracticeDraft() {
                             <input className="form-check-input" id="practiceDraftToggle"
                                 // onClick={document.forms["toggle-practice"].submit()}
                                    role="switch" type="checkbox"/>
-                            <label className="form-check-label" htmlFor="practiceDraftToggle">Practice Draft Mode
-                                Off</label>
+                            <label className="form-check-label" htmlFor="practiceDraftToggle">Toggle Practice Draft Mode</label>
                         </div>
                     </form>
                 </div>
-            </div>
+            {/*</div>*/}
         </>
     );
 }

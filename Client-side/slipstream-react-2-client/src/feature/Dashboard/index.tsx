@@ -8,7 +8,7 @@ import Table1 from "./Table1";
 // import Table2 from "./Table2";
 import Reminders from "./Reminders";
 import Table2 from "./Table2";
-
+import {useState} from "react";
 
 
 // interface DashboardParams {
@@ -38,17 +38,56 @@ import Table2 from "./Table2";
 //     users: [{ user:object }];
 // }
 
-
 export default function Dashboard() {
+    const [showPracticeOptions, setShowPracticeOptions]
+        = useState<boolean>(false);
+
+    function TogglePracticeOptions() {
+        // if(show){
+        if (showPracticeOptions) {
+            setShowPracticeOptions(false);
+            // return <PracticeDraft/>
+        } else {
+            setShowPracticeOptions(true);
+            // return <div></div>
+        }
+    }
+
+    function PracticeOptionsToggle() {
+        // if (showPracticeOptions) {
+        return <>
+            <div className="form-check form-switch">
+                <input className="form-check-input"
+                       id="testBoxToggleOff" onClick={() => TogglePracticeOptions()} role="switch"
+                       type="checkbox" checked={showPracticeOptions}/>
+                <label className="form-check-label" htmlFor="testBoxToggleOff">Show/Hide
+                    Practice Options</label>
+            </div>
+        </>
+        // }
+    }
+
     return (
         <>
             <View>
                 <BackgroundImage>
                     <Navbar/>
                     <Body>
-                        <DashTop/>
+                        <DashTop showPracticeOptions={showPracticeOptions}
+                                 TogglePracticeOptions={TogglePracticeOptions}/>
                         <Reminders/>
-                        <PracticeDraft/>
+                        <div className="col-start-2 col-span-3 box-shadow">
+                            {
+                                showPracticeOptions ?
+                                    <div>
+                                        <PracticeOptionsToggle/>
+                                        <PracticeDraft/>
+                                    </div>
+                                    : <PracticeOptionsToggle/>
+                            }
+                        </div>
+                        {/*<TogglePracticeOptions valueOf={showPracticeOptions}/>*/}
+                        {/*<PracticeDraft/>*/}
                         {/*<JoyTable1/>*/}
                         {/*<JoyTable2/>*/}
                         <Table1/>
@@ -59,3 +98,5 @@ export default function Dashboard() {
         </>
     );
 }
+
+// export {togglePracticeOptions}

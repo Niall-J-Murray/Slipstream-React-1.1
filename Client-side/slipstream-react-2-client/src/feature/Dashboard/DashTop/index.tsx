@@ -9,9 +9,8 @@ import {useEffect, useState} from "react";
 import {getUserData} from "../../../services/user.service.ts";
 import {getIsLeagueActive, getOpenLeague, getTeamLeague} from "../../../services/league.service.ts";
 import {createTeam} from "../../../services/team.service.ts";
-import PracticeDraft from "../PracticeDraft";
 
-export default function DashTop() {
+export default function DashTop({showPracticeOptions, TogglePracticeOptions}) {
     const [currentUser, setCurrentUser]
         = useState<IUser | undefined>();
     const [userData, setUserData]
@@ -186,35 +185,37 @@ export default function DashTop() {
         </div>;
     }
 
-    function showhide(id) {
-        const e = document.getElementById(id);
-        e.style.display = (e.style.display == 'block') ? 'none' : 'block';
-    }
+    // function showhide(id) {
+    //     const e = document.getElementById(id);
+    //     e.style.display = (e.style.display == 'block') ? 'none' : 'block';
+    // }
 
-    function showhide2() {
-        // return PracticeDraft();
-        return <PracticeDraft/>
-    }
+    // function showhide2() {
+    //     if (showPracticeOptions) {
+    //         return <PracticeDraft/>
+    //     } else {
+    //         return <div></div>
+    //     }
+    // }
 
     // Todo
     //  Display correct info and options in dash-top depending on users team/league status.
     //  Start with toggling practice options switch.
 
 
-
-    function PracticeOptionsToggle() {
-        return <div>
-            <div className="form-check form-switch">
-                <input className="form-check-input"
-                    // id="testBoxToggleOff" onClick={()=>showhide('test-box')} role="switch"
-                    id="testBoxToggleOff" onClick={()=>showhide2()} role="switch"
-                       type="checkbox"/>
-                <label className="form-check-label" htmlFor="testBoxToggleOff">Show/Hide
-                    Practice Options</label>
-            </div>
-        </div>
-
-    }
+    // function PracticeOptionsToggle() {
+    //     // if (showPracticeOptions) {
+    //     return <>
+    //         <div className="form-check form-switch">
+    //             <input className="form-check-input"
+    //                    id="testBoxToggleOff" onClick={() => TogglePracticeOptions()} role="switch"
+    //                    type="checkbox" checked={showPracticeOptions}/>
+    //             <label className="form-check-label" htmlFor="testBoxToggleOff">Show/Hide
+    //                 Practice Options</label>
+    //         </div>
+    //     </>
+    //     // }
+    // }
 
     function UserGreeting() {
         if (team != null) {
@@ -229,7 +230,7 @@ export default function DashTop() {
                     <h3> league is full...</h3>
                     <h3>League is {currentLeague?.teams?.length} of 10 teams full.</h3>
                     <hr/>
-                    <PracticeOptionsToggle/>
+                    {/*<PracticeOptionsToggle/>*/}
                 </div>;
             }
             return <div>
@@ -242,7 +243,7 @@ export default function DashTop() {
                 <h3>League is {currentLeague?.teams?.length} of 10 teams full.</h3>
                 <h3> The draft picks will start when the league is full...</h3>
                 <hr/>
-                <PracticeOptionsToggle/>
+                {/*<PracticeOptionsToggle/>*/}
             </div>;
         }
         return <div>
