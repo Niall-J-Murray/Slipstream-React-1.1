@@ -200,7 +200,7 @@ export default function DashTop({showPracticeOptions, TogglePracticeOptions}) {
 
     // Todo
     //  Display correct info and options in dash-top depending on users team/league status.
-    //  Start with toggling practice options switch.
+    //  Start with toggling practice options switch and toggle practice mode functionality.
 
 
     // function PracticeOptionsToggle() {
