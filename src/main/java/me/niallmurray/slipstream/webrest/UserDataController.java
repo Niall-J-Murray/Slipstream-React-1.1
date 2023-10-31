@@ -23,7 +23,7 @@ public class UserDataController {
   public ResponseEntity<User> getUserData(@PathVariable Long userId) {
     Optional<User> userOpt = userRepository.findById(userId);
 //    return userOpt.orElse(null);
-    System.out.println("user entity: " + ResponseEntity.ok(userOpt.orElse(null).getUsername()));
+//    System.out.println("user entity: " + ResponseEntity.ok(userOpt.orElse(null).getUsername()));
     return ResponseEntity.ok(userOpt.orElse(null));
   }
 

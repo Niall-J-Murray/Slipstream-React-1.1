@@ -1,7 +1,9 @@
 package me.niallmurray.slipstream.webrest;
 
+import me.niallmurray.slipstream.domain.Driver;
 import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
+import me.niallmurray.slipstream.domain.User;
 import me.niallmurray.slipstream.service.LeagueService;
 import me.niallmurray.slipstream.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +48,7 @@ public class LeagueController {
     League league = leagueService.findById(leagueId);
     List<Team> teams = teamService.findAllTeamsByLeague(league);
 //    System.out.println("league: " + league);
-    System.out.println("league teams list: " + teams);
+//    System.out.println("league teams list: " + teams);
     return ResponseEntity.ok(teams);
   }
 
@@ -76,6 +78,15 @@ public class LeagueController {
   public ResponseEntity<Boolean> getIsLeagueActive(@PathVariable Long leagueId) {
     League league = leagueService.findById(leagueId);
     return ResponseEntity.ok(league.getIsActive());
+  }
+
+  @PostMapping("/{leagueId}/toggleTestLeague")
+//  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  public ResponseEntity<Boolean> postToggleTestLeague(@PathVariable Long leagueId) {
+    League league = leagueService.findById(leagueId);
+    league.setIsTestLeague(Boolean.FALSE.equals(league.getIsTestLeague()));
+    leagueService.save(league);
+    return ResponseEntity.ok(league.getIsTestLeague());
   }
 
 }

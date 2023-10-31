@@ -10,9 +10,9 @@ import {getUserData} from "../../../services/user.service.ts";
 import {getIsLeagueActive, getOpenLeague, getTeamLeague} from "../../../services/league.service.ts";
 import {createTeam} from "../../../services/team.service.ts";
 
-export default function DashTop({showPracticeOptions, TogglePracticeOptions}) {
-    const [currentUser, setCurrentUser]
-        = useState<IUser | undefined>();
+export default function DashTop({currentUser, isPracticeLeague, TogglePracticeOptions}) {
+    // const [currentUser, setCurrentUser]
+    //     = useState<IUser | undefined>();
     const [userData, setUserData]
         = useState<IUser | undefined>();
     const [team, setTeam]
@@ -75,7 +75,7 @@ export default function DashTop({showPracticeOptions, TogglePracticeOptions}) {
 
     useEffect(() => {
         const user = getCurrentUser();
-        setCurrentUser(user);
+        // setCurrentUser(user);
         const fetchUserData = async () => {
             if (user != null) {
                 const userData = await getUserData(user.id);
@@ -98,7 +98,6 @@ export default function DashTop({showPracticeOptions, TogglePracticeOptions}) {
             }
         }
         fetchUserData().catch(console.error);
-
     }, []);
 
 
@@ -125,18 +124,6 @@ export default function DashTop({showPracticeOptions, TogglePracticeOptions}) {
                     <p>You must create a team to try a practice draft.</p>
                     <p>Choose a team name to get started...</p>
                     <hr/>
-                    <div>
-                        <h4>This is a practice league.</h4>
-                        <div className="form-check form-switch">
-                            <input checked className="form-check-input" disabled
-                                   id="practiceDraftActive2"
-                                // onClick={document.forms["toggle-practice"].submit()}
-                                   role="switch" type="checkbox"/>
-                            <label className="form-check-label" htmlFor="practiceDraftActive2">Practice Draft Mode
-                                On</label>
-                        </div>
-                        <hr/>
-                    </div>
                 </div>
                 <Formik
                     initialValues={initialValues}
@@ -185,37 +172,15 @@ export default function DashTop({showPracticeOptions, TogglePracticeOptions}) {
         </div>;
     }
 
-    // function showhide(id) {
-    //     const e = document.getElementById(id);
-    //     e.style.display = (e.style.display == 'block') ? 'none' : 'block';
-    // }
+    function PracticeGreeting() {
+        if (isPracticeLeague) {
+            return <div>
+                <h3>This is a practice league - <br/>Test teams will be removed automatically 24hrs after practice draft
+                    is finished.</h3>
+            </div>;
+        }
+    }
 
-    // function showhide2() {
-    //     if (showPracticeOptions) {
-    //         return <PracticeDraft/>
-    //     } else {
-    //         return <div></div>
-    //     }
-    // }
-
-    // Todo
-    //  Display correct info and options in dash-top depending on users team/league status.
-    //  Start with toggling practice options switch and toggle practice mode functionality.
-
-
-    // function PracticeOptionsToggle() {
-    //     // if (showPracticeOptions) {
-    //     return <>
-    //         <div className="form-check form-switch">
-    //             <input className="form-check-input"
-    //                    id="testBoxToggleOff" onClick={() => TogglePracticeOptions()} role="switch"
-    //                    type="checkbox" checked={showPracticeOptions}/>
-    //             <label className="form-check-label" htmlFor="testBoxToggleOff">Show/Hide
-    //                 Practice Options</label>
-    //         </div>
-    //     </>
-    //     // }
-    // }
 
     function UserGreeting() {
         if (team != null) {
@@ -227,8 +192,8 @@ export default function DashTop({showPracticeOptions, TogglePracticeOptions}) {
                     <p>Random 1st pick draft number: {firstPickNumber}</p>
                     <p>Random 2nd pick draft number: {secondPickNumber}</p>
                     <hr/>
-                    <h3> league is full...</h3>
                     <h3>League is {currentLeague?.teams?.length} of 10 teams full.</h3>
+                    <PracticeGreeting/>
                     <hr/>
                     {/*<PracticeOptionsToggle/>*/}
                 </div>;
@@ -242,6 +207,7 @@ export default function DashTop({showPracticeOptions, TogglePracticeOptions}) {
                 <hr/>
                 <h3>League is {currentLeague?.teams?.length} of 10 teams full.</h3>
                 <h3> The draft picks will start when the league is full...</h3>
+                <PracticeGreeting/>
                 <hr/>
                 {/*<PracticeOptionsToggle/>*/}
             </div>;

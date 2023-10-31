@@ -45,3 +45,16 @@ export const getIsLeagueActive = async (leagueId: number | null | undefined) => 
         .then(response => response.data);
     return data;
 };
+
+export const postToggleTestLeague = async (leagueId: number | null | undefined) => {
+    const response = await axios
+        .post(API_DATA_URL + leagueId + "/toggleTestLeague", {
+            // headers: authHeader(),
+            leagueId
+        });
+    if (response.data) {
+        console.log("postToggleTestLeague:")
+        console.log(response.data)
+        return response.data;
+    }
+};
