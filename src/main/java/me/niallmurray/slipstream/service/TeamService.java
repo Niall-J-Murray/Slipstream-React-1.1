@@ -26,7 +26,7 @@ public class TeamService {
   @Autowired
   private DriverService driverService;
 
-  public Team createTeam(User user,String teamName) {
+  public Team createTeam(User user, String teamName) {
     Team team = new Team();
     team.setUser(user);
 
@@ -66,14 +66,16 @@ public class TeamService {
     return userDisplayName;
   }
 
-  public void createTestTeam(User user) {
-    String leagueNumber = user.getTeam().getLeague().getLeagueName().substring(8);
-    int leagueSize = findAllTeamsByLeague(user.getTeam().getLeague()).size();
-    String teamName = "Team " + leagueNumber + "-" + (leagueSize + 1);
+  public Team createTestTeam(Long leagueId) {
+    League league = leagueService.findById(leagueId);
+    String leagueNumber = league.getLeagueName().substring(7);
+    int leagueSize = findAllTeamsByLeague(league).size();
+    String teamName = "Team " + leagueNumber + "." + (leagueSize + 1);
     User testUser = userService.createTestUser(teamName);
 
     Team team = new Team();
     team.setUser(testUser);
+    team.setUsername(testUser.getUsername());
     team.setTeamName(teamName);
     team.setFirstPickNumber(randomPickNumber());
     team.setSecondPickNumber(21 - team.getFirstPickNumber());
@@ -84,6 +86,7 @@ public class TeamService {
     testUser.setTeam(team);
 
     addOneTeamToLeague(team);
+    return team;
   }
 
   public void addOneTeamToLeague(Team team) {
@@ -252,8 +255,8 @@ public class TeamService {
         userService.delete(team.getUser());
       }
     }
-    if (Boolean.TRUE.equals(league.getIsTestLeague())) {
-      league.setIsTestLeague(false);
+    if (Boolean.TRUE.equals(league.getIsPracticeLeague())) {
+      league.setIsPracticeLeague(false);
     }
   }
 

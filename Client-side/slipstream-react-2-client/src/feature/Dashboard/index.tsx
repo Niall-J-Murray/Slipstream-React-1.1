@@ -4,16 +4,23 @@ import Navbar from "../../components/Navbar";
 import Body from "../../components/Body";
 import DashTop from "./DashTop";
 import Reminders from "./Reminders";
-import PracticeDraft from "./PracticeDraft";
 import Table1 from "./Table1";
 import Table2 from "./Table2";
 import {useEffect, useState} from "react";
-import {getIsLeagueActive, getOpenLeague, getTeamLeague, postToggleTestLeague} from "../../services/league.service.ts";
+import {
+    getAllLeagueTeams,
+    getIsDraftInProgress,
+    getIsLeagueActive,
+    getOpenLeague,
+    getTeamLeague,
+    postToggleTestLeague
+} from "../../services/league.service.ts";
 import {getCurrentUser} from "../../services/auth.service.ts";
 import {getUserData} from "../../services/user.service.ts";
 import IUser from "../../types/user.type.ts";
 import ITeam from "../../types/team.type.ts";
 import ILeague from "../../types/league.type.ts";
+import PracticeDraftOptions from "./PracticeDraftOptions";
 
 
 // interface DashboardParams {
@@ -52,6 +59,8 @@ export default function Dashboard() {
         = useState<ITeam | undefined>();
     const [currentLeague, setCurrentLeague]
         = useState<ILeague | undefined>();
+    const [leagueTeams, setLeagueTeams]
+        = useState<Array<ITeam> | undefined>([]);
     const [openLeague, setOpenLeague]
         = useState<ILeague | undefined>();
     const [isLeagueActive, setIsLeagueActive]
@@ -62,6 +71,8 @@ export default function Dashboard() {
         = useState<boolean>(false);
     const [isPracticeLeague, setIsPracticeLeague]
         = useState<boolean>();
+    const [isDraftInProgress, setisDraftInProgress]
+        = useState<boolean>(false);
 
     useEffect(() => {
         const user = getCurrentUser();
@@ -78,11 +89,30 @@ export default function Dashboard() {
                 if (userData.team.id) {
                     const leagueData = await getTeamLeague(userData.team.id);
                     setCurrentLeague(leagueData);
-                    console.log("league size:")
-                    console.log(leagueData.teams.length)
+                    setIsPracticeLeague(leagueData.isPracticeLeague)
+                    await getAllLeagueTeams(leagueData.leagueId).then(function (response) {
+                        setLeagueTeams(response)
+                    })
+                    getIsLeagueActive(leagueData.leagueId).then(function (response) {
+                        setIsLeagueActive(response);
+                    })
                     setIsLeagueFull((leagueData.teams.length) >= 10)
                     getIsLeagueActive(leagueData.leagueId).then(function (response) {
                         setIsLeagueActive(response);
+                    })
+                    getIsDraftInProgress(leagueData.leagueId).then(function (response) {
+                        setisDraftInProgress(response);
+                    })
+                } else {
+                    await getOpenLeague().then(function (response) {
+                        setOpenLeague(response);
+                        setCurrentLeague(response);
+                        getAllLeagueTeams(response.leagueId).then(function (response) {
+                            setLeagueTeams(response)
+                        })
+                        getIsLeagueActive(response.leagueId).then(function (response) {
+                            setIsLeagueActive(response);
+                        })
                     })
                 }
             }
@@ -98,18 +128,6 @@ export default function Dashboard() {
         }
     }
 
-    function PracticeOptionsToggle() {
-        return <>
-            <div className="form-check form-switch">
-                <input className="form-check-input"
-                       id="testBoxToggleOff" onChange={TogglePracticeOptions} role="switch"
-                       type="checkbox" checked={showPracticeOptions}/>
-                <label className="form-check-label" htmlFor="testBoxToggleOff">Show/Hide
-                    Practice Options</label>
-            </div>
-        </>
-    }
-
     function TogglePracticeLeague() {
         if (isPracticeLeague) {
             postToggleTestLeague(currentLeague?.leagueId)
@@ -118,7 +136,6 @@ export default function Dashboard() {
                     console.log(response)
                     setIsPracticeLeague(response);
                 })
-            // setIsPracticeLeague(false);
         } else {
             postToggleTestLeague(currentLeague?.leagueId)
                 .then(function (response) {
@@ -126,14 +143,8 @@ export default function Dashboard() {
                     console.log(response)
                     setIsPracticeLeague(response);
                 })
-            // setIsPracticeLeague(true);
         }
     }
-
-    // Todo
-    //  Display correct info and options in dash-top depending on users team/league status.
-    //  Start with toggling practice options switch and toggle practice mode functionality.
-    //  Make toggle checkbox match current state on initial load.
 
     return (
         <>
@@ -141,26 +152,32 @@ export default function Dashboard() {
                 <BackgroundImage>
                     <Navbar/>
                     <Body>
-                        <DashTop currentUser={currentUser} isPracticeLeague={isPracticeLeague}
-                                 TogglePracticeOptions={TogglePracticeOptions}/>
+                        <DashTop
+                            currentUser={currentUser}
+                            team={team} openLeague={openLeague}
+                            currentLeague={currentLeague}
+                            isPracticeLeague={isPracticeLeague}
+                            isLeagueFull={isLeagueFull}
+                        />
                         <Reminders/>
-                        <div className="col-start-2 col-span-3 box-shadow">
-                            {
-                                showPracticeOptions ?
-                                    <div>
-                                        <PracticeOptionsToggle/>
-                                        <PracticeDraft isPracticeLeague={isPracticeLeague}
-                                                       TogglePracticeLeague={TogglePracticeLeague}/>
-                                    </div>
-                                    : <PracticeOptionsToggle/>
-                            }
-                        </div>
-                        {/*<TogglePracticeOptions valueOf={showPracticeOptions}/>*/}
-                        {/*<PracticeDraft/>*/}
-                        {/*<JoyTable1/>*/}
-                        {/*<JoyTable2/>*/}
-                        <Table1/>
-                        <Table2/>
+                        <PracticeDraftOptions
+                            currentLeague={currentLeague}
+                            isPracticeLeague={isPracticeLeague}
+                            showPracticeOptions={showPracticeOptions}
+                            TogglePracticeOptions={TogglePracticeOptions}
+                            TogglePracticeLeague={TogglePracticeLeague}
+                        />
+
+                        <Table1
+                            isLeagueActive={isLeagueActive}
+                            currentLeague={currentLeague}
+                            leagueTeams={leagueTeams}
+                        />
+                        <Table2
+                            isLeagueFull={isLeagueFull}
+                            isLeagueActive={isLeagueActive}
+                            isDraftInProgress={isDraftInProgress}
+                        />
                     </Body>
                 </BackgroundImage>
             </View>

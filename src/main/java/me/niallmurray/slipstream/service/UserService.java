@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -15,19 +16,11 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-  //  @Autowired
-//  private ActiveUserStore activeUserStore;
   @Autowired
   private UserRepository userRepository;
 
   public User createUser(User user) {
     user.setUsername(user.getUsername().trim());
-//    Authority authority = new Authority();
-//    authority.setUser(user);
-//    authority.setAuthority("ROLE_USER");
-
-//    user.getAuthorities().add(authority);
-//    user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
     user.setIsTestUser(false);
     user.setEmailsReceived(0);
     // For new users first login and to check for unsuccessful logouts.
@@ -39,16 +32,11 @@ public class UserService {
   public User createTestUser(String teamName) {
     User user = new User();
     user.setPassword(new BCryptPasswordEncoder().encode(user.getUsername() + "password"));
-    user.setLastLogout(String.valueOf(LocalDateTime.of(123, 4, 5, 6, 7)));
-    user.setUsername("Test User " + teamName.substring(5));
+    user.setLastLogout(String.valueOf(LocalDateTime.now()));
+    user.setUsername("Test_User_" + teamName.substring(5));
     user.setEmail(user.getUsername() + "@slipstream.com");
     user.setEmailsReceived(0);
     user.setIsTestUser(true);
-
-//    Authority authority = new Authority();
-//    authority.setUser(user);
-//    authority.setAuthority("ROLE_USER");
-//    user.getAuthorities().add(authority);
 
     return userRepository.save(user);
   }

@@ -37,17 +37,22 @@ export const getTeamLeague = async (teamId: number | null | undefined) => {
     return data;
 };
 
-// export const createTeam = async (userId: number | null | undefined) => {
-//     const data = await axios.post(API_DATA_URL + "team/" + userId, {headers: authHeader()})
-//         .then(response => response.data);
-//     return data;
-// };
-
-export const createTeam = async (userId: number | null| undefined, teamName: string) => {
+export const createTeam = async (userId: number | null | undefined, teamName: string) => {
     const response = await axios
         .post(API_DATA_URL + "team/" + userId, {
             // headers: authHeader(),
             teamName,
+        });
+    if (response.data) {
+        return response.data;
+    }
+};
+
+export const createTestTeam = async (leagueId: number | null | undefined) => {
+    const response = await axios
+        .post(API_DATA_URL + "team/" + leagueId + "/createTestTeam", {
+            // headers: authHeader(),
+            leagueId,
         });
     if (response.data) {
         return response.data;

@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar";
 import Body from "../../components/Body";
 import LoginForm from "./LoginForm";
 
-export default function Register() {
+export default function Login() {
     return (
         <>
             <View>
@@ -18,15 +18,3 @@ export default function Register() {
         </>
     );
 }
-
-// <View>
-//     <BackgroundImage>
-//         <Navbar/>
-//         <Body>
-//             {/*<HomeWelcome users={users} user={user} isloggedin={isLoggedIn}/>*/}
-//             <HomeWelcome/>
-//             <AppDescription/>
-//             <HowToPlay/>
-//         </Body>
-//     </BackgroundImage>
-// </View>

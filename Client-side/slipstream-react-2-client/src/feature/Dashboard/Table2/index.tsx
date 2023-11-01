@@ -9,42 +9,42 @@ import DriverStandingsTable from "../DriverStandingsTable";
 import ITeam from "../../../types/team.type.ts";
 
 
-export default function Table2() {
-    const [currentUser, setCurrentUser]
-        = useState<IUser | undefined>();
-    const [userData, setUserData]
-        = useState<IUser | undefined>();
-    const [team, setTeam]
-        = useState<ITeam | undefined>();
-    const [currentLeague, setCurrentLeague]
-        = useState<ILeague | undefined>();
-    const [draftInProgress, setDraftInProgress]
-        = useState<boolean>(false);
+export default function Table2({isLeagueFull,isLeagueActive,isDraftInProgress}) {
+    // const [currentUser, setCurrentUser]
+    //     = useState<IUser | undefined>();
+    // const [userData, setUserData]
+    //     = useState<IUser | undefined>();
+    // const [team, setTeam]
+    //     = useState<ITeam | undefined>();
+    // const [currentLeague, setCurrentLeague]
+    //     = useState<ILeague | undefined>();
+    // const [draftInProgress, setDraftInProgress]
+    //     = useState<boolean>(false);
 
-    useEffect(() => {
-        const user = getCurrentUser();
-        setCurrentUser(user);
-        const fetchUserData = async () => {
-            if (user != null) {
-                const userData = await getUserData(user.id);
-                setUserData(userData);
-                setTeam(userData.team)
-
-                if (team?.id) {
-                    const leagueData = await getTeamLeague(team.id);
-                    setCurrentLeague(leagueData);
-                    getIsDraftInProgress(leagueData.leagueId).then(function (response) {
-                        setDraftInProgress(response);
-                    })
-                }
-            }
-        }
-        fetchUserData().catch(console.error);
-    }, []);
+    // useEffect(() => {
+    //     const user = getCurrentUser();
+    //     setCurrentUser(user);
+    //     const fetchUserData = async () => {
+    //         if (user != null) {
+    //             const userData = await getUserData(user.id);
+    //             setUserData(userData);
+    //             setTeam(userData.team)
+    //
+    //             if (team?.id) {
+    //                 const leagueData = await getTeamLeague(team.id);
+    //                 setCurrentLeague(leagueData);
+    //                 getIsDraftInProgress(leagueData.leagueId).then(function (response) {
+    //                     setDraftInProgress(response);
+    //                 })
+    //             }
+    //         }
+    //     }
+    //     fetchUserData().catch(console.error);
+    // }, []);
 
     function DriverTable() {
-        console.log(draftInProgress)
-        if (draftInProgress) {
+        console.log(isDraftInProgress)
+        if (isDraftInProgress) {
             return <DriverDraftTable/>;
         }
         return <DriverStandingsTable/>;

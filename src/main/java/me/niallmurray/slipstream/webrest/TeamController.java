@@ -68,11 +68,10 @@ public class TeamController {
     return "redirect:/dashboard/" + userId;
   }
 
-  @PostMapping("team/{userId}/addTestTeam")
-  public String postCreateTestTeam(@PathVariable Long userId) {
-    User user = userService.findById(userId);
-    teamService.createTestTeam(user);
-    return "redirect:/dashboard/" + userId;
+  @PostMapping("team/{leagueId}/createTestTeam")
+  public ResponseEntity<Team> postCreateTestTeam(@PathVariable Long leagueId) {
+   Team testTeam = teamService.createTestTeam(leagueId);
+    return ResponseEntity.ok(testTeam);
   }
 
   @PostMapping("/dashboard/{userId}/deleteTestTeams")

@@ -1,9 +1,7 @@
 package me.niallmurray.slipstream.webrest;
 
-import me.niallmurray.slipstream.domain.Driver;
 import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
-import me.niallmurray.slipstream.domain.User;
 import me.niallmurray.slipstream.service.LeagueService;
 import me.niallmurray.slipstream.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,9 +82,9 @@ public class LeagueController {
 //  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<Boolean> postToggleTestLeague(@PathVariable Long leagueId) {
     League league = leagueService.findById(leagueId);
-    league.setIsTestLeague(Boolean.FALSE.equals(league.getIsTestLeague()));
+    league.setIsPracticeLeague(Boolean.FALSE.equals(league.getIsPracticeLeague()));
     leagueService.save(league);
-    return ResponseEntity.ok(league.getIsTestLeague());
+    return ResponseEntity.ok(league.getIsPracticeLeague());
   }
 
 }

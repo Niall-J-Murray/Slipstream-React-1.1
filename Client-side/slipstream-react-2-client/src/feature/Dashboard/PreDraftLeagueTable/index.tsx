@@ -6,58 +6,58 @@ import IUser from "../../../types/user.type.ts";
 import ILeague from "../../../types/league.type.ts";
 import ITeam from "../../../types/team.type.ts";
 
-export default function PreDraftLeagueTable() {
-    const [currentUser, setCurrentUser]
-        = useState<IUser | undefined>();
-    const [userData, setUserData]
-        = useState<IUser | undefined>();
-    const [team, setTeam]
-        = useState<ITeam | undefined>();
-    const [leagueTeams, setLeagueTeams]
-        = useState<Array<ITeam> | undefined>([]);
-    const [currentLeague, setCurrentLeague]
-        = useState<ILeague | undefined>();
-    const [openLeague, setOpenLeague]
-        = useState<ILeague | undefined>();
-    const [isLeagueActive, setIsLeagueActive]
-        = useState<boolean>(false);
-
-    useEffect(() => {
-        const user = getCurrentUser();
-        setCurrentUser(user);
-        const fetchUserData = async () => {
-            if (user != null) {
-                const userData = await getUserData(user.id);
-                setUserData(userData);
-                setTeam(userData.team)
-
-                if (userData.team) {
-                    console.log("user team")
-                    const leagueData = await getTeamLeague(userData.team.id);
-                    setCurrentLeague(leagueData);
-                    await getAllLeagueTeams(leagueData.leagueId).then(function (response) {
-                        setLeagueTeams(response)
-                    })
-                    getIsLeagueActive(leagueData.leagueId).then(function (response) {
-                        setIsLeagueActive(response);
-                    })
-                } else {
-                    console.log("no user team")
-                    await getOpenLeague().then(function (response) {
-                        setOpenLeague(response);
-                        setCurrentLeague(response);
-                        getAllLeagueTeams(response.leagueId).then(function (response) {
-                            setLeagueTeams(response)
-                        })
-                        getIsLeagueActive(response.leagueId).then(function (response) {
-                            setIsLeagueActive(response);
-                        })
-                    })
-                }
-            }
-        }
-        fetchUserData().catch(console.error);
-    }, []);
+export default function PreDraftLeagueTable({currentLeague,leagueTeams}) {
+    // const [currentUser, setCurrentUser]
+    //     = useState<IUser | undefined>();
+    // const [userData, setUserData]
+    //     = useState<IUser | undefined>();
+    // const [team, setTeam]
+    //     = useState<ITeam | undefined>();
+    // const [leagueTeams, setLeagueTeams]
+    //     = useState<Array<ITeam> | undefined>([]);
+    // const [currentLeague, setCurrentLeague]
+    //     = useState<ILeague | undefined>();
+    // const [openLeague, setOpenLeague]
+    //     = useState<ILeague | undefined>();
+    // const [isLeagueActive, setIsLeagueActive]
+    //     = useState<boolean>(false);
+    //
+    // useEffect(() => {
+    //     const user = getCurrentUser();
+    //     setCurrentUser(user);
+    //     const fetchUserData = async () => {
+    //         if (user != null) {
+    //             const userData = await getUserData(user.id);
+    //             setUserData(userData);
+    //             setTeam(userData.team)
+    //
+    //             if (userData.team) {
+    //                 console.log("user team")
+    //                 const leagueData = await getTeamLeague(userData.team.id);
+    //                 setCurrentLeague(leagueData);
+    //                 await getAllLeagueTeams(leagueData.leagueId).then(function (response) {
+    //                     setLeagueTeams(response)
+    //                 })
+    //                 getIsLeagueActive(leagueData.leagueId).then(function (response) {
+    //                     setIsLeagueActive(response);
+    //                 })
+    //             } else {
+    //                 console.log("no user team")
+    //                 await getOpenLeague().then(function (response) {
+    //                     setOpenLeague(response);
+    //                     setCurrentLeague(response);
+    //                     getAllLeagueTeams(response.leagueId).then(function (response) {
+    //                         setLeagueTeams(response)
+    //                     })
+    //                     getIsLeagueActive(response.leagueId).then(function (response) {
+    //                         setIsLeagueActive(response);
+    //                     })
+    //                 })
+    //             }
+    //         }
+    //     }
+    //     fetchUserData().catch(console.error);
+    // }, []);
 
     return (
         <>

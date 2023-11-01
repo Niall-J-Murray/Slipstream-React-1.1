@@ -25,7 +25,7 @@ public class LeagueService {
     League league = new League();
     league.setLeagueName("League " + findNewestLeagueId());
     league.setTeams(new ArrayList<>());
-    league.setIsTestLeague(false);
+    league.setIsPracticeLeague(false);
     league.setIsActive(false);
     league.setCreationTimestamp(
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm")));

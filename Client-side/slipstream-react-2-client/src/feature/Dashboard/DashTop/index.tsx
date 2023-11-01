@@ -1,30 +1,24 @@
 import * as Yup from "yup";
-import IUser from "../../../types/user.type.ts";
-import ITeam from "../../../types/team.type.ts";
-import ILeague from "../../../types/league.type.ts";
 import {NavigateFunction, useNavigate} from 'react-router-dom';
 import {ErrorMessage, Field, Form, Formik} from "formik";
-import {getCurrentUser} from "../../../services/auth.service.ts";
-import {useEffect, useState} from "react";
-import {getUserData} from "../../../services/user.service.ts";
-import {getIsLeagueActive, getOpenLeague, getTeamLeague} from "../../../services/league.service.ts";
+import {useState} from "react";
 import {createTeam} from "../../../services/team.service.ts";
 
-export default function DashTop({currentUser, isPracticeLeague, TogglePracticeOptions}) {
+export default function DashTop({currentUser, team, openLeague, currentLeague, isPracticeLeague, isLeagueFull}) {
     // const [currentUser, setCurrentUser]
     //     = useState<IUser | undefined>();
-    const [userData, setUserData]
-        = useState<IUser | undefined>();
-    const [team, setTeam]
-        = useState<ITeam | undefined>();
-    const [currentLeague, setCurrentLeague]
-        = useState<ILeague | undefined>();
-    const [openLeague, setOpenLeague]
-        = useState<ILeague | undefined>();
-    const [isLeagueActive, setIsLeagueActive]
-        = useState<boolean>(false);
-    const [isLeagueFull, setIsLeagueFull]
-        = useState<boolean>(false);
+    // const [userData, setUserData]
+    //     = useState<IUser | undefined>();
+    // const [team, setTeam]
+    //     = useState<ITeam | undefined>();
+    // const [currentLeague, setCurrentLeague]
+    //     = useState<ILeague | undefined>();
+    // const [openLeague, setOpenLeague]
+    //     = useState<ILeague | undefined>();
+    // const [isLeagueActive, setIsLeagueActive]
+    //     = useState<boolean>(false);
+    // const [isLeagueFull, setIsLeagueFull]
+    //     = useState<boolean>(false);
 
     // const stateObjects = userData!.username + currentLeague?.leagueName + isLeagueActive?.toString();
     // console.log("DashTop stateObjects")
@@ -73,46 +67,41 @@ export default function DashTop({currentUser, isPracticeLeague, TogglePracticeOp
     };
 
 
-    useEffect(() => {
-        const user = getCurrentUser();
-        // setCurrentUser(user);
-        const fetchUserData = async () => {
-            if (user != null) {
-                const userData = await getUserData(user.id);
-                setUserData(userData);
-                setTeam(userData.team)
+    // useEffect(() => {
+    //     const user = getCurrentUser();
+    //     // setCurrentUser(user);
+    //     const fetchUserData = async () => {
+    //         if (user != null) {
+    //             const userData = await getUserData(user.id);
+    //             setUserData(userData);
+    //             setTeam(userData.team)
+    //
+    //             getOpenLeague().then(function (response) {
+    //                 setOpenLeague(response);
+    //             })
+    //             if (userData.team.id) {
+    //                 const leagueData = await getTeamLeague(userData.team.id);
+    //                 setCurrentLeague(leagueData);
+    //                 console.log("league size:")
+    //                 console.log(leagueData.teams.length)
+    //                 setIsLeagueFull((leagueData.teams.length) >= 10)
+    //                 getIsLeagueActive(leagueData.leagueId).then(function (response) {
+    //                     setIsLeagueActive(response);
+    //                 })
+    //             }
+    //         }
+    //     }
+    //     fetchUserData().catch(console.error);
+    // }, []);
 
-                getOpenLeague().then(function (response) {
-                    setOpenLeague(response);
-                })
-                if (userData.team.id) {
-                    const leagueData = await getTeamLeague(userData.team.id);
-                    setCurrentLeague(leagueData);
-                    console.log("league size:")
-                    console.log(leagueData.teams.length)
-                    setIsLeagueFull((leagueData.teams.length) >= 10)
-                    getIsLeagueActive(leagueData.leagueId).then(function (response) {
-                        setIsLeagueActive(response);
-                    })
-                }
-            }
-        }
-        fetchUserData().catch(console.error);
-    }, []);
-
-
-    const isAdmin = "isAdmin";
-
-    const hasTeam = "hasTeam";
-
+    // const isAdmin = "isAdmin";
+    // const hasTeam = "hasTeam";
     const teamName = team?.teamName
     const firstPickNumber = team?.firstPickNumber
     const secondPickNumber = team?.secondPickNumber
-
-    const leagueFull = "leagueFull"
-    const timeToPick = "timeToPick";
-
-    const leagueActive = "leagueActive";
+    // const leagueFull = "leagueFull"
+    // const timeToPick = "timeToPick";
+    // const leagueActive = "leagueActive";
 
     function CreateTeam() {
         console.log(openLeague?.leagueName)

@@ -57,7 +57,7 @@ public class DashboardController {
     modelMap.addAttribute("teamsInLeague", currentLeague.getTeams());
     modelMap.addAttribute("teamsByPick", teamService.findAllTeamsByNextPick());
     modelMap.addAttribute("allDrivers", driverService.sortDriversStanding());
-    modelMap.addAttribute("isTestLeague", currentLeague.getIsTestLeague());
+    modelMap.addAttribute("isTestLeague", currentLeague.getIsPracticeLeague());
     modelMap.addAttribute("leagueFull", false);
     modelMap.addAttribute("timeToPick", false);
     modelMap.addAttribute("leagueActive", false);
@@ -71,7 +71,7 @@ public class DashboardController {
       modelMap.addAttribute("teamsByRank", teamService.updateLeagueTeamsRankings(currentLeague));
     } else {
       modelMap.addAttribute("teamLeague", user.getTeam().getLeague());
-      modelMap.addAttribute("isTestLeague", user.getTeam().getLeague().getIsTestLeague());
+      modelMap.addAttribute("isTestLeague", user.getTeam().getLeague().getIsPracticeLeague());
       modelMap.addAttribute("availableDrivers", driverService.getUndraftedDrivers(user.getTeam().getLeague()));
       modelMap.addAttribute("currentPickNumber", leagueService.getCurrentPickNumber(user.getTeam().getLeague()));
       modelMap.addAttribute("teamsByRank", teamService.updateLeagueTeamsRankings(user.getTeam().getLeague()));
@@ -121,7 +121,7 @@ public class DashboardController {
   public String postToggleTest(@PathVariable Long userId) {
     User user = userService.findById(userId);
     League league = user.getTeam().getLeague();
-    league.setIsTestLeague(Boolean.FALSE.equals(league.getIsTestLeague()));
+    league.setIsPracticeLeague(Boolean.FALSE.equals(league.getIsPracticeLeague()));
     leagueService.save(league);
     return "redirect:/dashboard/" + userId;
   }
@@ -146,7 +146,7 @@ public class DashboardController {
   @PostMapping("/dashboard/{userId}/addTestTeam")
   public String postCreateTestTeam(@PathVariable Long userId) {
     User user = userService.findById(userId);
-    teamService.createTestTeam(user);
+    teamService.createTestTeam(user.getTeam().getLeague().getLeagueId());
     return "redirect:/dashboard/" + userId;
   }
 

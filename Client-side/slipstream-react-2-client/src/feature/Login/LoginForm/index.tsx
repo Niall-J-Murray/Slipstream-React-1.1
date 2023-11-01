@@ -8,7 +8,7 @@ import {login} from "../../../services/auth.service";
 type Props = {}
 
 const Login: React.FC<Props> = () => {
-    let navigate: NavigateFunction = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
 
     const [loading, setLoading] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
@@ -54,7 +54,7 @@ const Login: React.FC<Props> = () => {
     return (
         <>
             <div className="col-start-3 col-span-1 box-shadow">
-                <div className="grid grid-cols-5 gap-3 p-5 ">
+                <div className="grid grid-cols-5 gap-3 p-5">
                     <img
                         src={lights_on}
                         height={180}

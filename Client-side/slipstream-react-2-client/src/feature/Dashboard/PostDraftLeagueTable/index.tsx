@@ -6,41 +6,42 @@ import IUser from "../../../types/user.type.ts";
 import ILeague from "../../../types/league.type.ts";
 import ITeam from "../../../types/team.type.ts";
 
-export default function PostDraftLeagueTable() {
-    const [currentUser, setCurrentUser]
-        = useState<IUser | undefined>();
-    const [userData, setUserData]
-        = useState<IUser | undefined>();
-    const [team, setTeam]
-        = useState<ITeam | undefined>();
-    const [leagueTeams, setLeagueTeams]
-        = useState<Array<ITeam> | undefined>([]);
-    const [currentLeague, setCurrentLeague]
-        = useState<ILeague | undefined>();
 
-    useEffect(() => {
-        let user = getCurrentUser();
-        setCurrentUser(user);
-        const fetchUserData = async () => {
-            if (user != null) {
-                let userData = await getUserData(user.id);
-                setUserData(userData);
-                setTeam(userData.team)
-
-                let leagueData = await getTeamLeague(userData.team.id);
-                setCurrentLeague(leagueData);
-                await getAllLeagueTeams(leagueData.leagueId).then(function (response) {
-                    setLeagueTeams(response)
-                })
-            }
-        }
-        fetchUserData().catch(console.error);
-
-        // console.log("PostDraftLeagueTable:")
-        // console.log(currentUser)
-        // console.log(userData)
-        // console.log(team)
-    }, []);
+export default function PostDraftLeagueTable({currentLeague,leagueTeams}) {
+    // const [currentUser, setCurrentUser]
+    //     = useState<IUser | undefined>();
+    // const [userData, setUserData]
+    //     = useState<IUser | undefined>();
+    // const [team, setTeam]
+    //     = useState<ITeam | undefined>();
+    // const [leagueTeams, setLeagueTeams]
+    //     = useState<Array<ITeam> | undefined>([]);
+    // const [currentLeague, setCurrentLeague]
+    //     = useState<ILeague | undefined>();
+    //
+    // useEffect(() => {
+    //     let user = getCurrentUser();
+    //     setCurrentUser(user);
+    //     const fetchUserData = async () => {
+    //         if (user != null) {
+    //             let userData = await getUserData(user.id);
+    //             setUserData(userData);
+    //             setTeam(userData.team)
+    //
+    //             let leagueData = await getTeamLeague(userData.team.id);
+    //             setCurrentLeague(leagueData);
+    //             await getAllLeagueTeams(leagueData.leagueId).then(function (response) {
+    //                 setLeagueTeams(response)
+    //             })
+    //         }
+    //     }
+    //     fetchUserData().catch(console.error);
+    //
+    //     // console.log("PostDraftLeagueTable:")
+    //     // console.log(currentUser)
+    //     // console.log(userData)
+    //     // console.log(team)
+    // }, []);
 
 return (
     <>

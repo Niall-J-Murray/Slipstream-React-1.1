@@ -6,7 +6,7 @@ export default interface ILeague {
     creationTimestamp?: string | null,
     activeTimestamp?: string | null,
     isActive?: boolean | null,
-    isTestLeague?: boolean | null,
+    isPracticeLeague?: boolean | null,
     teams?: Array<ITeam> | null
 }
 
