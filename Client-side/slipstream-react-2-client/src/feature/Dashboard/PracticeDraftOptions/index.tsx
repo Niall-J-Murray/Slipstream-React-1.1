@@ -1,7 +1,15 @@
 import PracticeDraft from "./PracticeDraft";
 import PracticeOptionsToggle from "./PracticeOptionsToggle";
 
-export default function PracticeDraftOptions({showPracticeOptions, currentLeague, isPracticeLeague, TogglePracticeOptions, TogglePracticeLeague}) {
+export default function PracticeDraftOptions({
+                                                 showPracticeOptions,
+                                                 currentLeague,
+                                                 isPracticeLeague,
+                                                 isLeagueFull,
+                                                 togglePracticeOptions,
+                                                 togglePracticeLeague,
+                                                 addTestTeam
+                                             }) {
     return (
         <>
             <div className="col-start-2 col-span-3 box-shadow">
@@ -10,16 +18,19 @@ export default function PracticeDraftOptions({showPracticeOptions, currentLeague
                         <div>
                             <PracticeOptionsToggle
                                 showPracticeOptions={showPracticeOptions}
-                                TogglePracticeOptions={TogglePracticeOptions}
+                                togglePracticeOptions={togglePracticeOptions}
                             />
                             <PracticeDraft
                                 currentLeague={currentLeague}
                                 isPracticeLeague={isPracticeLeague}
-                                TogglePracticeLeague={TogglePracticeLeague}/>
+                                isLeagueFull={isLeagueFull}
+                                togglePracticeLeague={togglePracticeLeague}
+                                addTestTeam={addTestTeam}
+                            />
                         </div>
                         : <PracticeOptionsToggle
                             showPracticeOptions={showPracticeOptions}
-                            TogglePracticeOptions={TogglePracticeOptions}
+                            togglePracticeOptions={togglePracticeOptions}
                         />
                 }
             </div>

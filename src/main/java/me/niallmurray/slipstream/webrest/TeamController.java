@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 //@CrossOrigin(exposedHeaders = "Access-Control-Allow-Origin")
@@ -70,8 +71,11 @@ public class TeamController {
 
   @PostMapping("team/{leagueId}/createTestTeam")
   public ResponseEntity<Team> postCreateTestTeam(@PathVariable Long leagueId) {
-   Team testTeam = teamService.createTestTeam(leagueId);
-    return ResponseEntity.ok(testTeam);
+    Team testTeam = teamService.createTestTeam(leagueId);
+    if (testTeam != null) {
+      return ResponseEntity.ok(testTeam);
+    }
+    return ResponseEntity.of(Optional.empty());
   }
 
   @PostMapping("/dashboard/{userId}/deleteTestTeams")

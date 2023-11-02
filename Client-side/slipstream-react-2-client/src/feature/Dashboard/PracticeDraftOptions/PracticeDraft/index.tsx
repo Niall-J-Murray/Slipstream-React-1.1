@@ -1,9 +1,13 @@
-import {createTestTeam} from "../../../../services/team.service.ts";
-
-export default function PracticeDraft({currentLeague, isPracticeLeague, TogglePracticeLeague}) {
+export default function PracticeDraft({
+                                          currentLeague,
+                                          isPracticeLeague,
+                                          isLeagueFull,
+                                          togglePracticeLeague,
+                                          addTestTeam
+                                      }) {
 
     function PracticeDraftNotActive() {
-        return <div>
+        return <>
             <div>
                 <h4>Want to try a practice draft?</h4>
                 Caution:<br/>
@@ -21,22 +25,24 @@ export default function PracticeDraft({currentLeague, isPracticeLeague, TogglePr
             <form>
                 <div className="form-check form-switch">
                     <input className="form-check-input" id="practiceDraftToggle"
-                           onChange={TogglePracticeLeague}
+                           onChange={togglePracticeLeague}
                            role="switch" type="checkbox" checked={false}/>
                     <label className="form-check-label" htmlFor="practiceDraftToggle">
                         Toggle Practice Draft Mode
                     </label>
                 </div>
             </form>
-        </div>
+        </>
     }
 
     // Todo Display correct info and options in dash-top depending on users team/league status.
     //  Start with toggling practice options switch and toggle practice mode functionality.
     //  update table 1 component when test team/any team is created.
+    //  ---
+    //  Enable draft picking functionality.
 
     function PracticeDraftActive() {
-        return <div>
+        return <>
             <div>
                 <h4>For Practice Draft:</h4>
                 <ul className="text-block">
@@ -48,26 +54,34 @@ export default function PracticeDraft({currentLeague, isPracticeLeague, TogglePr
                     <li>Any non-test teams can be left in this league, or deleted to join a new league.</li>
                 </ul>
             </div>
-            <div>
-                <h5>Click below to add a test team to this league:</h5>
+            {isLeagueFull ?
                 <div>
-                    <button className="btn btn-success" id="test-team-button" type="submit"
-                            onClick={() => createTestTeam(currentLeague.leagueId)}>
-                        Add Test Team
-                    </button>
+                    This league is full, players can now begin selecting their drivers.
                 </div>
-            </div>
-            <form>
-                <div className="form-check form-switch">
-                    <input className="form-check-input" id="practiceDraftToggle"
-                           onChange={TogglePracticeLeague}
-                           role="switch" type="checkbox" checked={true}/>
-                    <label className="form-check-label" htmlFor="practiceDraftToggle">
-                        Toggle Practice Draft Mode
-                    </label>
+                :
+                <div>
+                    <div>
+                        <h5>Click below to add a test team to this league:</h5>
+                        <div>
+                            <button className="btn btn-success" id="test-team-button" type="submit"
+                                    onClick={addTestTeam}>
+                                Add Test Team
+                            </button>
+                        </div>
+                    </div>
+                    <form>
+                        <div className="form-check form-switch">
+                            <input className="form-check-input" id="practiceDraftToggle"
+                                   onChange={togglePracticeLeague}
+                                   role="switch" type="checkbox" checked={true}/>
+                            <label className="form-check-label" htmlFor="practiceDraftToggle">
+                                Toggle Practice Draft Mode
+                            </label>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </div>
+            }
+        </>
     }
 
     function PracticeDraftToggle() {
@@ -80,9 +94,7 @@ export default function PracticeDraft({currentLeague, isPracticeLeague, TogglePr
 
     return (
         <>
-            <div>
-                <PracticeDraftToggle/>
-            </div>
+            <PracticeDraftToggle/>
         </>
     );
 }

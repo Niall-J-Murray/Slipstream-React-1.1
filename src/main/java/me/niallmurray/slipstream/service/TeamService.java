@@ -68,25 +68,30 @@ public class TeamService {
 
   public Team createTestTeam(Long leagueId) {
     League league = leagueService.findById(leagueId);
-    String leagueNumber = league.getLeagueName().substring(7);
     int leagueSize = findAllTeamsByLeague(league).size();
-    String teamName = "Team " + leagueNumber + "." + (leagueSize + 1);
-    User testUser = userService.createTestUser(teamName);
 
-    Team team = new Team();
-    team.setUser(testUser);
-    team.setUsername(testUser.getUsername());
-    team.setTeamName(teamName);
-    team.setFirstPickNumber(randomPickNumber());
-    team.setSecondPickNumber(21 - team.getFirstPickNumber());
-    team.setRanking(team.getFirstPickNumber());
-    team.setStartingPoints(0.0);
-    team.setIsTestTeam(true);
-    team.setLeague(leagueService.findAvailableLeague());
-    testUser.setTeam(team);
+    if (leagueSize < 10) {
+      String leagueNumber = league.getLeagueName().substring(7);
+      String teamName = "Team " + leagueNumber + "." + (leagueSize + 1);
+      User testUser = userService.createTestUser(teamName);
 
-    addOneTeamToLeague(team);
-    return team;
+      Team team = new Team();
+
+      team.setUser(testUser);
+      team.setUsername(testUser.getUsername());
+      team.setTeamName(teamName);
+      team.setFirstPickNumber(randomPickNumber());
+      team.setSecondPickNumber(21 - team.getFirstPickNumber());
+      team.setRanking(team.getFirstPickNumber());
+      team.setStartingPoints(0.0);
+      team.setIsTestTeam(true);
+      team.setLeague(league);
+
+      testUser.setTeam(team);
+      addOneTeamToLeague(team);
+      return team;
+    }
+    return null;
   }
 
   public void addOneTeamToLeague(Team team) {

@@ -80,10 +80,23 @@ body {
     text-shadow: 0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black;
 }
 
-a,
+/*a,*/
+/*.btn-success,*/
+/*.btn-link {*/
+/*    font-family: Font1, Arial, Helvetica, sans-serif;*/
+/*    color: white;*/
+/*}*/
+
+a{
+    font-family: Font1, Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+
 .btn-success,
 .btn-link {
     font-family: Font1, Arial, Helvetica, sans-serif;
+    background-color: orangered;
     color: white;
 }
 

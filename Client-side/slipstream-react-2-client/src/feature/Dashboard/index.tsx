@@ -21,6 +21,7 @@ import IUser from "../../types/user.type.ts";
 import ITeam from "../../types/team.type.ts";
 import ILeague from "../../types/league.type.ts";
 import PracticeDraftOptions from "./PracticeDraftOptions";
+import {createTestTeam} from "../../services/team.service.ts";
 
 
 // interface DashboardParams {
@@ -71,7 +72,7 @@ export default function Dashboard() {
         = useState<boolean>(false);
     const [isPracticeLeague, setIsPracticeLeague]
         = useState<boolean>();
-    const [isDraftInProgress, setisDraftInProgress]
+    const [isDraftInProgress, setIsDraftInProgress]
         = useState<boolean>(false);
 
     useEffect(() => {
@@ -83,36 +84,43 @@ export default function Dashboard() {
                 setUserData(userData);
                 setTeam(userData.team)
 
-                getOpenLeague().then(function (response) {
-                    setOpenLeague(response);
-                })
+                getOpenLeague()
+                    .then(function (response) {
+                        setOpenLeague(response);
+                    })
                 if (userData.team.id) {
                     const leagueData = await getTeamLeague(userData.team.id);
                     setCurrentLeague(leagueData);
                     setIsPracticeLeague(leagueData.isPracticeLeague)
-                    await getAllLeagueTeams(leagueData.leagueId).then(function (response) {
-                        setLeagueTeams(response)
-                    })
-                    getIsLeagueActive(leagueData.leagueId).then(function (response) {
-                        setIsLeagueActive(response);
-                    })
+                    await getAllLeagueTeams(leagueData.leagueId)
+                        .then(function (response) {
+                            setLeagueTeams(response)
+                        })
+                    getIsLeagueActive(leagueData.leagueId)
+                        .then(function (response) {
+                            setIsLeagueActive(response);
+                        })
                     setIsLeagueFull((leagueData.teams.length) >= 10)
-                    getIsLeagueActive(leagueData.leagueId).then(function (response) {
-                        setIsLeagueActive(response);
-                    })
-                    getIsDraftInProgress(leagueData.leagueId).then(function (response) {
-                        setisDraftInProgress(response);
-                    })
+                    getIsLeagueActive(leagueData.leagueId)
+                        .then(function (response) {
+                            setIsLeagueActive(response);
+                        })
+                    getIsDraftInProgress(leagueData.leagueId)
+                        .then(function (response) {
+                            setIsDraftInProgress(response);
+                        })
                 } else {
                     await getOpenLeague().then(function (response) {
                         setOpenLeague(response);
                         setCurrentLeague(response);
-                        getAllLeagueTeams(response.leagueId).then(function (response) {
-                            setLeagueTeams(response)
-                        })
-                        getIsLeagueActive(response.leagueId).then(function (response) {
-                            setIsLeagueActive(response);
-                        })
+                        getAllLeagueTeams(response.leagueId)
+                            .then(function (response) {
+                                setLeagueTeams(response)
+                            })
+                        getIsLeagueActive(response.leagueId)
+                            .then(function (response) {
+                                setIsLeagueActive(response);
+                            })
                     })
                 }
             }
@@ -120,7 +128,7 @@ export default function Dashboard() {
         fetchUserData().catch(console.error);
     }, []);
 
-    function TogglePracticeOptions() {
+    function togglePracticeOptions() {
         if (showPracticeOptions) {
             setShowPracticeOptions(false);
         } else {
@@ -128,22 +136,31 @@ export default function Dashboard() {
         }
     }
 
-    function TogglePracticeLeague() {
+    function togglePracticeLeague() {
         if (isPracticeLeague) {
             postToggleTestLeague(currentLeague?.leagueId)
                 .then(function (response) {
-                    console.log("TogglePracticeLeague:")
+                    console.log("togglePracticeLeague:")
                     console.log(response)
                     setIsPracticeLeague(response);
                 })
         } else {
             postToggleTestLeague(currentLeague?.leagueId)
                 .then(function (response) {
-                    console.log("TogglePracticeLeague:")
+                    console.log("togglePracticeLeague:")
                     console.log(response)
                     setIsPracticeLeague(response);
                 })
         }
+    }
+
+    const addTestTeam = async () => {
+        await createTestTeam(currentLeague?.leagueId);
+
+        getAllLeagueTeams(currentLeague?.leagueId)
+            .then((response) => {
+                setLeagueTeams(response)
+            })
     }
 
     return (
@@ -163,9 +180,11 @@ export default function Dashboard() {
                         <PracticeDraftOptions
                             currentLeague={currentLeague}
                             isPracticeLeague={isPracticeLeague}
+                            isLeagueFull={isLeagueFull}
                             showPracticeOptions={showPracticeOptions}
-                            TogglePracticeOptions={TogglePracticeOptions}
-                            TogglePracticeLeague={TogglePracticeLeague}
+                            togglePracticeOptions={togglePracticeOptions}
+                            togglePracticeLeague={togglePracticeLeague}
+                            addTestTeam={addTestTeam}
                         />
 
                         <Table1
