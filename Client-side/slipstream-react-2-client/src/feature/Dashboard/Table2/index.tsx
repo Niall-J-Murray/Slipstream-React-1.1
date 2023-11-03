@@ -4,8 +4,8 @@ import {getIsDraftInProgress, getTeamLeague} from "../../../services/league.serv
 import {getUserData} from "../../../services/user.service.ts";
 import ILeague from "../../../types/league.type.ts";
 import {getCurrentUser} from "../../../services/auth.service.ts";
-import DriverDraftTable from "../DriverDraftTable";
-import DriverStandingsTable from "../DriverStandingsTable";
+import DriverDraftTable from "./DriverDraftTable";
+import DriverStandingsTable from "./DriverStandingsTable";
 import ITeam from "../../../types/team.type.ts";
 
 

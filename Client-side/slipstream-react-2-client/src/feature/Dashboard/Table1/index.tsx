@@ -4,8 +4,8 @@ import {useEffect, useState} from "react";
 import {getIsLeagueActive, getOpenLeague, getTeamLeague} from "../../../services/league.service.ts";
 import {getUserData} from "../../../services/user.service.ts";
 import {getCurrentUser} from "../../../services/auth.service.ts";
-import PostDraftLeagueTable from "../PostDraftLeagueTable";
-import PreDraftLeagueTable from "../PreDraftLeagueTable";
+import PostDraftLeagueTable from "./PostDraftLeagueTable";
+import PreDraftLeagueTable from "./PreDraftLeagueTable";
 import ITeam from "../../../types/team.type.ts";
 
 export default function Table1({isLeagueActive,currentLeague,leagueTeams}) {

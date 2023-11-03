@@ -35,12 +35,6 @@ export default function PracticeDraft({
         </>
     }
 
-    // Todo Display correct info and options in dash-top depending on users team/league status.
-    //  Start with toggling practice options switch and toggle practice mode functionality.
-    //  update table 1 component when test team/any team is created.
-    //  ---
-    //  Enable draft picking functionality.
-
     function PracticeDraftActive() {
         return <>
             <div>

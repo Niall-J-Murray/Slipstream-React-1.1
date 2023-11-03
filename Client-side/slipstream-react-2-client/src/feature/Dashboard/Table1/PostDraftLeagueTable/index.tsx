@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
-import {getCurrentUser} from "../../../services/auth.service.ts";
-import {getUserData} from "../../../services/user.service.ts";
-import {getAllLeagueTeams, getTeamLeague} from "../../../services/league.service.ts";
-import IUser from "../../../types/user.type.ts";
-import ILeague from "../../../types/league.type.ts";
-import ITeam from "../../../types/team.type.ts";
+import {getCurrentUser} from "../../../../services/auth.service.ts";
+import {getUserData} from "../../../../services/user.service.ts";
+import {getAllLeagueTeams, getTeamLeague} from "../../../../services/league.service.ts";
+import IUser from "../../../../types/user.type.ts";
+import ILeague from "../../../../types/league.type.ts";
+import ITeam from "../../../../types/team.type.ts";
 
 
 export default function PostDraftLeagueTable({currentLeague,leagueTeams}) {

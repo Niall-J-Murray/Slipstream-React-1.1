@@ -4,26 +4,7 @@ import {ErrorMessage, Field, Form, Formik} from "formik";
 import {useState} from "react";
 import {createTeam} from "../../../services/team.service.ts";
 
-export default function DashTop({currentUser, team, openLeague, currentLeague, isPracticeLeague, isLeagueFull}) {
-    // const [currentUser, setCurrentUser]
-    //     = useState<IUser | undefined>();
-    // const [userData, setUserData]
-    //     = useState<IUser | undefined>();
-    // const [team, setTeam]
-    //     = useState<ITeam | undefined>();
-    // const [currentLeague, setCurrentLeague]
-    //     = useState<ILeague | undefined>();
-    // const [openLeague, setOpenLeague]
-    //     = useState<ILeague | undefined>();
-    // const [isLeagueActive, setIsLeagueActive]
-    //     = useState<boolean>(false);
-    // const [isLeagueFull, setIsLeagueFull]
-    //     = useState<boolean>(false);
-
-    // const stateObjects = userData!.username + currentLeague?.leagueName + isLeagueActive?.toString();
-    // console.log("DashTop stateObjects")
-    // console.log(stateObjects)
-
+export default function DashTop({currentUser, userData, team, openLeague, currentLeague, isPracticeLeague, isLeagueFull, isDraftInProgress, currentPickNumber, findNextToPick}) {
     const navigate: NavigateFunction = useNavigate();
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -65,35 +46,6 @@ export default function DashTop({currentUser, team, openLeague, currentLeague, i
             }
         );
     };
-
-
-    // useEffect(() => {
-    //     const user = getCurrentUser();
-    //     // setCurrentUser(user);
-    //     const fetchUserData = async () => {
-    //         if (user != null) {
-    //             const userData = await getUserData(user.id);
-    //             setUserData(userData);
-    //             setTeam(userData.team)
-    //
-    //             getOpenLeague().then(function (response) {
-    //                 setOpenLeague(response);
-    //             })
-    //             if (userData.team.id) {
-    //                 const leagueData = await getTeamLeague(userData.team.id);
-    //                 setCurrentLeague(leagueData);
-    //                 console.log("league size:")
-    //                 console.log(leagueData.teams.length)
-    //                 setIsLeagueFull((leagueData.teams.length) >= 10)
-    //                 getIsLeagueActive(leagueData.leagueId).then(function (response) {
-    //                     setIsLeagueActive(response);
-    //                 })
-    //             }
-    //         }
-    //     }
-    //     fetchUserData().catch(console.error);
-    // }, []);
-
     // const isAdmin = "isAdmin";
     // const hasTeam = "hasTeam";
     const teamName = team?.teamName
@@ -164,12 +116,40 @@ export default function DashTop({currentUser, team, openLeague, currentLeague, i
     function PracticeGreeting() {
         if (isPracticeLeague) {
             return <div>
-                <h3>This is a practice league - <br/>Test teams will be removed automatically 24hrs after practice draft
-                    is finished.</h3>
+                <h4>This is a practice league -
+                    <br/> {">"} You may make picks for your team and test teams.
+                    <br/> {">"} Test teams will be removed automatically 24hrs after practice draft
+                    is finished.
+                </h4>
             </div>;
         }
     }
 
+    function PickInstructions() {
+        if (isDraftInProgress) {
+            if (firstPickNumber == currentPickNumber || secondPickNumber == currentPickNumber) {
+                return <>
+                    <h4 className={"text-#2ea44f; text-decoration-line: underline"}>
+                        Current pick number: {currentPickNumber}
+                    </h4>
+                    <h4 className="color: #2ea44f; text-decoration-line: underline">
+                        It's your turn to pick {currentUser.username}!
+                    </h4>
+                </>
+            }
+            return <>
+                <p>
+                    Draft in progress, please wait for your turn to pick.
+                </p>
+                <h4 className={"color: #2ea44f; text-decoration-line: underline"}>
+                    Current pick number: {currentPickNumber}
+                </h4>
+                <h4 className="color: #2ea44f; text-decoration-line: underline">
+                    It's {findNextToPick()}'s turn to select a driver.
+                </h4>
+            </>
+        }
+    }
 
     function UserGreeting() {
         if (team != null) {
@@ -184,8 +164,9 @@ export default function DashTop({currentUser, team, openLeague, currentLeague, i
                     <h3>League is {currentLeague?.teams?.length} of 10 teams full.</h3>
                     <PracticeGreeting/>
                     <hr/>
-                    {/*<PracticeOptionsToggle/>*/}
-                </div>;
+                    <PickInstructions/>
+                </div>
+                    ;
             }
             return <div>
                 <h2>{currentUser?.username}'s Dashboard </h2>
@@ -198,7 +179,6 @@ export default function DashTop({currentUser, team, openLeague, currentLeague, i
                 <h3> The draft picks will start when the league is full...</h3>
                 <PracticeGreeting/>
                 <hr/>
-                {/*<PracticeOptionsToggle/>*/}
             </div>;
         }
         return <div>
@@ -226,34 +206,7 @@ export default function DashTop({currentUser, team, openLeague, currentLeague, i
     );
 }
 
-// return (
-//     <>
-//         {/*<div className="col-start-2 col-span-3 box-shadow">*/}
-//         <div className="col-start-2 col-span-1 box-shadow">
-//             <div className="p-5">
-//                 <h2> "$|username's Dashboard|"</h2>
-//                 <h2> userId:{currentUser?.id}</h2>
-//                 <h2>username: {currentUser?.username}</h2>
-//                 <h2>team name: {team?.teamName}</h2>
-//                 <hr/>
-//                 <div className="row">
-//                     <div className="col-sm-5">
-//                         <div>"${isAdmin} is true"
-//                             <h3>"|Sorry, admin cannot play!|"</h3><br/>
-//                         </div>
-//                         <div>"${isAdmin} is not true"
-//                             <div>"$team1 != null"
-//                                 <p>Your team: "{teamName}"</p>
-//                                 <p>Random 1st pick draft number (1-10): {firstPickNumber}</p>
-//                                 <p>Random 2nd pick draft number (11-20): {secondPickNumber}</p>
-//                                 <hr/>
-//                                 <div>"${!leagueActive} and {!leagueFull}"
-//                                     <h3 className="pb-3">"|League is $size of 10 teams
-//                                         full.|"</h3>
-//                                     <h3> The draft picks will start when the league is full...</h3>
-//                                     <hr/>
-//                                     <div className="form-check form-switch">"$!isTestLeague"
-//                                         <input className="form-check-input"
+
 //                                             // id="testBoxToggleOff" onClick="showhide('test-box')" role="switch"
 //                                                type="checkbox"/>
 //                                         <label className="form-check-label" htmlFor="testBoxToggleOff">Show/Hide

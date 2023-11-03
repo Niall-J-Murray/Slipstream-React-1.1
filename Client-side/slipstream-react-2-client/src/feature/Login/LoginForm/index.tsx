@@ -1,13 +1,13 @@
-import React, {useState} from "react";
 import {NavigateFunction, useNavigate} from 'react-router-dom';
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import lights_on  from "../../../assets/images/lights_on.png";
 import {login} from "../../../services/auth.service";
+import {useState} from "react";
 
-type Props = {}
-
-const Login: React.FC<Props> = () => {
+// type Props = {}
+// const Login: React.FC<Props> = () => {
+export default function LoginForm() {
     const navigate: NavigateFunction = useNavigate();
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -112,5 +112,3 @@ const Login: React.FC<Props> = () => {
         </>
     );
 };
-
-export default Login;

@@ -20,16 +20,26 @@ export const getAllDrivers = async () => {
     return data;
 };
 
-// export const getAllLeagueTeams = async (leagueId: number | null | undefined) => {
-//     const data = await axios.get(API_DATA_URL + "league/" + leagueId + "/allTeams", {headers: authHeader()})
-//         .then(response => response.data);
-//     return data;
-// };
-//
-// export const getTeamLeague = async (teamId: number | null | undefined) => {
-//     const data = await axios.get(API_DATA_URL + "league/team/" + teamId, {headers: authHeader()})
-//         // .then(response => response.data);
-//         .then(response => response.data);
-//     return data;
-// };
+export const getUndraftedDrivers = async (leagueId: number | null | undefined) => {
+    const data = await axios.get(API_DATA_URL + "driver/undraftedDrivers/" + leagueId, {headers: authHeader()})
+        .then(response => response.data);
+    return data;
+};
 
+
+
+export const postPickDriver = async (userId: number | null | undefined, driverId: string | number | null | undefined) => {
+    const response = await axios
+        .post(API_DATA_URL + "driver/pick/" + userId,
+            {
+                // headers: authHeader(),
+                userId,
+                driverId,
+            });
+    // .then(response => response.data);
+    if (response.data) {
+        console.log("postPickDriver:")
+        console.log(response.data)
+        return response.data;
+    }
+};

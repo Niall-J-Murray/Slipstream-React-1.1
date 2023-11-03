@@ -1,9 +1,11 @@
 package me.niallmurray.slipstream.webrest;
 
 import me.niallmurray.slipstream.domain.Driver;
+import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
 import me.niallmurray.slipstream.service.DriverService;
 import me.niallmurray.slipstream.service.TeamService;
+import me.niallmurray.slipstream.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,12 +14,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/driver")
 public class DriverController {
   @Autowired
   DriverService driverService;
+  @Autowired
+  UserService userService;
   @Autowired
   TeamService teamService;
 
@@ -52,5 +57,26 @@ public class DriverController {
     return ResponseEntity.ok(driversInTeam);
   }
 
+  @GetMapping("/undraftedDrivers/{leagueId}")
+  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  public ResponseEntity<List<Driver>> getUndraftedDrivers(@PathVariable Long leagueId) {
+    List<Driver> undraftedDrivers = driverService.getUndraftedDrivers(leagueId);
+//    System.out.println("getAllDrivers: " + allDrivers);
+    return ResponseEntity.ok(undraftedDrivers);
+  }
 
+  @PostMapping("/driver/pick/{userId}")
+  public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, Long driverId) {
+
+    League userLeague = userService.findById(userId).getTeam().getLeague();
+    if (Boolean.TRUE.equals(teamService.isTestPick(userLeague))) {
+      teamService.addDriverToTestTeam(userId, driverId);
+    } else {
+      teamService.addDriverToTeam(userId, driverId);
+    }
+    Driver driver = driverService.findById(driverId);
+    //Async send email to next to pick
+//    emailService.asyncPickNotificationEmail(userLeague);
+//    return ResponseEntity.ok(driver);
+  }
 }

@@ -78,6 +78,13 @@ public class LeagueController {
     return ResponseEntity.ok(league.getIsActive());
   }
 
+  @GetMapping("/{leagueId}/getPickNumber")
+  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  public ResponseEntity<Integer> getPickNumber(@PathVariable Long leagueId) {
+    League league = leagueService.findById(leagueId);
+    return ResponseEntity.ok(league.getCurrentPickNumber());
+  }
+
   @PostMapping("/{leagueId}/toggleTestLeague")
 //  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<Boolean> postToggleTestLeague(@PathVariable Long leagueId) {

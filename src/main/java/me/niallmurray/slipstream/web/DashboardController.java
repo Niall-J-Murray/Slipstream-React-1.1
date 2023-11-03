@@ -4,7 +4,10 @@ import me.niallmurray.slipstream.domain.Driver;
 import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
 import me.niallmurray.slipstream.domain.User;
-import me.niallmurray.slipstream.service.*;
+import me.niallmurray.slipstream.service.DriverService;
+import me.niallmurray.slipstream.service.LeagueService;
+import me.niallmurray.slipstream.service.TeamService;
+import me.niallmurray.slipstream.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -26,8 +29,8 @@ public class DashboardController {
   private DriverService driverService;
   @Autowired
   private LeagueService leagueService;
-  @Autowired
-  private EmailService emailService;
+//  @Autowired
+//  private EmailService emailService;
 
   @GetMapping("/dashboard")
   public String redirectUserDashboard(@AuthenticationPrincipal User userAuth) {
@@ -66,13 +69,13 @@ public class DashboardController {
     // Also handles NPEs.
     if (user.getTeam() == null) {
       modelMap.addAttribute("teamLeague", currentLeague);
-      modelMap.addAttribute("availableDrivers", driverService.getUndraftedDrivers(currentLeague));
+      modelMap.addAttribute("availableDrivers", driverService.getUndraftedDrivers(currentLeague.getLeagueId()));
       modelMap.addAttribute("currentPickNumber", leagueService.getCurrentPickNumber(currentLeague));
       modelMap.addAttribute("teamsByRank", teamService.updateLeagueTeamsRankings(currentLeague));
     } else {
       modelMap.addAttribute("teamLeague", user.getTeam().getLeague());
       modelMap.addAttribute("isTestLeague", user.getTeam().getLeague().getIsPracticeLeague());
-      modelMap.addAttribute("availableDrivers", driverService.getUndraftedDrivers(user.getTeam().getLeague()));
+      modelMap.addAttribute("availableDrivers", driverService.getUndraftedDrivers(user.getTeam().getLeague().getLeagueId()));
       modelMap.addAttribute("currentPickNumber", leagueService.getCurrentPickNumber(user.getTeam().getLeague()));
       modelMap.addAttribute("teamsByRank", teamService.updateLeagueTeamsRankings(user.getTeam().getLeague()));
     }
@@ -137,7 +140,7 @@ public class DashboardController {
         user.setTeam(team);
       }
       user.getTeam().setTeamName(teamName);
-      teamService.createTeam(user,teamName);
+      teamService.createTeam(user, teamName);
       return "redirect:/dashboard/" + userId;
     }
     return "redirect:/dashboard/%d?error".formatted(userId);
@@ -163,7 +166,7 @@ public class DashboardController {
       teamService.addDriverToTeam(userId, driverId);
     }
     //Async send email to next to pick
-    emailService.asyncPickNotificationEmail(userLeague);
+//    emailService.asyncPickNotificationEmail(userLeague);
     return "redirect:/dashboard/" + userId;
   }
 

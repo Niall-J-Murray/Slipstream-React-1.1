@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import IDriver from "../../../types/driver.type.ts";
-import {getAllDrivers} from "../../../services/driver.service.ts";
+import IDriver from "../../../../types/driver.type.ts";
+import {getAllDrivers} from "../../../../services/driver.service.ts";
 
 export default function DriverStandingsTable() {
     const [driverStandings, setDriverStandings]

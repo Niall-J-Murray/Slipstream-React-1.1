@@ -12,6 +12,7 @@ import {
     getIsDraftInProgress,
     getIsLeagueActive,
     getOpenLeague,
+    getPickNumber,
     getTeamLeague,
     postToggleTestLeague
 } from "../../services/league.service.ts";
@@ -74,6 +75,8 @@ export default function Dashboard() {
         = useState<boolean>();
     const [isDraftInProgress, setIsDraftInProgress]
         = useState<boolean>(false);
+    const [currentPickNumber, setCurrentPickNumber]
+        = useState<number>(0)
 
     useEffect(() => {
         const user = getCurrentUser();
@@ -108,6 +111,10 @@ export default function Dashboard() {
                     getIsDraftInProgress(leagueData.leagueId)
                         .then(function (response) {
                             setIsDraftInProgress(response);
+                        })
+                    getPickNumber(leagueData.leagueId)
+                        .then(function (response) {
+                            setCurrentPickNumber(response);
                         })
                 } else {
                     await getOpenLeague().then(function (response) {
@@ -163,6 +170,15 @@ export default function Dashboard() {
             })
     }
 
+    function checkPickNumber(pickNumber) {
+        return pickNumber == currentPickNumber;
+    }
+
+    const findNextToPick = () => {
+        // leagueTeams?.find(team?.firstPickNumber == currentPickNumber)
+       return  leagueTeams?.find(checkPickNumber)?.teamName
+    }
+
     return (
         <>
             <View>
@@ -171,10 +187,15 @@ export default function Dashboard() {
                     <Body>
                         <DashTop
                             currentUser={currentUser}
-                            team={team} openLeague={openLeague}
+                            userData={userData}
+                            team={team}
+                            openLeague={openLeague}
                             currentLeague={currentLeague}
                             isPracticeLeague={isPracticeLeague}
                             isLeagueFull={isLeagueFull}
+                            isDraftInProgress={isDraftInProgress}
+                            currentPickNumber={currentPickNumber}
+                            findNextToPick={findNextToPick}
                         />
                         <Reminders/>
                         <PracticeDraftOptions

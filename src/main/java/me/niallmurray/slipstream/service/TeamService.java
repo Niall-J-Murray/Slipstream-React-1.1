@@ -26,6 +26,15 @@ public class TeamService {
   @Autowired
   private DriverService driverService;
 
+  public boolean isUniqueTeamName(String teamName) {
+    List<Team> allTeams = teamRepository.findAll();
+    for (Team team : allTeams) {
+      if (Objects.equals(team.getTeamName(), teamName))
+        return false;
+    }
+    return true;
+  }
+
   public Team createTeam(User user, String teamName) {
     Team team = new Team();
     team.setUser(user);
@@ -112,15 +121,6 @@ public class TeamService {
       }
     }
     return pickNumber;
-  }
-
-  public boolean isUniqueTeamName(String teamName) {
-    List<Team> allTeams = teamRepository.findAll();
-    for (Team team : allTeams) {
-      if (Objects.equals(team.getTeamName(), teamName))
-        return false;
-    }
-    return true;
   }
 
   public void addDriverToTeam(Long userId, Long driverId) {

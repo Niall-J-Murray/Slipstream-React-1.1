@@ -1,6 +1,5 @@
 package me.niallmurray.slipstream.service;
 
-import me.niallmurray.slipstream.domain.Driver;
 import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
 import me.niallmurray.slipstream.repositories.LeagueRepository;
@@ -17,8 +16,6 @@ import java.util.Objects;
 public class LeagueService {
   @Autowired
   private LeagueRepository leagueRepository;
-  @Autowired
-  private DriverService driverService;
 
   public League createLeague() {
     deleteEmptyLeagues();
@@ -26,6 +23,7 @@ public class LeagueService {
     league.setLeagueName("League " + findNewestLeagueId());
     league.setTeams(new ArrayList<>());
     league.setIsPracticeLeague(false);
+    league.setCurrentPickNumber(1);
     league.setIsActive(false);
     league.setCreationTimestamp(
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm")));
@@ -61,12 +59,19 @@ public class LeagueService {
     return teams;
   }
 
+//  public int getCurrentPickNumber(League league) {
+//    List<Driver> undraftedDrivers = driverService.getUndraftedDrivers(league.getLeagueId());
+//    if (league.getTeams().size() == 10 && undraftedDrivers.isEmpty()) {
+//      activateLeague(league);
+//    }
+//    return 21 - undraftedDrivers.size();
+//  }
+
   public int getCurrentPickNumber(League league) {
-    List<Driver> undraftedDrivers = driverService.getUndraftedDrivers(league);
-    if (league.getTeams().size() == 10 && undraftedDrivers.isEmpty()) {
+    if (league.getTeams().size() == 10 && league.getCurrentPickNumber() > 20) {
       activateLeague(league);
     }
-    return 21 - undraftedDrivers.size();
+    return league.getCurrentPickNumber();
   }
 
   public void activateLeague(League league) {

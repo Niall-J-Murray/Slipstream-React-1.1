@@ -2,7 +2,6 @@ package me.niallmurray.slipstream.service;
 
 import jakarta.transaction.Transactional;
 import me.niallmurray.slipstream.domain.Driver;
-import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
 import me.niallmurray.slipstream.dto.DriverStanding;
 import me.niallmurray.slipstream.repositories.DriverRepository;
@@ -18,6 +17,8 @@ import java.util.List;
 public class DriverService {
   @Autowired
   private DriverRepository driverRepository;
+  @Autowired
+  private LeagueService leagueService;
 
   public List<Driver> mapDTOToDrivers(List<DriverStanding> allDriverStandings) {
     List<Driver> drivers = new ArrayList<>();
@@ -59,11 +60,12 @@ public class DriverService {
     return driverRepository.findAllByOrderByStandingAsc();
   }
 
-  public List<Driver> getUndraftedDrivers(League league) {
+  public List<Driver> getUndraftedDrivers(Long leagueId) {
     List<Driver> undraftedDrivers = driverRepository.findAllByOrderByStandingAsc();
-    // Remove fired de Vries from pick options.
+    // Remove inactive de Vries and Lawson from pick options.
     undraftedDrivers.remove(driverRepository.findByCarNumber(21));
-    List<Team> teams = league.getTeams();
+    undraftedDrivers.remove(driverRepository.findByCarNumber(15));
+    List<Team> teams = leagueService.findById(leagueId).getTeams();
     for (Team team : teams) {
       List<Driver> drivers = team.getDrivers();
       undraftedDrivers.removeAll(drivers);

@@ -26,6 +26,8 @@ public class League {
   @Column()
   private Boolean isPracticeLeague;
   @Column()
+  private Integer currentPickNumber;
+  @Column()
   private Boolean isActive;
   @Column()
   private String activeTimestamp;
