@@ -46,8 +46,13 @@ public class AdminController {
     return ResponseEntity.ok(allUserAccounts);
   }
 
+  @GetMapping("/allLeagues")
+  public ResponseEntity<List<League>> getAllLeagues() {
+    return ResponseEntity.ok(leagueService.findAll());
+  }
+
   @ResponseBody
-  @GetMapping("admin/driverStandingsJSON")
+  @GetMapping("/driverStandingsJSON")
   public ResponseEntity<DriverStandingResponse> getDriverStandingsResponse() {
     return new RestTemplate().getForEntity(f1DataApi, DriverStandingResponse.class);
   }
@@ -61,9 +66,10 @@ public class AdminController {
     return driverService.mapDTOToDrivers(currentStandings);
   }
 
-  @PostMapping("/admin/addDrivers")
+  @PostMapping("/addDrivers")
   public String getAddDrivers() {
     driverService.addDrivers(getDriversFromResponse());
+    System.out.println("Drivers Added!");
     return "Drivers Added!";
   }
 
@@ -75,14 +81,14 @@ public class AdminController {
     driverService.addDrivers(latestStandings);
   }
 
-  @PostMapping("/admin/updateStandings")
+  @PostMapping("/updateStandings")
   public String getUpdateStandings() {
     driverService.updateDrivers(getDriversFromResponse());
 
     for (League league : leagueService.findAll()) {
       teamService.updateLeagueTeamsRankings(league);
     }
-
+    System.out.println("Leagues updated!");
     return "Leagues updated!";
   }
 }

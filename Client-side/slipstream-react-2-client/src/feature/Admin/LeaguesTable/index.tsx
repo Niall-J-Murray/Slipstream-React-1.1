@@ -1,0 +1,52 @@
+import {useEffect, useState} from "react";
+import {getAllLeagues} from "../../../services/admin.service.ts";
+import ILeague from "../../../types/league.type.ts";
+
+export default function LeaguesTable() {
+    const [allLeagues, setAllLeagues]
+        = useState([])
+
+
+    useEffect(() => {
+        const getDriverStandings = async () => {
+            await getAllLeagues().then(function (response) {
+                setAllLeagues(response);
+            });
+        }
+        getDriverStandings().catch(console.error);
+    }, []);
+
+    return (
+        <>
+            <div className="col-start-3 col-span-2">
+                <table className="drivers-table">
+                    <caption><h3>Leagues</h3></caption>
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>League Name</th>
+                        <th>Creation Time</th>
+                        <th>Active Time</th>
+                        <th>Practice League?</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {allLeagues?.map((league: ILeague) => {
+                        return (
+                            <tr key={league.leagueId}>
+                                <td>{league.leagueId}</td>
+                                <td>{league.leagueName}</td>
+                                <td>{league.creationTimestamp}</td>
+                                <td>{league.activeTimestamp}</td>
+                                <td>{league.isPracticeLeague}</td>
+                            </tr>
+                        )
+                    })}
+                    </tbody>
+                </table>
+            </div>
+        </>
+    );
+}
+
+

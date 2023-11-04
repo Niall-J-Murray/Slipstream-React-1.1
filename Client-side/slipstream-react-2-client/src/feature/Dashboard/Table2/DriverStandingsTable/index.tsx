@@ -25,7 +25,6 @@ export default function DriverStandingsTable() {
                     <tr>
                         <th>Rank</th>
                         <th>Points</th>
-                        {/*<th className={"username"}>Driver</th>*/}
                         <th>Driver</th>
                         <th>Nationality</th>
                         <th>Constructor</th>

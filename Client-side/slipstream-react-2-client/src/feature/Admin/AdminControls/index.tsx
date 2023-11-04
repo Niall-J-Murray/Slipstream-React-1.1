@@ -14,6 +14,7 @@ export default function AdminControls() {
 
         getAddDrivers()
             .then(r => setMessage(r));
+        // .catch(console.error);
         setLoading(false);
     }
 
@@ -21,6 +22,7 @@ export default function AdminControls() {
         console.log("UpdateStandings")
         setMessage("");
         setLoading(true);
+
         getUpdateStandings()
             .then(r => setMessage(r));
         setLoading(false);
@@ -28,18 +30,18 @@ export default function AdminControls() {
 
     return (
         <>
-        <div className="col-start-2 col-span-1 box-shadow">
-            <div className="p-5">
-                        <div>
-                            <button type={"submit"} onSubmit={handleAddDrivers}>Add Drivers</button>
-                        </div>
-                        <div>{loading ? "loading" : ""}</div>
-                        <div>{message ? message : ""}</div>
-                        <div>
-                            <button type={"submit"} onSubmit={handleUpdateStandings}>Update Standings</button>
-                        </div>
+            <div className="col-start-2 col-span-1 box-shadow">
+                <div className="p-5">
+                    <div>
+                        <button type={"submit"} onClick={() => handleAddDrivers()}>Add Drivers</button>
+                    </div>
+                    <div>{loading ? "loading" : ""}</div>
+                    <div>{message ? message : ""}</div>
+                    <div>
+                        <button type={"submit"} onClick={() => handleUpdateStandings()}>Update Standings</button>
                     </div>
                 </div>
-            </>
-            );
-            }
+            </div>
+        </>
+    );
+}

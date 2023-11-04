@@ -5,9 +5,10 @@ import View from "../../components/View";
 import BackgroundImage from "../../components/BackgroundImage";
 import Navbar from "../../components/Navbar";
 import Body from "../../components/Body";
-import AppDescription from "../Home/AppDescription";
 import AdminControls from "./AdminControls";
 import UserTable from "./UserTable";
+import DriverStandingsTable from "../Dashboard/Table2/DriverStandingsTable";
+import LeaguesTable from "./LeaguesTable";
 
 export default function Admin() {
     const [allUsers, setAllUsers]
@@ -26,8 +27,9 @@ export default function Admin() {
                     <Navbar/>
                     <Body>
                         <AdminControls/>
-                        <AppDescription/>
+                        <LeaguesTable/>
                         <UserTable allUsers={allUsers}/>
+                        <DriverStandingsTable/>
                     </Body>
                 </BackgroundImage>
             </View>
