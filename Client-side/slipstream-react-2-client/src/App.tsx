@@ -4,7 +4,6 @@ import "./App.css";
 
 import EventBus from "./common/EventBus";
 import * as AuthService from "./services/auth.service";
-import {updateOnLogout} from "./services/auth.service";
 import IUser from './types/user.type';
 // import Login from "./auth-components/Login";
 // import Register from "./auth-components/Register";
@@ -18,6 +17,7 @@ import Login from "./feature/Login";
 import Register from "./feature/Register";
 import Logout from "./feature/Logout";
 import Dashboard from "./feature/Dashboard";
+import Admin from "./feature/Admin";
 
 
 export default function App() {
@@ -80,6 +80,24 @@ export default function App() {
 
     return (
         <div>
+            <div className="container mt-3">
+                {/*<CssVarsProvider>*/}
+                {/*    <Sheet variant="outlined">*/}
+                <Routes>
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/home" element={<Home/>}/>
+                    <Route path="/register" element={<Register/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/dashboard" element={<Dashboard/>}/>
+                    <Route path="/admin" element={<Admin/>}/>
+                    <Route path="/logout" element={<Logout/>}/>
+                    {/*<Route path="/user" element={<BoardUser/>}/>*/}
+                    {/*<Route path="/mod" element={<BoardModerator/>}/>*/}
+
+                </Routes>
+                {/*    </Sheet>*/}
+                {/*</CssVarsProvider>*/}
+            </div>
             {/*<nav className="navbar navbar-expand navbar-dark bg-dark">*/}
             {/*    <Link to={"/"} className="navbar-brand">*/}
             {/*        Slipstream F1*/}
@@ -145,24 +163,6 @@ export default function App() {
             {/*        </div>*/}
             {/*    )}*/}
             {/*</nav>*/}
-
-            <div className="container mt-3">
-                {/*<CssVarsProvider>*/}
-                {/*    <Sheet variant="outlined">*/}
-                <Routes>
-                    <Route path="/" element={<Home/>}/>
-                    <Route path="/home" element={<Home/>}/>
-                    <Route path="/register" element={<Register/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/dashboard" element={<Dashboard/>}/>
-                    <Route path="/logout" element={<Logout/>}/>
-                    {/*<Route path="/user" element={<BoardUser/>}/>*/}
-                    {/*<Route path="/mod" element={<BoardModerator/>}/>*/}
-                    {/*<Route path="/admin" element={<BoardAdmin/>}/>*/}
-                </Routes>
-                {/*    </Sheet>*/}
-                {/*</CssVarsProvider>*/}
-            </div>
         </div>
     );
 
@@ -179,5 +179,5 @@ export default function App() {
     //         </Routes>
     //     </BrowserRouter>
     // );
-};
+}
 

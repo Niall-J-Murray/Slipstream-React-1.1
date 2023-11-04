@@ -33,7 +33,7 @@ export const postPickDriver = async (userId: number | null | undefined, driverId
         .post(API_DATA_URL + "driver/pick/" + userId,
             {
                 // headers: authHeader(),
-                userId,
+                // userId,
                 driverId,
             });
     // .then(response => response.data);
@@ -43,3 +43,14 @@ export const postPickDriver = async (userId: number | null | undefined, driverId
         return response.data;
     }
 };
+
+// export const postPickDriver = async (userId: number | null | undefined, driverId: string) => {
+//     const response = await axios
+//         .post(API_DATA_URL + "driver/pick/" + userId, {
+//             // headers: authHeader(),
+//             driverId,
+//         });
+//     if (response.data) {
+//         return response.data;
+//     }
+// };

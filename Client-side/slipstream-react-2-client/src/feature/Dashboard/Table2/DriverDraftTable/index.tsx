@@ -158,7 +158,7 @@ export default function DriverDraftTable() {
                     //     alert(JSON.stringify(values, null, 2));
                     // }}
                     onSubmit={(values) => {
-                        handlePick(values)
+                        handlePick(values.picked)
                     }
                     }
                 >

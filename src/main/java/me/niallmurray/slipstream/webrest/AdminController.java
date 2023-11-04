@@ -1,4 +1,4 @@
-package me.niallmurray.slipstream.web;
+package me.niallmurray.slipstream.webrest;
 
 import me.niallmurray.slipstream.domain.Driver;
 import me.niallmurray.slipstream.domain.League;
@@ -13,20 +13,16 @@ import me.niallmurray.slipstream.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Objects;
 
-@Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
+@RequestMapping("/api/admin")
 public class AdminController {
-//  @Autowired
-//  private ActiveUserStore activeUserStore;
   @Autowired
   private TeamService teamService;
   @Autowired
@@ -38,16 +34,16 @@ public class AdminController {
   @Value("${ergast.urls.base}${ergast.urls.currentDriverStandings}.json")
   private String f1DataApi;
 
-  @GetMapping("/admin")
-  public String getAdmin(ModelMap modelMap) {
+  @GetMapping("/allUsers")
+  public ResponseEntity<List<User>> getAllUsers() {
     List<User> allUserAccounts = adminService.getAllUserAccounts();
-    modelMap.addAttribute("users", allUserAccounts);
-    modelMap.addAttribute("leagues", leagueService.findAll());
-//    modelMap.addAttribute("activeUsers", activeUserStore.getUsers());
-    modelMap.addAttribute("allDrivers", driverService.sortDriversStanding());
-    modelMap.addAttribute("isLoggedIn", true);
-    modelMap.addAttribute("isAdmin", true);
-    return "admin";
+//    modelMap.addAttribute("users", allUserAccounts);
+//    modelMap.addAttribute("leagues", leagueService.findAll());
+////    modelMap.addAttribute("activeUsers", activeUserStore.getUsers());
+//    modelMap.addAttribute("allDrivers", driverService.sortDriversStanding());
+//    modelMap.addAttribute("isLoggedIn", true);
+//    modelMap.addAttribute("isAdmin", true);
+    return ResponseEntity.ok(allUserAccounts);
   }
 
   @ResponseBody
@@ -66,11 +62,9 @@ public class AdminController {
   }
 
   @PostMapping("/admin/addDrivers")
-  public String postAddDrivers(ModelMap modelMap) {
+  public String getAddDrivers() {
     driverService.addDrivers(getDriversFromResponse());
-
-    modelMap.addAttribute("allDrivers", driverService.sortDriversStanding());
-    return "redirect:/admin";
+    return "Drivers Added!";
   }
 
   // To automatically add drivers when first user attempts login,
@@ -81,14 +75,14 @@ public class AdminController {
     driverService.addDrivers(latestStandings);
   }
 
-  @PostMapping("/admin/updateDrivers")
-  public String postUpdateDriverStandings(ModelMap modelMap) {
+  @PostMapping("/admin/updateStandings")
+  public String getUpdateStandings() {
     driverService.updateDrivers(getDriversFromResponse());
 
     for (League league : leagueService.findAll()) {
       teamService.updateLeagueTeamsRankings(league);
     }
-    modelMap.addAttribute("allDrivers", driverService.sortDriversStanding());
-    return "redirect:/admin";
+
+    return "Leagues updated!";
   }
 }

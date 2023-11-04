@@ -1,5 +1,6 @@
 package me.niallmurray.slipstream.webrest;
 
+import jakarta.validation.Valid;
 import me.niallmurray.slipstream.domain.Driver;
 import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
@@ -65,18 +66,20 @@ public class DriverController {
     return ResponseEntity.ok(undraftedDrivers);
   }
 
-  @PostMapping("/driver/pick/{userId}")
-  public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, Long driverId) {
-
+  @PostMapping("/pick/{userId}")
+  public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, @Valid @RequestParam("driverId") Long driverId) {
+    System.out.println("driverID: " + driverId);
+//    Long driverIdFromJson = Long.valueOf(driverId.substring(13, (driverId.length() - 2)));
+    Long driverIdFromJson = driverId;
     League userLeague = userService.findById(userId).getTeam().getLeague();
     if (Boolean.TRUE.equals(teamService.isTestPick(userLeague))) {
-      teamService.addDriverToTestTeam(userId, driverId);
+      teamService.addDriverToTestTeam(userId, driverIdFromJson);
     } else {
-      teamService.addDriverToTeam(userId, driverId);
+      teamService.addDriverToTeam(userId, driverIdFromJson);
     }
-    Driver driver = driverService.findById(driverId);
+    Driver driver = driverService.findById(driverIdFromJson);
     //Async send email to next to pick
 //    emailService.asyncPickNotificationEmail(userLeague);
-//    return ResponseEntity.ok(driver);
+    return ResponseEntity.ok(driver);
   }
 }

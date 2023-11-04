@@ -1,26 +1,36 @@
-export default function Admin(props: any) {
-    const {users} = props;
-    // const {userId, ...rest} = users;
-    // const getValue = (key: any) => {
-    //     const {[key]: returnValue} = rest;
-    //     return returnValue;
-    // }
-    // console.log(getValue(users))
+import {useEffect, useState} from "react";
+import {getAllUsers} from "../../services/admin.service.ts";
+import IUser from "../../types/user.type.ts";
+import View from "../../components/View";
+import BackgroundImage from "../../components/BackgroundImage";
+import Navbar from "../../components/Navbar";
+import Body from "../../components/Body";
+import AppDescription from "../Home/AppDescription";
+import AdminControls from "./AdminControls";
+import UserTable from "./UserTable";
+
+export default function Admin() {
+    const [allUsers, setAllUsers]
+        = useState<Array<IUser> | undefined>([]);
+
+    useEffect(() => {
+        getAllUsers().then(response => {
+            setAllUsers(response);
+        })
+    }, []);
+
     return (
         <>
-            <div>Admin</div>
-            <ul>
-                {users.map((user: any) => {
-                    return (
-                        <li key={userId}>
-                            {user.username}
-                        </li>
-                    )
-                })}
-                {/*<li>*/}
-                {/*    {getValue(userId)}*/}
-                {/*</li>*/}
-            </ul>
+            <View>
+                <BackgroundImage>
+                    <Navbar/>
+                    <Body>
+                        <AdminControls/>
+                        <AppDescription/>
+                        <UserTable allUsers={allUsers}/>
+                    </Body>
+                </BackgroundImage>
+            </View>
         </>
     );
 }
