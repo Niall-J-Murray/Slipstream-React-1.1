@@ -45,7 +45,10 @@ export default function DriverStandingsTable() {
                     </tbody>
                 </table>
                 <h6 className="font-size: small; margin-left: 1em">
-                    *Note: Ricciardo replaced de Vries on July 11th 2023
+                    * Driver Changes:
+                    <br/>Ricciardo replaced de Vries on July 11th 2023.
+                    <br/>Lawson replaced Ricciardo on August 27th 2023.
+                    <br/>Ricciardo replaced Lawson on October 20th 2023.
                 </h6>
             </div>
         </>

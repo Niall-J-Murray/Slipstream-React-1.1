@@ -87,21 +87,99 @@ body {
 /*    color: white;*/
 /*}*/
 
-a{
+a {
     font-family: Font1, Arial, Helvetica, sans-serif;
     color: white;
 }
 
 
-.btn-success,
+/*a:hover{*/
+/*    color:#2ecc71;*/
+/*}*/
+
+/*.main{*/
+/*    width: 100%;*/
+/*}*/
+
+/*.sub-main{*/
+/*    width: 30%;*/
+/*    margin:22px;*/
+/*    float: left;*/
+/*}*/
+
+/*.btn{*/
+/*    text-align: center;*/
+/*    cursor: pointer;*/
+/*    font-size:24px;*/
+/*    margin: 0 0 0 100px;*/
+/*}*/
+
+.btn-proceed,
+.btn-dropdown {
+    text-align: center;
+    cursor: pointer;
+    /*font-size:24px;*/
+    /*margin: 0 0 0 100px;*/
+    border-radius: 4px;
+    background-color: red;
+    border: none;
+    padding: 5px;
+    width: 200px;
+    transition: all 0.5s;
+}
+
+.btn-proceed span,
+.btn-dropdown span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.btn-proceed span:after {
+    content: '⇀';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.btn-dropdown span:after {
+    content: '⇃';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.btn-proceed:hover span,
+.btn-dropdown:hover span {
+    padding-right: 25px;
+}
+
+.btn-proceed:hover span:after,
+.btn-dropdown:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+.btn-proceed,
+.btn-dropdown,
 .btn-link {
     font-family: Font1, Arial, Helvetica, sans-serif;
-    background-color: orangered;
+    background-color: red;
     color: white;
 }
 
-.btn-success:hover {
-    background: #2ea44f;
+.btn-proceed:hover {
+    background-color: orangered;
+}
+
+.btn-proceed:focus,
+.btn-dropdown:focus {
+    background-color: #2ea44f;
 }
 
 a:hover,
@@ -123,15 +201,38 @@ a:hover,
 #pick-button,
 #pick-button-dis,
 #test-pick-button {
+    font-family: Font1, Arial, Helvetica, sans-serif;
+    color: white;
+    font-weight: bold;
+    text-decoration-line: underline;
     padding: 0;
     border: none;
     background: none;
 }
 
-input[type='radio'] {
-    border: 1px solid black;
-    padding: 0;
-}
+/*.confirm-pick,*/
+/*.confirm-pick-dis,*/
+/*.confirm-test-pick {*/
+/*    background-color: orangered;*/
+/*}*/
+
+/*.confirm-pick:hover,*/
+/*.confirm-test-pick:hover {*/
+/*    background-color: #2ea44f;*/
+/*}*/
+
+/*.pick-button,*/
+/*.pick-button-dis,*/
+/*.test-pick-button {*/
+/*    padding: 0;*/
+/*    border: none;*/
+/*    background: none;*/
+/*}*/
+
+/*input[type='radio'] {*/
+/*    border: 1px solid black;*/
+/*    padding: 0;*/
+/*}*/
 
 .form-check-label {
     padding: 0;

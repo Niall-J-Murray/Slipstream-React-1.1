@@ -99,9 +99,9 @@ export default function Navbar() {
                                 <Menu as="div" className="relative ml-3">
                                     <div>
                                         <Menu.Button
-                                            className="btn btn-success flex rounded-full bg-black-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black-800 p-1">
+                                            className="btn btn-dropdown flex rounded-full bg-black-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black-800 p-1">
                                             <span className="sr-only">Open user menu</span>
-                                            <div>{dropdownName(currentUser)}</div>
+                                            <span>{dropdownName(currentUser)}</span>
                                         </Menu.Button>
                                     </div>
                                     <Transition

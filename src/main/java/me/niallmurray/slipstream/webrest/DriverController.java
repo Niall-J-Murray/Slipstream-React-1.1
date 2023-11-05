@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -67,17 +68,18 @@ public class DriverController {
   }
 
   @PostMapping("/pick/{userId}")
-  public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, @Valid @RequestParam("driverId") Long driverId) {
-    System.out.println("driverID: " + driverId);
-//    Long driverIdFromJson = Long.valueOf(driverId.substring(13, (driverId.length() - 2)));
-    Long driverIdFromJson = driverId;
+  public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, @Valid @RequestBody Map<String, Long> requestData) {
+    System.out.println("driverID: " + requestData.get("driverId"));
+
+    Long driverId = requestData.get("driverId");
     League userLeague = userService.findById(userId).getTeam().getLeague();
+
     if (Boolean.TRUE.equals(teamService.isTestPick(userLeague))) {
-      teamService.addDriverToTestTeam(userId, driverIdFromJson);
+      teamService.addDriverToTestTeam(userId, driverId);
     } else {
-      teamService.addDriverToTeam(userId, driverIdFromJson);
+      teamService.addDriverToTeam(userId, driverId);
     }
-    Driver driver = driverService.findById(driverIdFromJson);
+    Driver driver = driverService.findById(driverId);
     //Async send email to next to pick
 //    emailService.asyncPickNotificationEmail(userLeague);
     return ResponseEntity.ok(driver);

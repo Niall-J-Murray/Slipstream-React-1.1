@@ -1,14 +1,34 @@
 import * as Yup from "yup";
 import {NavigateFunction, useNavigate} from 'react-router-dom';
 import {ErrorMessage, Field, Form, Formik} from "formik";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {createTeam} from "../../../services/team.service.ts";
 
-export default function DashTop({currentUser, userData, team, openLeague, currentLeague, isPracticeLeague, isLeagueFull, isDraftInProgress, currentPickNumber, findNextToPick}) {
+export default function DashTop({
+                                    currentUser,
+                                    userData,
+                                    team,
+                                    openLeague,
+                                    currentLeague,
+                                    isPracticeLeague,
+                                    isLeagueFull,
+                                    isDraftInProgress,
+                                    currentPickNumber,
+                                    findNextToPick
+                                }) {
     const navigate: NavigateFunction = useNavigate();
 
-    const [loading, setLoading] = useState<boolean>(false);
-    const [message, setMessage] = useState<string>("");
+    const [loading, setLoading]
+        = useState<boolean>(false);
+    const [message, setMessage]
+        = useState<string>("");
+    const [leagueSize, setLeagueSize]
+        = useState<number>();
+
+    useEffect(() => {
+        setLeagueSize(currentLeague?.teams.length);
+    }, []);
+
 
     const initialValues: {
         // userId: number | null | undefined;
@@ -161,7 +181,7 @@ export default function DashTop({currentUser, userData, team, openLeague, curren
                     <p>Random 1st pick draft number: {firstPickNumber}</p>
                     <p>Random 2nd pick draft number: {secondPickNumber}</p>
                     <hr/>
-                    <h3>League is {currentLeague?.teams?.length} of 10 teams full.</h3>
+                    <h3>League is {leagueSize} of 10 teams full.</h3>
                     <PracticeGreeting/>
                     <hr/>
                     <PickInstructions/>
@@ -175,7 +195,7 @@ export default function DashTop({currentUser, userData, team, openLeague, curren
                 <p>Random 1st pick draft number: {firstPickNumber}</p>
                 <p>Random 2nd pick draft number: {secondPickNumber}</p>
                 <hr/>
-                <h3>League is {currentLeague?.teams?.length} of 10 teams full.</h3>
+                <h3>League is {leagueSize} of 10 teams full.</h3>
                 <h3> The draft picks will start when the league is full...</h3>
                 <PracticeGreeting/>
                 <hr/>

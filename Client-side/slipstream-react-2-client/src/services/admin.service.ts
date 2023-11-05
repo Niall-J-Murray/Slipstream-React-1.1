@@ -14,13 +14,13 @@ export const getAllLeagues = async () => {
 };
 
 export const getAddDrivers = async () => {
-    console.log("Drivers Added!")
+    console.log("Drivers Added Axios")
     return await axios.get(API_DATA_URL + "/addDrivers", {headers: authHeader()})
         .then(response => response.data);
 };
 
 export const getUpdateStandings = async () => {
-    console.log("Leagues updated!")
+    console.log("Leagues updated Axios")
     return await axios.get(API_DATA_URL + "/updateStandings", {headers: authHeader()})
         .then(response => response.data);
 };

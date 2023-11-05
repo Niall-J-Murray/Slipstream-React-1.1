@@ -56,15 +56,36 @@ public class DriverService {
     }
   }
 
+//  public List<Driver> sortDriversStanding() {
+//    return driverRepository.findAllByOrderByStandingAsc();
+//  }
+
   public List<Driver> sortDriversStanding() {
-    return driverRepository.findAllByOrderByStandingAsc();
+    List<Driver> driverStandings = driverRepository.findAllByOrderByStandingAsc();
+    for (Driver driver : driverStandings) {
+      asteriskReplacedDrivers(driver, "de Vries");
+      asteriskReplacedDrivers(driver, "Ricciardo");
+      asteriskReplacedDrivers(driver, "Lawson");
+    }
+    return driverStandings;
+  }
+
+  public void asteriskReplacedDrivers(Driver driver, String surname) {
+    if (driver.getSurname().equalsIgnoreCase(surname)) {
+      driver.setSurname(driver.getSurname() + "*");
+    }
+  }
+
+  public List<Driver> removeInactiveDrivers() {
+    // Filter out any drivers who are no longer active due to injury or being dropped by their team.
+    List<Driver> driversStandings = sortDriversStanding();
+    driversStandings.removeIf((driver -> driver.getShortName().equalsIgnoreCase("DEV")));
+    driversStandings.removeIf((driver -> driver.getShortName().equalsIgnoreCase("LAW")));
+    return driversStandings;
   }
 
   public List<Driver> getUndraftedDrivers(Long leagueId) {
-    List<Driver> undraftedDrivers = driverRepository.findAllByOrderByStandingAsc();
-    // Remove inactive de Vries and Lawson from pick options.
-    undraftedDrivers.remove(driverRepository.findByCarNumber(21));
-    undraftedDrivers.remove(driverRepository.findByCarNumber(15));
+    List<Driver> undraftedDrivers = removeInactiveDrivers();
     List<Team> teams = leagueService.findById(leagueId).getTeams();
     for (Team team : teams) {
       List<Driver> drivers = team.getDrivers();
@@ -72,6 +93,19 @@ public class DriverService {
     }
     return undraftedDrivers;
   }
+
+//  public List<Driver> getUndraftedDrivers(Long leagueId) {
+//    List<Driver> undraftedDrivers = driverRepository.findAllByOrderByStandingAsc();
+//    // Remove inactive de Vries and Lawson from pick options.
+//    undraftedDrivers.remove(driverRepository.findByCarNumber(21));
+//    undraftedDrivers.remove(driverRepository.findByCarNumber(15));
+//    List<Team> teams = leagueService.findById(leagueId).getTeams();
+//    for (Team team : teams) {
+//      List<Driver> drivers = team.getDrivers();
+//      undraftedDrivers.removeAll(drivers);
+//    }
+//    return undraftedDrivers;
+//  }
 
   public Driver findById(Long driverId) {
     return driverRepository.findById(driverId).orElse(null);

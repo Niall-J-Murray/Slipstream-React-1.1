@@ -113,7 +113,7 @@
                       th:object="${user}">
                   <div>
                     <h5>Changed your mind, or want to join a new league?</h5>
-                    <button class="btn btn-success" id="delete-team-button" type="submit">
+                    <button class="btn btn-proceed" id="delete-team-button" type="submit">
                       Delete Team
                     </button>
                   </div>
@@ -152,7 +152,7 @@
                       </div>
                       <input th:field="${currentLeague}" th:value="${currentLeague}" type="hidden"/>
                       <div>
-                        <button class="btn btn-success m-2" id="submit-btn" type="submit">Submit</button>
+                        <button class="btn btn-proceed m-2" id="submit-btn" type="submit">Submit</button>
                       </div>
                     </div>
                   </form>
@@ -252,7 +252,7 @@
                         th:action="@{/dashboard/{userId}/addTestTeam (userId=${user.userId})}"
                         th:object="${user}">
                     <div>
-                      <button class="btn btn-success" id="test-team-button" type="submit">
+                      <button class="btn btn-proceed" id="test-team-button" type="submit">
                         Add Test Team
                       </button>
                     </div>
@@ -290,7 +290,7 @@
                           th:action="@{/dashboard/{userId}/deleteTestTeams (userId=${user.userId})}"
                           th:object="${user}">
                       <div>
-                        <button class="btn btn-success" id="delete-test-teams-button" type="submit">
+                        <button class="btn btn-proceed" id="delete-test-teams-button" type="submit">
                           Delete Test Teams
                         </button>
                       </div>
@@ -336,13 +336,13 @@
             <form action="" method="POST" th:action="@{/dashboard/{userId}/draftPick (userId=${user.userId})}"
                   th:object="${driver}">
               <th style="width: 6em" id="confirm-pick-dis" th:if="${leagueFull and !timeToPick and !isTestPick}">
-                <button class="btn btn-success" disabled id="pick-button-dis" type="submit">Confirm Pick</button>
+                <button class="btn btn-proceed" disabled id="pick-button-dis" type="submit">Confirm Pick</button>
               </th>
               <th style="width: 6em" id="confirm-pick" th:if="${leagueFull and timeToPick}">
-                <button class="btn btn-success" id="pick-button" type="submit"><u>Confirm</u> Pick</button>
+                <button class="btn btn-proceed" id="pick-button" type="submit"><u>Confirm</u> Pick</button>
               </th>
               <th style="width: 6em" id="confirm-test-pick" th:if="${leagueFull and isTestPick}">
-                <button class="btn btn-success" id="test-pick-button" type="submit">Confirm Pick</button>
+                <button class="btn btn-proceed" id="test-pick-button" type="submit">Confirm Pick</button>
               </th>
               <th style="width: 9em">Driver</th>
               <th style="width: 5em">Rank</th>

@@ -66,11 +66,11 @@ public class AdminController {
     return driverService.mapDTOToDrivers(currentStandings);
   }
 
-  @PostMapping("/addDrivers")
+  @GetMapping("/addDrivers")
   public String getAddDrivers() {
     driverService.addDrivers(getDriversFromResponse());
-    System.out.println("Drivers Added!");
-    return "Drivers Added!";
+    System.out.println("Drivers Added Spring Boot");
+    return "Drivers Added Response";
   }
 
   // To automatically add drivers when first user attempts login,
@@ -81,7 +81,7 @@ public class AdminController {
     driverService.addDrivers(latestStandings);
   }
 
-  @PostMapping("/updateStandings")
+  @GetMapping("/updateStandings")
   public String getUpdateStandings() {
     driverService.updateDrivers(getDriversFromResponse());
 
@@ -89,6 +89,6 @@ public class AdminController {
       teamService.updateLeagueTeamsRankings(league);
     }
     System.out.println("Leagues updated!");
-    return "Leagues updated!";
+    return "Leagues Updated Response";
   }
 }

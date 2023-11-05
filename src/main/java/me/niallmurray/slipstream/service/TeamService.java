@@ -153,7 +153,7 @@ public class TeamService {
   }
 
   public Boolean isTestPick(League league) {
-    return getNextToPickName(league) != null && (getNextToPickName(league).startsWith("Test User"));
+    return getNextToPickName(league) != null && (getNextToPickName(league).startsWith("Test_User"));
   }
 
   public Boolean hasTestTeams(League league) {

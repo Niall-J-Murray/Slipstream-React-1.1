@@ -9,9 +9,10 @@ import {useState} from "react";
 // const Login: React.FC<Props> = () => {
 export default function LoginForm() {
     const navigate: NavigateFunction = useNavigate();
-
-    const [loading, setLoading] = useState<boolean>(false);
-    const [message, setMessage] = useState<string>("");
+    const [loading, setLoading]
+        = useState<boolean>(false);
+    const [message, setMessage]
+        = useState<string>("");
 
     const initialValues: {
         username: string;

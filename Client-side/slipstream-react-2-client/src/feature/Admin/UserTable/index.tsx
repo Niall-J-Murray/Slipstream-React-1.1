@@ -1,7 +1,6 @@
 import IUser from "../../../types/user.type.ts";
 
-export default function UserTable({allUsers}) {
-
+export default function UserTable(allUsers: IUser[]) {
     return (
         <>
             <div className="col-start-2 col-span-3">

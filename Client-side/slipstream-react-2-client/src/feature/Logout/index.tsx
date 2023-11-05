@@ -28,13 +28,11 @@ export default function Logout() {
                     alt="red-lights"
                     className="login-pic col-start-1 col-span-3"
                 />
-                <div className={"col-start-2 col-span-3"}>Are you sure?</div>
-
-                <div className={"col-start-2 col-span-3"}>
-                    <button className="btn btn-success" type="submit" onClick={logOut}>
+                <label className={"col-start-2 col-span-3"}>Are you sure?
+                    <button className="btn btn-proceed" type="submit" onClick={logOut}>
                         <span>Confirm Logout</span>
                     </button>
-                </div>
+                </label>
             </div>
         </div>;
     }

@@ -1,69 +1,12 @@
-import {useEffect, useState} from "react";
-import {Field, Form, Formik} from "formik";
-import IUser from "../../../../types/user.type.ts";
-import ITeam from "../../../../types/team.type.ts";
-import ILeague from "../../../../types/league.type.ts";
-import IDriver from "../../../../types/driver.type.ts";
-import {getCurrentUser} from "../../../../services/auth.service.ts";
-import {getUserData} from "../../../../services/user.service.ts";
-import {getAllLeagueTeams, getTeamLeague} from "../../../../services/league.service.ts";
-import {getAllDrivers, getUndraftedDrivers, postPickDriver} from "../../../../services/driver.service.ts";
-import {NavigateFunction, useNavigate} from "react-router-dom";
 import * as Yup from "yup";
+import {NavigateFunction, useNavigate} from "react-router-dom";
+import {useState} from "react";
+import {postPickDriver} from "../../../../services/driver.service.ts";
+import {Field, Form, Formik} from "formik";
+import IDriver from "../../../../types/driver.type.ts";
 
-export default function DriverDraftTable() {
-    const [currentUser, setCurrentUser]
-        = useState<IUser | undefined>();
-    const [userData, setUserData]
-        = useState<IUser | undefined>();
-    const [team, setTeam]
-        = useState<ITeam | undefined>();
-    const [leagueTeams, setLeagueTeams]
-        = useState<Array<ITeam> | undefined>([]);
-    const [currentLeague, setCurrentLeague]
-        = useState<ILeague | undefined>();
-    const [driverStandings, setDriverStandings]
-        = useState<Array<IDriver> | undefined>([]);
-    const [undraftedDrivers, setUndraftedDrivers]
-        = useState<Array<IDriver> | undefined>([]);
-
-    console.log(currentUser, userData, team, leagueTeams, currentLeague)
-
-    useEffect(() => {
-        const user = getCurrentUser();
-        setCurrentUser(user);
-        const fetchUserData = async () => {
-            if (user != null) {
-                const userData = await getUserData(user.id);
-                setUserData(userData);
-                setTeam(userData.team)
-
-                const leagueData = await getTeamLeague(userData.team.id);
-                setCurrentLeague(leagueData);
-                await getAllLeagueTeams(leagueData.leagueId)
-                    .then(function (response) {
-                        setLeagueTeams(response)
-                    })
-                await getUndraftedDrivers(leagueData.leagueId)
-                    .then(function (response) {
-                        setUndraftedDrivers(response)
-                    })
-            }
-            await getAllDrivers().then(function (response) {
-                setDriverStandings(response);
-            });
-
-        }
-        fetchUserData().catch(console.error);
-        // console.log("DriverDraftTable:")
-        // console.log(currentLeague)
-        // console.log(currentUser)
-        // console.log(userData)
-        // console.log(team)
-    }, []);
-
+export default function DriverDraftTable({currentUser, undraftedDrivers}) {
     const navigate: NavigateFunction = useNavigate();
-
     const [loading, setLoading] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
 
@@ -73,46 +16,10 @@ export default function DriverDraftTable() {
         driverId: null,
     };
 
-    // const initialValues: {
-    //     userId: number | null | undefined;
-    //     driverId: number | null | undefined;
-    // } = {
-    //     userId: currentUser?.id,
-    //     driverId: null,
-    // };
-
-    // const initialValues = driverId: number;
-    // const initialValues = null;
-
     const validationSchema = Yup.object().shape({
         userId: Yup.string().required("Invalid user ID."),
         driverId: Yup.string().required("Please select a driver.")
     });
-
-    // const handlePick = (formValue: { driverId: number | null | undefined }) => {
-    //     const {driverId} = formValue;
-    //     console.log("handlePick")
-    //     setMessage("");
-    //     setLoading(true);
-    //
-    //     postPickDriver(currentUser?.id, driverId).then(
-    //         () => {
-    //             navigate("/dashboard");
-    //             window.location.reload();
-    //         },
-    //         (error) => {
-    //             const resMessage =
-    //                 (error.response &&
-    //                     error.response.data &&
-    //                     error.response.data.message) ||
-    //                 error.message ||
-    //                 error.toString();
-    //
-    //             setLoading(false);
-    //             setMessage(resMessage);
-    //         }
-    //     );
-    // };
 
     // Todo Display correct info and options in dash-top depending on users team/league status.
     //  Start with toggling practice options switch and toggle practice mode functionality.
@@ -184,12 +91,11 @@ export default function DriverDraftTable() {
                                     <caption><h3>Undrafted Drivers -
                                         <small>({undraftedDrivers?.length}/20 remaining)</small></h3>
                                     </caption>
-
                                     <thead>
                                     <tr>
 
                                         <th id="confirm-test-pick">
-                                            <button type="submit">Submit</button>
+                                            <button id="pick-button" type="submit">Submit</button>
                                             {/*<div className="form-group">*/}
                                             {/*    <button name="driver-pick" className="btn btn-success" id="test-pick-button"*/}
                                             {/*            type="submit"*/}
@@ -210,7 +116,7 @@ export default function DriverDraftTable() {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {undraftedDrivers?.map(driver => {
+                                    {undraftedDrivers?.map((driver: IDriver) => {
                                         return (
                                             <tr key={driver.driverId}>
                                                 <td>

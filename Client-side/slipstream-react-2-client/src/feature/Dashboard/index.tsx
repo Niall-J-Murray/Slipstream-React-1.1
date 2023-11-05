@@ -23,6 +23,8 @@ import ITeam from "../../types/team.type.ts";
 import ILeague from "../../types/league.type.ts";
 import PracticeDraftOptions from "./PracticeDraftOptions";
 import {createTestTeam} from "../../services/team.service.ts";
+import IDriver from "../../types/driver.type.ts";
+import {getUndraftedDrivers} from "../../services/driver.service.ts";
 
 
 // interface DashboardParams {
@@ -75,8 +77,24 @@ export default function Dashboard() {
         = useState<boolean>();
     const [isDraftInProgress, setIsDraftInProgress]
         = useState<boolean>(false);
+    const [undraftedDrivers, setUndraftedDrivers]
+        = useState<Array<IDriver> | undefined>([]);
     const [currentPickNumber, setCurrentPickNumber]
         = useState<number>(0)
+
+    // doSomething()
+    //     .then((result) => doSomethingElse(result))
+    //     .then((newResult) => doThirdThing(newResult))
+    //     .then((finalResult) => {
+    //         console.log(`Got the final result: ${finalResult}`);
+    //     })
+    //     .catch(failureCallback);
+    // Important: Always return results,
+    // otherwise callbacks won't catch the result of a previous promise
+    // (with arrow functions, () => x is short for () => { return x; }).
+    // If the previous handler started a promise but did not return it,
+    // there's no way to track its settlement anymore,
+    // and the promise is said to be "floating".
 
     useEffect(() => {
         const user = getCurrentUser();
@@ -115,6 +133,10 @@ export default function Dashboard() {
                     getPickNumber(leagueData.leagueId)
                         .then(function (response) {
                             setCurrentPickNumber(response);
+                        })
+                    getUndraftedDrivers(leagueData.leagueId)
+                        .then(function (response) {
+                            setUndraftedDrivers(response);
                         })
                 } else {
                     await getOpenLeague().then(function (response) {
@@ -170,13 +192,13 @@ export default function Dashboard() {
             })
     }
 
-    function checkPickNumber(pickNumber) {
+    function checkPickNumber(pickNumber: number) {
         return pickNumber == currentPickNumber;
     }
 
     const findNextToPick = () => {
         // leagueTeams?.find(team?.firstPickNumber == currentPickNumber)
-       return  leagueTeams?.find(checkPickNumber)?.teamName
+        return leagueTeams?.find(checkPickNumber)?.teamName
     }
 
     return (
@@ -214,10 +236,11 @@ export default function Dashboard() {
                             leagueTeams={leagueTeams}
                         />
                         <Table2
+                            currentUser={currentUser}
                             isLeagueFull={isLeagueFull}
                             isLeagueActive={isLeagueActive}
                             isDraftInProgress={isDraftInProgress}
-                        />
+                            undraftedDrivers={undraftedDrivers}/>
                     </Body>
                 </BackgroundImage>
             </View>

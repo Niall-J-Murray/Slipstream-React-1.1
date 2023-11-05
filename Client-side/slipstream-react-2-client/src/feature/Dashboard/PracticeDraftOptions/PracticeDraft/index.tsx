@@ -57,7 +57,7 @@ export default function PracticeDraft({
                     <div>
                         <h5>Click below to add a test team to this league:</h5>
                         <div>
-                            <button className="btn btn-success" id="test-team-button" type="submit"
+                            <button className="btn btn-proceed" id="test-team-button" type="submit"
                                     onClick={addTestTeam}>
                                 Add Test Team
                             </button>
