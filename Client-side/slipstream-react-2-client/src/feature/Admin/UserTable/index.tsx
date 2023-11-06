@@ -1,13 +1,14 @@
 import IUser from "../../../types/user.type.ts";
 
-export default function UserTable(allUsers: IUser[]) {
+export default function UserTable({allUsers}) {
+    const users:IUser[] = allUsers;
     return (
         <>
             <div className="col-start-2 col-span-3">
                 <div>
                     <table className="table drivers-table">
                         <caption><h3>Users -
-                            <small>({allUsers?.length} total)</small></h3>
+                            <small>({users?.length} total)</small></h3>
                         </caption>
                         <thead>
                         <tr>
@@ -18,7 +19,7 @@ export default function UserTable(allUsers: IUser[]) {
                         </tr>
                         </thead>
                         <tbody>
-                        {allUsers?.map((user: IUser) => {
+                        {users?.map((user: IUser) => {
                             return (
                                 <tr key={user.id}>
                                     <td>{user.username}</td>

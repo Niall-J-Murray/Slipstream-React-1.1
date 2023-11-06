@@ -23,8 +23,8 @@ export default function DriverStandingsTable() {
                     <caption><h3>F1 Drivers Championship</h3></caption>
                     <thead>
                     <tr>
-                        <th>Rank</th>
-                        <th>Points</th>
+                        <th>#</th>
+                        <th>Pts</th>
                         <th>Driver</th>
                         <th>Nationality</th>
                         <th>Constructor</th>
@@ -44,12 +44,14 @@ export default function DriverStandingsTable() {
                     })}
                     </tbody>
                 </table>
-                <h6 className="font-size: small; margin-left: 1em">
-                    * Driver Changes:
-                    <br/>Ricciardo replaced de Vries on July 11th 2023.
-                    <br/>Lawson replaced Ricciardo on August 27th 2023.
-                    <br/>Ricciardo replaced Lawson on October 20th 2023.
-                </h6>
+                <div>
+                    <h6>
+                        * Driver Changes:
+                        <br/>Ricciardo replaced de Vries on July 11th 2023.
+                        <br/>Lawson replaced Ricciardo on August 27th 2023.
+                        <br/>Ricciardo replaced Lawson on October 20th 2023.
+                    </h6>
+                </div>
             </div>
         </>
     );

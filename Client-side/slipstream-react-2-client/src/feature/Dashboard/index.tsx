@@ -11,6 +11,7 @@ import {
     getAllLeagueTeams,
     getIsDraftInProgress,
     getIsLeagueActive,
+    getNextPickName,
     getOpenLeague,
     getPickNumber,
     getTeamLeague,
@@ -26,34 +27,6 @@ import {createTestTeam} from "../../services/team.service.ts";
 import IDriver from "../../types/driver.type.ts";
 import {getUndraftedDrivers} from "../../services/driver.service.ts";
 
-
-// interface DashboardParams {
-//     user: {
-//         authorities: Set<{ Authority: Object }>,
-//         email: String,
-//         emailsReceived: Number,
-//         isTestUser: Boolean,
-//         lastLogout: String,
-//         password: String,
-//         team: {
-//             teamId: Number,
-//             league: Object,
-//             user: { user: Object },
-//             firstPickNumber: Number,
-//             secondPickNumber: Number,
-//             teamName: String,
-//             isTestTeam: Boolean,
-//             startingPoints: Number,
-//             teamPoints: Number,
-//             ranking: Number
-//             drivers: [object]
-//         },
-//         userId: Number,
-//         username: String
-//     };
-//     users: [{ user:object }];
-// }
-
 export default function Dashboard() {
     const [currentUser, setCurrentUser]
         = useState<IUser | undefined>();
@@ -61,12 +34,12 @@ export default function Dashboard() {
         = useState<IUser | undefined>();
     const [team, setTeam]
         = useState<ITeam | undefined>();
+    const [openLeague, setOpenLeague]
+        = useState<ILeague | undefined>();
     const [currentLeague, setCurrentLeague]
         = useState<ILeague | undefined>();
     const [leagueTeams, setLeagueTeams]
         = useState<Array<ITeam> | undefined>([]);
-    const [openLeague, setOpenLeague]
-        = useState<ILeague | undefined>();
     const [isLeagueActive, setIsLeagueActive]
         = useState<boolean>(false);
     const [isLeagueFull, setIsLeagueFull]
@@ -81,6 +54,8 @@ export default function Dashboard() {
         = useState<Array<IDriver> | undefined>([]);
     const [currentPickNumber, setCurrentPickNumber]
         = useState<number>(0)
+    const [currentPickName, setCurrentPickName]
+        = useState<string | undefined>("");
 
     // doSomething()
     //     .then((result) => doSomethingElse(result))
@@ -109,10 +84,8 @@ export default function Dashboard() {
                     .then(function (response) {
                         setOpenLeague(response);
                     })
-                if (userData.team.id) {
+                if (userData.team) {
                     const leagueData = await getTeamLeague(userData.team.id);
-                    setCurrentLeague(leagueData);
-                    setIsPracticeLeague(leagueData.isPracticeLeague)
                     await getAllLeagueTeams(leagueData.leagueId)
                         .then(function (response) {
                             setLeagueTeams(response)
@@ -121,7 +94,6 @@ export default function Dashboard() {
                         .then(function (response) {
                             setIsLeagueActive(response);
                         })
-                    setIsLeagueFull((leagueData.teams.length) >= 10)
                     getIsLeagueActive(leagueData.leagueId)
                         .then(function (response) {
                             setIsLeagueActive(response);
@@ -134,23 +106,35 @@ export default function Dashboard() {
                         .then(function (response) {
                             setCurrentPickNumber(response);
                         })
+                    getNextPickName(leagueData.leagueId)
+                        .then(function (response) {
+                            setCurrentPickName(response);
+                        })
                     getUndraftedDrivers(leagueData.leagueId)
                         .then(function (response) {
                             setUndraftedDrivers(response);
                         })
+                    setCurrentLeague(leagueData);
+                    setIsPracticeLeague(leagueData.isPracticeLeague)
+                    if (leagueData.teams.length >= 10) {
+                        setIsLeagueFull(true)
+                    }
                 } else {
-                    await getOpenLeague().then(function (response) {
-                        setOpenLeague(response);
-                        setCurrentLeague(response);
-                        getAllLeagueTeams(response.leagueId)
-                            .then(function (response) {
-                                setLeagueTeams(response)
-                            })
-                        getIsLeagueActive(response.leagueId)
-                            .then(function (response) {
-                                setIsLeagueActive(response);
-                            })
-                    })
+                    await getOpenLeague()
+                        .then(function (response) {
+                            setOpenLeague(response);
+                            setCurrentLeague(response);
+                            getIsLeagueActive(response.leagueId)
+                                .then(function (response) {
+                                    setIsLeagueActive(response);
+                                })
+                            getAllLeagueTeams(response.leagueId)
+                                .then(function (response) {
+                                    console.log("getAllLeagueTeams(response.leagueId)")
+                                    console.log(response)
+                                    setLeagueTeams(response)
+                                })
+                        })
                 }
             }
         }
@@ -192,14 +176,14 @@ export default function Dashboard() {
             })
     }
 
-    function checkPickNumber(pickNumber: number) {
-        return pickNumber == currentPickNumber;
-    }
-
-    const findNextToPick = () => {
-        // leagueTeams?.find(team?.firstPickNumber == currentPickNumber)
-        return leagueTeams?.find(checkPickNumber)?.teamName
-    }
+    // function checkPickNumber(pickNumber: number) {
+    //     return pickNumber == currentPickNumber;
+    // }
+    //
+    // const findNextToPick = () => {
+    //     // leagueTeams?.find(team?.firstPickNumber == currentPickNumber)
+    //     return leagueTeams?.find(checkPickNumber)?.teamName
+    // }
 
     return (
         <>
@@ -213,11 +197,12 @@ export default function Dashboard() {
                             team={team}
                             openLeague={openLeague}
                             currentLeague={currentLeague}
+                            leagueTeams={leagueTeams}
                             isPracticeLeague={isPracticeLeague}
                             isLeagueFull={isLeagueFull}
                             isDraftInProgress={isDraftInProgress}
                             currentPickNumber={currentPickNumber}
-                            findNextToPick={findNextToPick}
+                            currentPickName={currentPickName}
                         />
                         <Reminders/>
                         <PracticeDraftOptions
@@ -232,6 +217,7 @@ export default function Dashboard() {
 
                         <Table1
                             isLeagueActive={isLeagueActive}
+                            openLeague={openLeague}
                             currentLeague={currentLeague}
                             leagueTeams={leagueTeams}
                         />

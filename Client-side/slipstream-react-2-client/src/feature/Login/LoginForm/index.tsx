@@ -91,7 +91,7 @@ export default function LoginForm() {
                             </div>
 
                             <div className="form-group">
-                                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                                <button type="submit" className="btn btn-proceed" disabled={loading}>
                                     {loading && (
                                         <span className="spinner-border spinner-border-sm"></span>
                                     )}

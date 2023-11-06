@@ -10,11 +10,12 @@ export default function DashTop({
                                     team,
                                     openLeague,
                                     currentLeague,
+                                    leagueTeams,
                                     isPracticeLeague,
                                     isLeagueFull,
                                     isDraftInProgress,
                                     currentPickNumber,
-                                    findNextToPick
+                                    currentPickName
                                 }) {
     const navigate: NavigateFunction = useNavigate();
 
@@ -22,12 +23,11 @@ export default function DashTop({
         = useState<boolean>(false);
     const [message, setMessage]
         = useState<string>("");
-    const [leagueSize, setLeagueSize]
-        = useState<number>();
 
-    useEffect(() => {
-        setLeagueSize(currentLeague?.teams.length);
-    }, []);
+
+    // useEffect(() => {
+    //     setLeagueSize(currentLeague?.teams.length);
+    // }, [currentLeague]);
 
 
     const initialValues: {
@@ -76,7 +76,6 @@ export default function DashTop({
     // const leagueActive = "leagueActive";
 
     function CreateTeam() {
-        console.log(openLeague?.leagueName)
         return (
             <>
                 <div>
@@ -102,7 +101,7 @@ export default function DashTop({
                             />
                         </div>
                         <div className="form-group">
-                            <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                            <button type="submit" className="btn btn-proceed" disabled={loading}>
                                 {loading && (
                                     <span className="spinner-border spinner-border-sm"></span>
                                 )}
@@ -165,7 +164,7 @@ export default function DashTop({
                     Current pick number: {currentPickNumber}
                 </h4>
                 <h4 className="color: #2ea44f; text-decoration-line: underline">
-                    It's {findNextToPick()}'s turn to select a driver.
+                    It's {currentPickName}'s turn to select a driver.
                 </h4>
             </>
         }
@@ -181,12 +180,11 @@ export default function DashTop({
                     <p>Random 1st pick draft number: {firstPickNumber}</p>
                     <p>Random 2nd pick draft number: {secondPickNumber}</p>
                     <hr/>
-                    <h3>League is {leagueSize} of 10 teams full.</h3>
+                    <h3>League is {leagueTeams?.length} of 10 teams full.</h3>
                     <PracticeGreeting/>
                     <hr/>
                     <PickInstructions/>
                 </div>
-                    ;
             }
             return <div>
                 <h2>{currentUser?.username}'s Dashboard </h2>
@@ -195,7 +193,7 @@ export default function DashTop({
                 <p>Random 1st pick draft number: {firstPickNumber}</p>
                 <p>Random 2nd pick draft number: {secondPickNumber}</p>
                 <hr/>
-                <h3>League is {leagueSize} of 10 teams full.</h3>
+                <h3>League is {leagueTeams?.length} of 10 teams full.</h3>
                 <h3> The draft picks will start when the league is full...</h3>
                 <PracticeGreeting/>
                 <hr/>
@@ -225,72 +223,3 @@ export default function DashTop({
         </>
     );
 }
-
-
-//                                             // id="testBoxToggleOff" onClick="showhide('test-box')" role="switch"
-//                                                type="checkbox"/>
-//                                         <label className="form-check-label" htmlFor="testBoxToggleOff">Show/Hide
-//                                             Practice Options</label>
-//                                     </div>
-//                                     <div className="form-check form-switch">"$isTestLeague"
-//                                         <input defaultChecked className="form-check-input"
-//                                             // id="testBoxToggleOn" onClick="showhide('test-box')" role="switch"
-//                                                type="checkbox"/>
-//                                         <label className="form-check-label" htmlFor="testBoxToggleOn">Hide/Show
-//                                             Practice
-//                                             Options</label>
-//                                     </div>
-//                                     <hr/>
-//                                     <div> "$isTestLeague"
-//                                         <h4>Practice draft in progress</h4>
-//                                         <div className="form-check form-switch">
-//                                             <input checked className="form-check-input" disabled
-//                                                    id="practiceDraftActive1"
-//                                                    role="switch" type="checkbox"/>
-//                                             <label className="form-check-label"
-//                                                    htmlFor="practiceDraftActive1">Practice
-//                                                 Draft Mode On</label>
-//                                         </div>
-//                                     </div>
-//                                 </div>
-//                                 <div>"${leagueFull} and {!leagueActive}"
-//                                     <div> "$isTestLeague"
-//                                         <div className="form-check form-switch">
-//                                             <input checked className="form-check-input" disabled
-//                                                    id="practiceDraftActive3"
-//                                                    role="switch" type="checkbox"/>
-//                                             <label className="form-check-label"
-//                                                    htmlFor="practiceDraftActive3">Practice
-//                                                 Draft Mode On</label>
-//                                         </div>
-//                                         <h5>Practice draft in progress, you may make picks for your team and
-//                                             test
-//                                             teams.</h5>
-//                                         <hr/>
-//                                     </div>
-//                                     {/*<p>"${!timeToPick} and {!isTestLeague}"*/}
-//                                     <p>
-//                                         Draft in progress, please wait for your turn to pick.
-//                                     </p>
-//                                     <h4>
-//                                         {/*<h4 style={"color: #2ea44f; text-decoration-line: underline"}>*/}
-//                                         {/*"|Current pick number: ${currentPickNumber}|"</h4>*/}
-//
-//                                         {/*<h4 style="color: #2ea44f; text-decoration-line: underline">*/}
-//                                         "${!timeToPick}"
-//                                         {/*"|It's ${nextUserPick}'s turn to select a driver|"</h4>*/}
-//
-//                                         {/*<h4 style="color: #2ea44f; text-decoration-line: underline">*/}
-//                                         "${timeToPick}"
-//                                         "|It's your turn to pick $username!|"
-//                                     </h4>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     </>
-// );
-// }

@@ -52,6 +52,12 @@ export const getPickNumber = async (leagueId: number | null | undefined) => {
     return data;
 };
 
+export const getNextPickName = async (leagueId: number | null | undefined) => {
+    const data = await axios.get(API_DATA_URL + leagueId + "/getNextPickName", {headers: authHeader()})
+        .then(response => response.data);
+    return data;
+};
+
 export const postToggleTestLeague = async (leagueId: number | null | undefined) => {
     const response = await axios
         .post(API_DATA_URL + leagueId + "/toggleTestLeague", {

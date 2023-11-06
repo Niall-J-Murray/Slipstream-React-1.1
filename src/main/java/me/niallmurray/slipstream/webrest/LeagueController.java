@@ -43,8 +43,9 @@ public class LeagueController {
   @GetMapping("/{leagueId}/allTeams")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<List<Team>> getAllLeagueTeams(@PathVariable Long leagueId) {
-    League league = leagueService.findById(leagueId);
-    List<Team> teams = teamService.findAllTeamsByLeague(league);
+    List<Team> teams = leagueService.findAllTeamsInLeague(leagueId);
+//    League league = leagueService.findById(leagueId);
+//    List<Team> teams = teamService.findAllTeamsByLeague(league);
 //    System.out.println("league: " + league);
 //    System.out.println("league teams list: " + teams);
     return ResponseEntity.ok(teams);
@@ -66,7 +67,9 @@ public class LeagueController {
     boolean isDraftInProgress = false;
     League league = leagueService.findById(leagueId);
     if (league.getTeams().size() >= 10) {
-      isDraftInProgress = true;
+      if (leagueService.getCurrentPickNumber(leagueId) < 21) {
+        isDraftInProgress = true;
+      }
     }
     return ResponseEntity.ok(isDraftInProgress);
   }
@@ -83,6 +86,13 @@ public class LeagueController {
   public ResponseEntity<Integer> getPickNumber(@PathVariable Long leagueId) {
     League league = leagueService.findById(leagueId);
     return ResponseEntity.ok(league.getCurrentPickNumber());
+  }
+
+  @GetMapping("/{leagueId}/getNextPickName")
+  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+  public ResponseEntity<String> getNextPickName(@PathVariable Long leagueId) {
+//    League league = leagueService.findById(leagueId);
+    return ResponseEntity.ok(leagueService.getNextToPickName(leagueId));
   }
 
   @PostMapping("/{leagueId}/toggleTestLeague")

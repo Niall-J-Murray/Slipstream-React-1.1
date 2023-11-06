@@ -264,9 +264,19 @@ a:hover,
     text-align: center;
 }
 
-.league-table .username {
-    width: 75%;
+.league-table .ranking {
+    width: 10%;
 }
+
+.league-table .username {
+    width: 50%;
+}
+
+/*.league-table .teamname,*/
+/*.league-table .points,*/
+/*.league-table .drivers {*/
+/*    width: 100%;*/
+/*}*/
 
 thead caption {
     text-align: center;

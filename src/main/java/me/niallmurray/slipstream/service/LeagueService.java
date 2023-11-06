@@ -2,6 +2,7 @@ package me.niallmurray.slipstream.service;
 
 import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
+import me.niallmurray.slipstream.domain.User;
 import me.niallmurray.slipstream.repositories.LeagueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ public class LeagueService {
     league.setIsActive(false);
     league.setCreationTimestamp(
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm")));
+    leagueRepository.save(league);
+    league.setLeagueName("League " + league.getLeagueId());
     return leagueRepository.save(league);
   }
 
@@ -55,9 +58,48 @@ public class LeagueService {
 
   public List<Team> findAllTeamsInLeague(Long leagueId) {
     List<Team> teams = Objects.requireNonNull(leagueRepository.findById(leagueId).orElse(null)).getTeams();
-    System.out.println("findAllTeamsInLeague(): " + teams);
     return teams;
   }
+
+  public boolean timeToPick(Long leagueId) {
+    User user = getNextToPick(leagueId);
+    if (user != null) {
+      int firstPickNumber = user.getTeam().getFirstPickNumber();
+      int secondPickNumber = user.getTeam().getSecondPickNumber();
+
+      return firstPickNumber == getCurrentPickNumber(leagueId)
+              || secondPickNumber == getCurrentPickNumber(leagueId);
+    }
+    return false;
+  }
+
+  public User getNextToPick(Long leagueId) {
+    int currentPickNumber = getCurrentPickNumber(leagueId);
+    User nextUserPick = null;
+    List<Team> teamsInLeague = findAllTeamsInLeague(leagueId);
+    for (Team team : teamsInLeague) {
+//      if (timeToPick(leagueId)) {
+//        nextUserPick = team.getUser();
+//      }
+      if (team.getFirstPickNumber() == currentPickNumber
+              || team.getSecondPickNumber() == currentPickNumber) {
+        nextUserPick = team.getUser();
+      }
+    }
+    return nextUserPick;
+  }
+
+  public String getNextToPickName(Long leagueId) {
+    String nextUserPick = null;
+    List<Team> teamsInLeague = findAllTeamsInLeague(leagueId);
+    for (Team team : teamsInLeague) {
+      if (timeToPick(leagueId)) {
+        nextUserPick = team.getUser().getUsername();
+      }
+    }
+    return nextUserPick;
+  }
+
 
 //  public int getCurrentPickNumber(League league) {
 //    List<Driver> undraftedDrivers = driverService.getUndraftedDrivers(league.getLeagueId());
@@ -67,14 +109,20 @@ public class LeagueService {
 //    return 21 - undraftedDrivers.size();
 //  }
 
-  public int getCurrentPickNumber(League league) {
-    if (league.getTeams().size() == 10 && league.getCurrentPickNumber() > 20) {
-      activateLeague(league);
+  public int getCurrentPickNumber(Long leagueId) {
+    League league = leagueRepository.findById(leagueId).orElse(null);
+    if (league != null) {
+//    if (league.getTeams().size() == 10 && league.getCurrentPickNumber() > 20) {
+      if (league.getCurrentPickNumber() > 20) {
+        activateLeague(leagueId);
+      }
+      return league.getCurrentPickNumber();
     }
-    return league.getCurrentPickNumber();
+    return 21;
   }
 
-  public void activateLeague(League league) {
+  public void activateLeague(Long leagueId) {
+    League league = findById(leagueId);
     league.setIsActive(true);
     league.setActiveTimestamp(
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm")));

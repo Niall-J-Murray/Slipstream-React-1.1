@@ -128,6 +128,7 @@ public class TeamService {
     Driver driver = driverService.findById(driverId);
     Team team = findById(user.getTeam().getId());
     List<Driver> teamDrivers = user.getTeam().getDrivers();
+    League league = team.getLeague();
 
     if (teamDrivers.size() < 2) {
       teamDrivers.add(driver);
@@ -136,24 +137,30 @@ public class TeamService {
     }
     Double startingPoints = team.getDrivers().stream()
             .mapToDouble(Driver::getPoints).sum();
+
     team.setDrivers(teamDrivers);
     team.setStartingPoints(startingPoints);
     team.setUser(user);
     user.setTeam(user.getTeam());
 
+    league.setCurrentPickNumber(league.getCurrentPickNumber() + 1);
+
     userService.save(user);
     teamRepository.save(team);
     driverService.save(driver);
+    leagueService.save(league);
   }
 
   public void addDriverToTestTeam(Long userId, Long driverId) {
     User user = userService.findById(userId);
-    User testUser = userService.findByUserName(getNextToPickName(user.getTeam().getLeague()));
+    Long leagueId = user.getTeam().getLeague().getLeagueId();
+    User testUser = leagueService.getNextToPick(leagueId);
     addDriverToTeam(testUser.getId(), driverId);
   }
 
-  public Boolean isTestPick(League league) {
-    return getNextToPickName(league) != null && (getNextToPickName(league).startsWith("Test_User"));
+  public Boolean isTestPick(Long leagueId) {
+    return leagueService.getNextToPick(leagueId).getIsTestUser();
+//    return leagueService.getNextToPickName(leagueId) != null && (leagueService.getNextToPickName(leagueId).startsWith("Test_User"));
   }
 
   public Boolean hasTestTeams(League league) {
@@ -165,35 +172,35 @@ public class TeamService {
     return false;
   }
 
-  public boolean timeToPick(League league, Long teamId) {
-    int firstPickNumber = findById(teamId).getFirstPickNumber();
-    int secondPickNumber = findById(teamId).getSecondPickNumber();
+//  public boolean timeToPick(League league, Long teamId) {
+//    int firstPickNumber = findById(teamId).getFirstPickNumber();
+//    int secondPickNumber = findById(teamId).getSecondPickNumber();
+//
+//    return firstPickNumber == leagueService.getCurrentPickNumber(league)
+//            || secondPickNumber == leagueService.getCurrentPickNumber(league);
+//  }
 
-    return firstPickNumber == leagueService.getCurrentPickNumber(league)
-            || secondPickNumber == leagueService.getCurrentPickNumber(league);
-  }
-
-  public User getNextToPick(League league) {
-    User nextUserPick = null;
-    List<Team> teamsInLeague = findAllTeamsByLeague(league);
-    for (Team team : teamsInLeague) {
-      if (timeToPick(league, team.getId())) {
-        nextUserPick = team.getUser();
-      }
-    }
-    return nextUserPick;
-  }
-
-  public String getNextToPickName(League league) {
-    String nextUserPick = null;
-    List<Team> teamsInLeague = findAllTeamsByLeague(league);
-    for (Team team : teamsInLeague) {
-      if (timeToPick(league, team.getId())) {
-        nextUserPick = team.getUser().getUsername();
-      }
-    }
-    return nextUserPick;
-  }
+//  public User getNextToPick(League league) {
+//    User nextUserPick = null;
+//    List<Team> teamsInLeague = findAllTeamsByLeague(league);
+//    for (Team team : teamsInLeague) {
+//      if (timeToPick(league, team.getId())) {
+//        nextUserPick = team.getUser();
+//      }
+//    }
+//    return nextUserPick;
+//  }
+//
+//  public String getNextToPickName(League league) {
+//    String nextUserPick = null;
+//    List<Team> teamsInLeague = findAllTeamsByLeague(league);
+//    for (Team team : teamsInLeague) {
+//      if (timeToPick(league, team.getId())) {
+//        nextUserPick = team.getUser().getUsername();
+//      }
+//    }
+//    return nextUserPick;
+//  }
 
   public List<Team> updateLeagueTeamsRankings(League league) {
     List<Team> teams = league.getTeams();

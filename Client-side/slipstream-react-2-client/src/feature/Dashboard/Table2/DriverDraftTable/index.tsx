@@ -30,7 +30,9 @@ export default function DriverDraftTable({currentUser, undraftedDrivers}) {
 
     const handlePick = (driverId: string) => {
         // const {driverId} = formValue;
-        console.log("handlePick")
+        console.log("handlePick");
+        console.log(currentUser?.id);
+        console.log(driverId);
         setMessage("");
         setLoading(true);
 
@@ -65,6 +67,7 @@ export default function DriverDraftTable({currentUser, undraftedDrivers}) {
                     //     alert(JSON.stringify(values, null, 2));
                     // }}
                     onSubmit={(values) => {
+                        console.log("pick id:" + values.picked)
                         handlePick(values.picked)
                     }
                     }
@@ -93,7 +96,6 @@ export default function DriverDraftTable({currentUser, undraftedDrivers}) {
                                     </caption>
                                     <thead>
                                     <tr>
-
                                         <th id="confirm-test-pick">
                                             <button id="pick-button" type="submit">Submit</button>
                                             {/*<div className="form-group">*/}
@@ -106,7 +108,6 @@ export default function DriverDraftTable({currentUser, undraftedDrivers}) {
                                             {/*        <span>Confirm<br/>Pick</span>*/}
                                             {/*    </button>*/}
                                             {/*</div>*/}
-
                                         </th>
                                         <th>Driver</th>
                                         <th>Pos</th>
@@ -144,7 +145,16 @@ export default function DriverDraftTable({currentUser, undraftedDrivers}) {
                                         )
                                     })}
                                     </tbody>
+
                                 </table>
+                                <div>
+                                    <h6>
+                                        * Driver Changes:
+                                        <br/>Ricciardo replaced de Vries on July 11th 2023.
+                                        <br/>Lawson replaced Ricciardo on August 27th 2023.
+                                        <br/>Ricciardo replaced Lawson on October 20th 2023.
+                                    </h6>
+                                </div>
                             </div>
                         </Form>
                     )}

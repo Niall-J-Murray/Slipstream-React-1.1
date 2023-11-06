@@ -72,9 +72,9 @@ public class DriverController {
     System.out.println("driverID: " + requestData.get("driverId"));
 
     Long driverId = requestData.get("driverId");
-    League userLeague = userService.findById(userId).getTeam().getLeague();
+    Long userLeagueId = userService.findById(userId).getTeam().getLeague().getLeagueId();
 
-    if (Boolean.TRUE.equals(teamService.isTestPick(userLeague))) {
+    if (Boolean.TRUE.equals(teamService.isTestPick(userLeagueId))) {
       teamService.addDriverToTestTeam(userId, driverId);
     } else {
       teamService.addDriverToTeam(userId, driverId);

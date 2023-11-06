@@ -1,12 +1,11 @@
-import React, {useState} from "react";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
-
-import IUser from "../../../types/user.type";
+import {useState} from "react";
 import {register} from "../../../services/auth.service";
+import IUser from "../../../types/user.type";
 import lights_on from "../../../assets/images/lights_on.png";
 
-const Register: React.FC = () => {
+export default function RegistrationForm() {
     const [successful, setSuccessful] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
 
@@ -117,7 +116,8 @@ const Register: React.FC = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <button type="submit" className="btn btn-primary btn-block">Sign Up</button>
+                                    <button type="submit" className="btn btn-proceed">
+                                        <span>Sign Up</span></button>
                                 </div>
                             </div>
                         )}
@@ -131,14 +131,25 @@ const Register: React.FC = () => {
                                     role="alert"
                                 >
                                     {message}
+
                                 </div>
                             </div>
                         )}
+                        <div>
+                            {successful ?
+                                <div>
+                                    <div className="form-group">
+                                        <button type="submit" className="btn btn-proceed">
+                                            <span>Login</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                : <div>
+                                </div>}
+                        </div>
                     </Form>
                 </Formik>
             </div>
         </div>
     );
-};
-
-export default Register;
+}
