@@ -33,7 +33,8 @@ export default function LoginForm() {
         setMessage("");
         setLoading(true);
 
-        login(username, password).then(
+        login(username, password)
+            .then(
             () => {
                 navigate("/dashboard");
                 window.location.reload();

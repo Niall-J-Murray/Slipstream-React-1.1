@@ -43,6 +43,8 @@ public class TeamController {
   @GetMapping("/{teamId}")
   public ResponseEntity<Team> getTeamById(@PathVariable Long teamId, @AuthenticationPrincipal User userAuth) {
     Team team = teamService.findById(teamId);
+    System.out.println("getTeam: " +team);
+    System.out.println("getTeamDrivers: " +team.getDrivers());
     return new ResponseEntity<>(team, HttpStatus.OK);
   }
 

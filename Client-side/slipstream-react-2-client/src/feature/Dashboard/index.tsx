@@ -22,10 +22,10 @@ import {getUserData} from "../../services/user.service.ts";
 import IUser from "../../types/user.type.ts";
 import ITeam from "../../types/team.type.ts";
 import ILeague from "../../types/league.type.ts";
-import PracticeDraftOptions from "./PracticeDraftOptions";
-import {createTestTeam} from "../../services/team.service.ts";
+import {createTestTeam, getTeam} from "../../services/team.service.ts";
 import IDriver from "../../types/driver.type.ts";
 import {getUndraftedDrivers} from "../../services/driver.service.ts";
+import DraftControls from "./DraftControls";
 
 export default function Dashboard() {
     const [currentUser, setCurrentUser]
@@ -78,8 +78,14 @@ export default function Dashboard() {
             if (user != null) {
                 const userData = await getUserData(user.id);
                 setUserData(userData);
-                setTeam(userData.team)
+                console.log("userData");
+                console.log(userData);
+                console.log("userData drivers");
+                console.log(userData?.team?.drivers);
 
+                if (userData.team) {
+                    setTeam(await getTeam(userData?.team?.id));
+                }
                 getOpenLeague()
                     .then(function (response) {
                         setOpenLeague(response);
@@ -141,6 +147,11 @@ export default function Dashboard() {
         fetchUserData().catch(console.error);
     }, []);
 
+    console.log("dash team")
+    console.log(team)
+    console.log("dash team drivers")
+    console.log(team?.drivers)
+
     function togglePracticeOptions() {
         if (showPracticeOptions) {
             setShowPracticeOptions(false);
@@ -176,14 +187,14 @@ export default function Dashboard() {
             })
     }
 
-    // function checkPickNumber(pickNumber: number) {
-    //     return pickNumber == currentPickNumber;
-    // }
-    //
-    // const findNextToPick = () => {
-    //     // leagueTeams?.find(team?.firstPickNumber == currentPickNumber)
-    //     return leagueTeams?.find(checkPickNumber)?.teamName
-    // }
+// function checkPickNumber(pickNumber: number) {
+//     return pickNumber == currentPickNumber;
+// }
+//
+// const findNextToPick = () => {
+//     // leagueTeams?.find(team?.firstPickNumber == currentPickNumber)
+//     return leagueTeams?.find(checkPickNumber)?.teamName
+// }
 
     return (
         <>
@@ -205,7 +216,7 @@ export default function Dashboard() {
                             currentPickName={currentPickName}
                         />
                         <Reminders/>
-                        <PracticeDraftOptions
+                        <DraftControls
                             currentLeague={currentLeague}
                             isPracticeLeague={isPracticeLeague}
                             isLeagueFull={isLeagueFull}
@@ -213,6 +224,10 @@ export default function Dashboard() {
                             togglePracticeOptions={togglePracticeOptions}
                             togglePracticeLeague={togglePracticeLeague}
                             addTestTeam={addTestTeam}
+                            currentUser={currentUser}
+                            isDraftInProgress={isDraftInProgress}
+                            currentPickNumber={currentPickNumber}
+                            currentPickName={currentPickName}
                         />
 
                         <Table1

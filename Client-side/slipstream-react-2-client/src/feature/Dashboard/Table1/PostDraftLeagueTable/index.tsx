@@ -9,14 +9,33 @@ export default function PostDraftLeagueTable({currentLeague, leagueTeams}) {
         return a.ranking - b.ranking
     });
 
+    function logDrivers() {
+        rankedTeams?.map((team: ITeam) => {
+                team.drivers?.map((driver: IDriver) => {
+                        console.log(driver)
+                        console.log(driver.shortName)
+                    }
+                )
+            }
+        )
+    }
 
-    // function getDrivers(team:ITeam){
-    //    teamDrivers = team.drivers;
-    //     console.log(teamDrivers);
-    //     return teamDrivers;
-    // }
+    logDrivers();
 
-    // let teamDrivers = getDrivers();
+    let teamDrivers: Array<IDriver> | null | undefined;
+    function getDrivers(team: ITeam | undefined):Array<IDriver> | null | undefined{
+       teamDrivers = team?.drivers;
+        console.log("teamDrivers")
+        console.log(teamDrivers);
+        return teamDrivers;
+    }
+
+    console.log("rankedTeams.at(0)")
+    console.log(rankedTeams.at(0))
+teamDrivers = getDrivers(rankedTeams.at(0));
+    console.log("teamDrivers")
+    console.log(teamDrivers);
+
     return (
         <>
             <div className="col-start-2 col-span-1.5">
@@ -41,13 +60,14 @@ export default function PostDraftLeagueTable({currentLeague, leagueTeams}) {
                                 <td>{team.username}</td>
                                 <td>{team.teamName}</td>
                                 <td>{team.teamPoints}</td>
-                                {team.drivers?.map((driver: IDriver) => {
-                                    return (
-                                        <tr key={driver.driverId}>
-                                            <td>{driver ? driver.shortName:""}</td>
-                                        </tr>
-                                    )
-                                })}
+                                <td>{team.drivers?.at(0)}</td>
+                                {/*{team.drivers?.map((driver: IDriver) => {*/}
+                                {/*    return (*/}
+                                {/*        <tr key={driver.driverId}>*/}
+                                {/*            <td>{driver ? driver.shortName : ""}</td>*/}
+                                {/*        </tr>*/}
+                                {/*    )*/}
+                                {/*})}*/}
                             </tr>
                         )
                     })}

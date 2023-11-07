@@ -1,8 +1,6 @@
 package me.niallmurray.slipstream.webrest;
 
-import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.User;
-import me.niallmurray.slipstream.repositories.LeagueRepository;
 import me.niallmurray.slipstream.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +21,13 @@ public class UserDataController {
   public ResponseEntity<User> getUserData(@PathVariable Long userId) {
     Optional<User> userOpt = userRepository.findById(userId);
 //    return userOpt.orElse(null);
-//    System.out.println("user entity: " + ResponseEntity.ok(userOpt.orElse(null).getUsername()));
+//    System.out.println("user entity: " + ResponseEntity.ok(userOpt.orElse(null)));
+    if (userOpt.isPresent()) {
+      System.out.println("user entity: " + ResponseEntity.ok(userOpt.orElse(null).getUsername()));
+      if (userOpt.orElse(null).getTeam() != null) {
+        System.out.println(userOpt.orElse(null).getTeam().getDrivers());
+      }
+    }
     return ResponseEntity.ok(userOpt.orElse(null));
   }
 

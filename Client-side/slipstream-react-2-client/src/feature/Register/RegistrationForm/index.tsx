@@ -1,11 +1,13 @@
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import {useState} from "react";
-import {register} from "../../../services/auth.service";
+import {login, register} from "../../../services/auth.service";
 import IUser from "../../../types/user.type";
 import lights_on from "../../../assets/images/lights_on.png";
+import {NavigateFunction, useNavigate} from "react-router-dom";
 
 export default function RegistrationForm() {
+    const navigate: NavigateFunction = useNavigate();
     const [successful, setSuccessful] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
 
@@ -48,6 +50,8 @@ export default function RegistrationForm() {
             (response) => {
                 setMessage(response.data.message);
                 setSuccessful(true);
+                sessionStorage.setItem("usrnm", username);
+                sessionStorage.setItem("pwrd", password);
             },
             (error) => {
                 const resMessage =
@@ -61,7 +65,30 @@ export default function RegistrationForm() {
                 setSuccessful(false);
             }
         );
+
     };
+
+    function handleLogin() {
+
+
+        login(sessionStorage.getItem("usrnm"), sessionStorage.getItem("pwrd"))
+            .then(
+                () => {
+                    navigate("/home");
+                    window.location.reload();
+                },
+                (error) => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+
+                    setMessage(resMessage);
+                }
+            );
+    }
 
     return (
         <div className="col-start-3 col-span-1 box-shadow">
@@ -135,20 +162,20 @@ export default function RegistrationForm() {
                                 </div>
                             </div>
                         )}
-                        <div>
-                            {successful ?
-                                <div>
-                                    <div className="form-group">
-                                        <button type="submit" className="btn btn-proceed">
-                                            <span>Login</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                : <div>
-                                </div>}
-                        </div>
                     </Form>
                 </Formik>
+            </div>
+            <div>
+                {successful ?
+                    <div>
+                        <div className="form-group">
+                            <button type="button" className="btn btn-proceed" onClick={handleLogin}>
+                                <span>Login</span>
+                            </button>
+                        </div>
+                    </div>
+                    : <div>
+                    </div>}
             </div>
         </div>
     );

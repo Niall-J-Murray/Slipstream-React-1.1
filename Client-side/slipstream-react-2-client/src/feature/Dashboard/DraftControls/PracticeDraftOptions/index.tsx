@@ -12,7 +12,6 @@ export default function PracticeDraftOptions({
                                              }) {
     return (
         <>
-            {/*{!isLeagueFull ?*/}
                 <div className="col-start-2 col-span-3 box-shadow">
                     {
                         showPracticeOptions ?
@@ -35,9 +34,6 @@ export default function PracticeDraftOptions({
                             />
                     }
                 </div>
-                {/*:*/}
-                {/*<div></div>*/}
-            {/*}*/}
         </>
     )
 };

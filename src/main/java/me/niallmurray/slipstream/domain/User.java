@@ -1,6 +1,7 @@
 package me.niallmurray.slipstream.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -10,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +26,9 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
-public class User {
+public class User implements Serializable {
+  @Serial
+  private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -52,7 +57,6 @@ public class User {
   @OneToOne(mappedBy = "user",
           cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE},
           orphanRemoval = true)
-//  @JsonIgnore
   private Team team;
 
   public User(String username, String email, String password) {

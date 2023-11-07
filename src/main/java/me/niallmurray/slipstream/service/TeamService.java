@@ -228,22 +228,6 @@ public class TeamService {
     return teamRepository.saveAll(teams);
   }
 
-  public List<Team> findAllTeams() {
-    return teamRepository.findAll();
-  }
-
-  public List<Team> findAllTeamsByLeague(League league) {
-    return teamRepository.findAll().stream()
-            .filter(team -> team.getLeague().equals(league))
-            .toList();
-  }
-
-  public List<Team> findAllTeamsByNextPick() {
-    List<Team> allTeams = teamRepository.findAll();
-    allTeams.sort(Comparator.comparing(Team::getFirstPickNumber));
-    return allTeams;
-  }
-
   public void deleteTeam(Team team) {
     League league = team.getLeague();
     List<Driver> drivers = team.getDrivers();
@@ -281,6 +265,30 @@ public class TeamService {
         deleteAllTestTeams(league);
       }
     }
+  }
+
+  public List<Driver> findDriversInTeam(Long teamId) {
+    System.out.println("team drivers: " + findById(teamId).getDrivers());
+    return findById(teamId).getDrivers();
+//    return teamRepository.findAll().stream()
+//            .filter(team -> team.getLeague().equals(league))
+//            .toList();
+  }
+
+  public List<Team> findAllTeamsByNextPick() {
+    List<Team> allTeams = teamRepository.findAll();
+    allTeams.sort(Comparator.comparing(Team::getFirstPickNumber));
+    return allTeams;
+  }
+
+  public List<Team> findAllTeamsByLeague(League league) {
+    return teamRepository.findAll().stream()
+            .filter(team -> team.getLeague().equals(league))
+            .toList();
+  }
+
+  public List<Team> findAllTeams() {
+    return teamRepository.findAll();
   }
 
   public Team findById(Long teamId) {
