@@ -92,7 +92,7 @@ public class LeagueController {
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<String> getNextPickName(@PathVariable Long leagueId) {
 //    League league = leagueService.findById(leagueId);
-    return ResponseEntity.ok(leagueService.getNextToPickName(leagueId));
+    return ResponseEntity.ok(leagueService.getNextToPick(leagueId).getUsername());
   }
 
   @PostMapping("/{leagueId}/toggleTestLeague")

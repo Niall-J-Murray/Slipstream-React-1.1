@@ -187,6 +187,18 @@ a:hover,
     color: #2ea44f;
 }
 
+.pick-instructions-wait {
+    color: orangered;
+    text-decoration-line: underline
+}
+
+.pick-instructions-go{
+    color: #2ea44f;
+    text-decoration-line: underline
+}
+
+
+
 #confirm-pick,
 #confirm-pick-dis,
 #confirm-test-pick {

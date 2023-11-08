@@ -6,7 +6,7 @@ import DashTop from "./DashTop";
 import Reminders from "./Reminders";
 import Table1 from "./Table1";
 import Table2 from "./Table2";
-import {useEffect, useState} from "react";
+import {SetStateAction, useEffect, useState} from "react";
 import {
     getAllLeagueTeams,
     getIsDraftInProgress,
@@ -56,6 +56,13 @@ export default function Dashboard() {
         = useState<number>(0)
     const [currentPickName, setCurrentPickName]
         = useState<string | undefined>("");
+    const [selectedDriver, setSelectedDriver]
+        = useState<IDriver | undefined>();
+    // const navigate: NavigateFunction = useNavigate();
+    // const [loading, setLoading]
+    //     = useState<boolean>(false);
+    // const [message, setMessage]
+    //     = useState<string>("");
 
     // doSomething()
     //     .then((result) => doSomethingElse(result))
@@ -70,6 +77,12 @@ export default function Dashboard() {
     // If the previous handler started a promise but did not return it,
     // there's no way to track its settlement anymore,
     // and the promise is said to be "floating".
+
+    // Todo Display correct info and options in dash-top depending on users team/league status.
+    //  ---
+    //  Enable draft picking functionality.
+    //  Fix so only team owner can add to their team, or test teams.
+    //  Check picking function.
 
     useEffect(() => {
         const user = getCurrentUser();
@@ -121,10 +134,12 @@ export default function Dashboard() {
                             setUndraftedDrivers(response);
                         })
                     setCurrentLeague(leagueData);
-                    setIsPracticeLeague(leagueData.isPracticeLeague)
+                    setIsPracticeLeague(leagueData.isPracticeLeague);
                     if (leagueData.teams.length >= 10) {
                         setIsLeagueFull(true)
                     }
+                    ;
+                    setSelectedDriver(selectedDriver);
                 } else {
                     await getOpenLeague()
                         .then(function (response) {
@@ -164,15 +179,11 @@ export default function Dashboard() {
         if (isPracticeLeague) {
             postToggleTestLeague(currentLeague?.leagueId)
                 .then(function (response) {
-                    console.log("togglePracticeLeague:")
-                    console.log(response)
                     setIsPracticeLeague(response);
                 })
         } else {
             postToggleTestLeague(currentLeague?.leagueId)
                 .then(function (response) {
-                    console.log("togglePracticeLeague:")
-                    console.log(response)
                     setIsPracticeLeague(response);
                 })
         }
@@ -187,14 +198,35 @@ export default function Dashboard() {
             })
     }
 
-// function checkPickNumber(pickNumber: number) {
-//     return pickNumber == currentPickNumber;
-// }
-//
-// const findNextToPick = () => {
-//     // leagueTeams?.find(team?.firstPickNumber == currentPickNumber)
-//     return leagueTeams?.find(checkPickNumber)?.teamName
-// }
+    const handleDriverSelection = (driver: SetStateAction<IDriver | undefined>) => {
+        setSelectedDriver(driver);
+    }
+    // const handlePick = (driverId: string) => {
+    //     // const {driverId} = formValue;
+    //     console.log("handlePick");
+    //     console.log(currentUser?.id);
+    //     console.log(driverId);
+    //     setMessage("");
+    //     setLoading(true);
+    //
+    //     postPickDriver(currentUser?.id, driverId).then(
+    //         () => {
+    //             navigate("/dashboard");
+    //             window.location.reload();
+    //         },
+    //         (error) => {
+    //             const resMessage =
+    //                 (error.response &&
+    //                     error.response.data &&
+    //                     error.response.data.message) ||
+    //                 error.message ||
+    //                 error.toString();
+    //
+    //             setLoading(false);
+    //             setMessage(resMessage);
+    //         }
+    //     );
+    // };
 
     return (
         <>
@@ -213,8 +245,7 @@ export default function Dashboard() {
                             isLeagueFull={isLeagueFull}
                             isDraftInProgress={isDraftInProgress}
                             currentPickNumber={currentPickNumber}
-                            currentPickName={currentPickName}
-                        />
+                            currentPickName={currentPickName}/>
                         <Reminders/>
                         <DraftControls
                             currentLeague={currentLeague}
@@ -228,20 +259,21 @@ export default function Dashboard() {
                             isDraftInProgress={isDraftInProgress}
                             currentPickNumber={currentPickNumber}
                             currentPickName={currentPickName}
-                        />
-
+                            selectedDriver={selectedDriver}/>
                         <Table1
                             isLeagueActive={isLeagueActive}
                             openLeague={openLeague}
                             currentLeague={currentLeague}
                             leagueTeams={leagueTeams}
-                        />
+                            isDraftInProgress={isDraftInProgress}/>
                         <Table2
                             currentUser={currentUser}
                             isLeagueFull={isLeagueFull}
                             isLeagueActive={isLeagueActive}
                             isDraftInProgress={isDraftInProgress}
-                            undraftedDrivers={undraftedDrivers}/>
+                            undraftedDrivers={undraftedDrivers}
+                            currentPickName={currentPickName}
+                            handleDriverSelection={handleDriverSelection}/>
                     </Body>
                 </BackgroundImage>
             </View>

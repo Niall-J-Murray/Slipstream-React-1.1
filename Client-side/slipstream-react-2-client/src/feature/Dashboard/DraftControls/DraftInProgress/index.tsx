@@ -1,29 +1,70 @@
-export default function DraftInProgress({currentUser, isDraftInProgress, currentPickNumber, currentPickName}) {
-    const firstPickNumber = currentUser?.team?.firstPickNumber;
-    const secondPickNumber = currentUser?.team?.secondPickNumber;
+export default function DraftInProgress({
+                                            currentUser,
+                                            isDraftInProgress,
+                                            currentPickNumber,
+                                            currentPickName,
+                                            selectedDriver
+                                        }) {
 
     function PickInstructions() {
         if (isDraftInProgress) {
-            if (firstPickNumber == currentPickNumber || secondPickNumber == currentPickNumber) {
+            if (currentUser.username == currentPickName || currentUser.username == currentPickName) {
                 return <>
-                    <h4 className={"text-#2ea44f; text-decoration-line: underline"}>
-                        Current pick number: {currentPickNumber}
-                    </h4>
-                    <h4 className="color: #2ea44f; text-decoration-line: underline">
-                        It's your turn to pick {currentUser.username}!
-                    </h4>
+                    <div className="col-start-2 col-span-1">
+                        <h4>
+                            Draft in progress:
+                        </h4>
+                        <h4 className={"pick-instructions-go"}>
+                            Current pick number: {currentPickNumber}
+                        </h4>
+                        <h4 className={"pick-instructions-go"}>
+                            It's your turn to pick {currentUser.username}!
+                        </h4>
+                    </div>
+                    <div className="col-start-4 col-span-1">
+                        <h4>
+                            You have selected:
+                        </h4>
+                        <h4>
+                            {selectedDriver
+                                ?
+                                selectedDriver?.firstName + " " + selectedDriver?.surname
+                                :
+                                "Select a driver below..."}
+                        </h4>
+                        <button form="driver-pick-form" className={"btn btn-proceed"} type="submit">
+                            Confirm Pick
+                        </button>
+                    </div>
                 </>
             }
             return <>
-                <p>
-                    Draft in progress, please wait for your turn to pick.
-                </p>
-                <h4 className={"color: #2ea44f; text-decoration-line: underline"}>
-                    Current pick number: {currentPickNumber}
-                </h4>
-                <h4 className="color: #2ea44f; text-decoration-line: underline">
-                    It's {currentPickName}'s turn to select a driver.
-                </h4>
+                <div className="col-start-2 col-span-1">
+                    <h4>
+                        Draft in progress:
+                    </h4>
+                    <h4 className={"pick-instructions-wait"}>
+                        Current pick number: {currentPickNumber}
+                    </h4>
+                    <h4 className="pick-instructions-wait">
+                        It's {currentPickName}'s turn to pick.
+                    </h4>
+                </div>
+                <div className="col-start-4 col-span-1">
+                    <h4>
+                        Last driver selected was:
+                    </h4>
+                    <h4>
+                        {selectedDriver
+                            ?
+                            selectedDriver?.firstName + " " + selectedDriver?.surname
+                            :
+                            "No picks made yet"}
+                    </h4>
+                    <h4>
+                        Picked by previousPick
+                    </h4>
+                </div>
             </>
         }
     }

@@ -1,7 +1,12 @@
 import ITeam from "../../../../types/team.type.ts";
 
-export default function PreDraftLeagueTable({openLeague, currentLeague, leagueTeams}) {
-
+export default function PreDraftLeagueTable({openLeague, currentLeague, leagueTeams, isDraftInProgress}) {
+    const rankedTeams: ITeam[] = leagueTeams;
+    if (isDraftInProgress) {
+        rankedTeams.sort((a, b) => {
+            return a.ranking - b.ranking
+        });
+    }
 
     return (
         <>
@@ -21,7 +26,7 @@ export default function PreDraftLeagueTable({openLeague, currentLeague, leagueTe
                     </tr>
                     </thead>
                     <tbody>
-                    {leagueTeams?.map((team: ITeam) => {
+                    {rankedTeams?.map((team: ITeam) => {
                         return (
                             <tr key={team.id}>
                                 <td>{team.username}</td>

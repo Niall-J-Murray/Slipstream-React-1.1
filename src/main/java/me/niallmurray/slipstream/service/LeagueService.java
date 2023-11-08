@@ -89,16 +89,20 @@ public class LeagueService {
     return nextUserPick;
   }
 
-  public String getNextToPickName(Long leagueId) {
-    String nextUserPick = null;
-    List<Team> teamsInLeague = findAllTeamsInLeague(leagueId);
-    for (Team team : teamsInLeague) {
-      if (timeToPick(leagueId)) {
-        nextUserPick = team.getUser().getUsername();
-      }
-    }
-    return nextUserPick;
-  }
+//  public String getNextToPickName(Long leagueId) {
+//    String nextUserPick = null;
+//    List<Team> teamsInLeague = findAllTeamsInLeague(leagueId);
+//    for (Team team : teamsInLeague) {
+////      if (timeToPick(leagueId)) {
+////        nextUserPick = team.getUser().getUsername();
+////      }
+//      if (team.getFirstPickNumber() == currentPickNumber
+//              || team.getSecondPickNumber() == currentPickNumber) {
+//        nextUserPick = team.getUser().getUsername();
+//      }
+//    }
+//    return nextUserPick;
+//  }
 
 
 //  public int getCurrentPickNumber(League league) {
@@ -118,7 +122,7 @@ public class LeagueService {
       }
       return league.getCurrentPickNumber();
     }
-    return 21;
+    return 22;
   }
 
   public void activateLeague(Long leagueId) {
