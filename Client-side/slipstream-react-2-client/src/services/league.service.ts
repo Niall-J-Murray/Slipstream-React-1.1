@@ -1,7 +1,5 @@
 import axios from "axios";
 import authHeader from "./auth-header";
-import {postPickDriver} from "./driver.service.ts";
-
 
 const API_URL = "http://localhost:8080/api/test/";
 const API_DATA_URL = "http://localhost:8080/api/league/";
@@ -73,28 +71,28 @@ export const postToggleTestLeague = async (leagueId: number | null | undefined) 
     }
 };
 
-export const handlePick = (userId: number | null | undefined, driverId: string) => {
-    // const {driverId} = formValue;
-    console.log("handlePick");
-    console.log(userId);
-    console.log(driverId);
-    // setMessage("");
-    // setLoading(true);
-
-    postPickDriver(userId, driverId).then(
-        () => {
-            window.location.reload();
-        },
-        (error) => {
-            const resMessage =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
-
-            // setLoading(false);
-            // setMessage(resMessage);
-        }
-    );
-};
+// export const handlePick = (userId: number | null | undefined, driverId: string) => {
+//     // const {driverId} = formValue;
+//     console.log("handlePick");
+//     console.log(userId);
+//     console.log(driverId);
+//     // setMessage("");
+//     // setLoading(true);
+//
+//     postPickDriver(userId, driverId).then(
+//         () => {
+//             window.location.reload();
+//         },
+//         (error) => {
+//             const resMessage =
+//                 (error.response &&
+//                     error.response.data &&
+//                     error.response.data.message) ||
+//                 error.message ||
+//                 error.toString();
+//
+//             // setLoading(false);
+//             // setMessage(resMessage);
+//         }
+//     );
+// };

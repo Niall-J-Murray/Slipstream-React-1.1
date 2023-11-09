@@ -24,7 +24,7 @@ import ITeam from "../../types/team.type.ts";
 import ILeague from "../../types/league.type.ts";
 import {createTestTeam, getTeam} from "../../services/team.service.ts";
 import IDriver from "../../types/driver.type.ts";
-import {getUndraftedDrivers} from "../../services/driver.service.ts";
+import {getDriverData, getUndraftedDrivers} from "../../services/driver.service.ts";
 import DraftControls from "./DraftControls";
 
 export default function Dashboard() {
@@ -82,7 +82,7 @@ export default function Dashboard() {
     //  ---
     //  Enable draft picking functionality.
     //  Fix so only team owner can add to their team, or test teams.
-    //  Check picking function.
+    //  Check picking function to show driver selected before confirming pick.
 
     useEffect(() => {
         const user = getCurrentUser();
@@ -198,9 +198,16 @@ export default function Dashboard() {
             })
     }
 
-    const handleDriverSelection = (driver: SetStateAction<IDriver | undefined>) => {
+    const handleDriverSelection = (driver) => {
         setSelectedDriver(driver);
     }
+
+    // const handleDriverSelection = (driverId: number | null | undefined) => {
+    //     getDriverData(driverId)
+    //         .then(function (response) {
+    //             setSelectedDriver(response);
+    //         })
+    // }
     // const handlePick = (driverId: string) => {
     //     // const {driverId} = formValue;
     //     console.log("handlePick");

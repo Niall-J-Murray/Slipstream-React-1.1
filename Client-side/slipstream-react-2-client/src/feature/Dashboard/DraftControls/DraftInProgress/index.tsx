@@ -1,3 +1,5 @@
+import {postPickDriver} from "../../../../services/driver.service.ts";
+
 export default function DraftInProgress({
                                             currentUser,
                                             isDraftInProgress,
@@ -5,6 +7,33 @@ export default function DraftInProgress({
                                             currentPickName,
                                             selectedDriver
                                         }) {
+
+// const handlePick = (userId: number | null | undefined, driverId: string) => {
+//         // const {driverId} = formValue;
+//         console.log("handlePick");
+//         console.log(userId);
+//         console.log(driverId);
+//         // setMessage("");
+//         // setLoading(true);
+//
+//         postPickDriver(userId, driverId).then(
+//             () => {
+//                 window.location.reload();
+//             },
+//             (error) => {
+//                 const resMessage =
+//                     (error.response &&
+//                         error.response.data &&
+//                         error.response.data.message) ||
+//                     error.message ||
+//                     error.toString();
+//
+//                 // setLoading(false);
+//                 // setMessage(resMessage);
+//             }
+//         );
+//     };
+
 
     function PickInstructions() {
         if (isDraftInProgress) {
@@ -76,3 +105,30 @@ export default function DraftInProgress({
     )
 
 }
+
+export const handlePick = (userId: number | null | undefined, driverId: number | null | undefined) => {
+    // const {driverId} = formValue;
+    console.log("handlePick");
+    console.log(userId);
+    console.log(driverId);
+    // setMessage("");
+    // setLoading(true);
+    // driverId = 3;
+
+    postPickDriver(userId, driverId).then(
+        () => {
+            window.location.reload();
+        },
+        (error) => {
+            const resMessage =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+
+            // setLoading(false);
+            // setMessage(resMessage);
+        }
+    );
+};

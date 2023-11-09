@@ -1,6 +1,7 @@
 import {Field, Form, Formik} from "formik";
 import IDriver from "../../../../types/driver.type.ts";
-import {handlePick} from "../../../../services/league.service.ts";
+// import {handlePick} from "../../../../services/league.service.ts";
+import {handlePick} from "../../DraftControls/DraftInProgress/index.tsx";
 import {NavigateFunction, useNavigate} from "react-router-dom";
 
 export default function DriverDraftTable({currentUser, undraftedDrivers, handleDriverSelection, currentPickName}) {
@@ -10,6 +11,13 @@ export default function DriverDraftTable({currentUser, undraftedDrivers, handleD
     // const [message, setMessage]
     //     = useState<string>("");
 
+    // const [pickId, setPickId]
+    //     = useState<number | null | undefined>();
+    //
+    // useEffect(() => {
+    //     setPickId(pickId);
+    //     handleDriverSelection(pickId)
+    // }, [pickId]);
 
     // const handlePick = (driverId: string) => {
     //     // const {driverId} = formValue;
@@ -41,117 +49,157 @@ export default function DriverDraftTable({currentUser, undraftedDrivers, handleD
     return (
         <>
             <div className="col-start-3 col-span-2">
-                <Formik
-                    initialValues={{
-                        driverSelected: '',
-                    }}
-                    onSubmit={(values) => {
-                        console.log("pick id:" + values.driverSelected)
-                        handlePick(currentUser?.id, values.driverSelected)
-                        navigate("/dashboard");
-                    }}
-                    // validateOnChange={(values) => {
-                    //     console.log("pick id:" + values.driverSelected)
-                    // }}
-                >
-                    {({values}) => (
-                        <Form id="driver-pick-form">
-                            {/*<div id="my-radio-group">Picked</div>*/}
-                            <div role="group" aria-labelledby="my-radio-group">
-                                {/*<label>*/}
-                                {/*    <Field type="radio" name="picked" value="One"/>*/}
-                                {/*    One*/}
-                                {/*</label>*/}
-                                {/*<label>*/}
-                                {/*    <Field type="radio" name="picked" value="Two"/>*/}
-                                {/*    Two*/}
-                                {/*</label>*/}
-                                {/*<div>Picked: {values.driverSelected}</div>*/}
-                                {/*</div>*/}
-
-                                {/*<button type="submit">Submit</button>*/}
-
-
-                                <table className="drivers-table">
-                                    <caption><h3>Undrafted Drivers -
-                                        <small>({undraftedDrivers?.length}/20 remaining)</small></h3>
-                                    </caption>
-                                    <thead>
-                                    <tr>
-                                        {/*<th id="confirm-test-pick">*/}
-                                        {/*    <button id="pick-button" type="submit">Submit</button>*/}
-                                        {/*<div className="form-group">*/}
-                                        {/*    <button name="driver-pick" className="btn btn-success" id="test-pick-button"*/}
-                                        {/*            type="submit"*/}
-                                        {/*            disabled={loading}>*/}
-                                        {/*        {loading && (*/}
-                                        {/*            <span className="spinner-border spinner-border-sm"></span>*/}
-                                        {/*        )}*/}
-                                        {/*        <span>Confirm<br/>Pick</span>*/}
-                                        {/*    </button>*/}
-                                        {/*</div>*/}
-                                        {/*</th>*/}
-                                        <th>Pick</th>
-                                        <th>Driver</th>
-                                        <th>Pos</th>
-                                        <th>Pts</th>
-                                        <th>Nationality</th>
-                                        <th>Constructor</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {undraftedDrivers?.map((driver: IDriver) => {
-                                        return (
-                                            <tr key={driver.driverId}>
-                                                {/*<td id="confirm-test-pick">*/}
-                                                <td
-                                                >{(currentUser.username == currentPickName) ?
-                                                    <Field id="pick-button"
-                                                           type="radio"
-                                                           name="driverSelected"
-                                                           value={driver.driverId}
-                                                           onChange={() => handleDriverSelection(driver)}
-                                                        // onChange={()=>console.log("pick id:" + driver.driverId)}
-                                                    />
-                                                    :
-                                                    <Field id="pick-button"
-                                                           type="radio"
-                                                           name="driverSelectedDisabled"
-                                                           value={driver.driverId}
-                                                           onChange={() => handleDriverSelection(driver)}
-                                                           disabled
-                                                        // onChange={()=>console.log("pick id:" + driver.driverId)}
-                                                    />
-                                                }
-                                                </td>
-                                                <td>{driver.surname}</td>
-                                                <td>{driver.standing}</td>
-                                                <td>{driver.points}</td>
-                                                <td>{driver.nationality}</td>
-                                                <td>{driver.constructor}</td>
-                                            </tr>
-                                        )
-                                    })}
-                                    </tbody>
-
-                                </table>
-                                <div>
-                                    <h6>
-                                        * Driver Changes:
-                                        <br/>Ricciardo replaced de Vries on July 11th 2023.
-                                        <br/>Lawson replaced Ricciardo on August 27th 2023.
-                                        <br/>Ricciardo replaced Lawson on October 20th 2023.
-                                    </h6>
-                                </div>
-                            </div>
-                        </Form>
-                    )}
-                </Formik>
-                {/*    </form>*/}
+                {/*<Formik*/}
+                {/*    initialValues={{*/}
+                {/*        picked: null,*/}
+                {/*    }}*/}
+                {/*    onSubmit={(values) => {*/}
+                {/*        console.log("pick id:")*/}
+                {/*        console.log(values.picked)*/}
+                {/*        handlePick(currentUser?.id, values.picked)*/}
+                {/*        navigate("/dashboard");*/}
+                {/*    }}*/}
+                {/*    // validateOnChange={(values) => {*/}
+                {/*    //     console.log("pick id:" + values.driverSelected)*/}
+                {/*    // }}*/}
+                {/*>*/}
+                {/*    /!*{({values}) => (*!/*/}
+                {/*    <Form id="driver-pick-form">*/}
+                {/*<div id="my-radio-group">Picked</div>*/}
+                {/*<div role="group" aria-labelledby="my-radio-group">*/}
+                {/*<label>*/}
+                {/*    <Field type="radio" name="picked" value="One"/>*/}
+                {/*    One*/}
+                {/*</label>*/}
+                {/*<label>*/}
+                {/*    <Field type="radio" name="picked" value="Two"/>*/}
+                {/*    Two*/}
+                {/*</label>*/}
+                {/*<div>Picked: {values.picked}</div>*/}
                 {/*</div>*/}
+
+                {/*<button type="submit">Submit</button>*/}
+
+
+                <table className="drivers-table">
+                    <caption><h3>Undrafted Drivers -
+                        <small>({undraftedDrivers?.length}/20 remaining)</small></h3>
+                    </caption>
+                    <thead>
+                    <tr>
+                        {/*<th id="confirm-test-pick">*/}
+                        {/*    <button id="pick-button" type="submit">Submit</button>*/}
+                        {/*<div className="form-group">*/}
+                        {/*    <button name="driver-pick" className="btn btn-success" id="test-pick-button"*/}
+                        {/*            type="submit"*/}
+                        {/*            disabled={loading}>*/}
+                        {/*        {loading && (*/}
+                        {/*            <span className="spinner-border spinner-border-sm"></span>*/}
+                        {/*        )}*/}
+                        {/*        <span>Confirm<br/>Pick</span>*/}
+                        {/*    </button>*/}
+                        {/*</div>*/}
+                        {/*</th>*/}
+                        <th>Pick</th>
+                        <th>Driver</th>
+                        <th>Pos</th>
+                        <th>Pts</th>
+                        <th>Nationality</th>
+                        <th>Constructor</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {undraftedDrivers?.map((driver: IDriver) => {
+                        return (
+                            <tr key={driver.driverId}>
+                                {/*<td id="confirm-test-pick">*/}
+                                <td>
+                                    {/*{driverPick = handleDriverSelection(driver.driverId)}*/}
+                                    {(currentUser.username == currentPickName) ?
+                                        <Formik
+                                            initialValues={{
+                                                driverId: null,
+                                            }}
+                                            onSubmit={(values) => {
+                                                console.log("pick id:")
+                                                console.log(values.driverId)
+                                                handlePick(currentUser?.id, values.driverId)
+                                                navigate("/dashboard");
+                                            }}
+                                            // validateOnChange={(values) => {
+                                            //     handleDriverSelection(values.picked);
+                                            // }}
+                                        >
+                                            {/*{({values}) => (*/}
+                                            <Form id="driver-pick-form">
+                                                <label>{driver.driverId}
+                                                    <Field
+                                                        type="radio"
+                                                        name="driverId"
+                                                        value={driver.driverId}
+                                                        innerRef={handleDriverSelection(driver.driverId)}
+                                                        // FieldInputProps={{onChange: handleDriverSelection(driver.driverId)}}
+                                                        // onChange={e => {
+                                                        //     e = setPickId(driver.driverId);
+                                                        //     // setFieldTouched('type');
+                                                        //     handleDriverSelection(e)
+                                                        // }}
+                                                        // onInput={() => handleDriverSelection(driver.driverId)}
+                                                        // onKeyDown={() => handleDriverSelection(driver.driverId)}
+                                                        // InputProps={{ on }}
+                                                        // onClick={() => handleDriverSelection(driver.driverId)}
+                                                        // value={()=>handleDriverSelection(driver.driverId)}
+                                                        // onChange={() => setPickId(driver.driverId)}
+                                                        // onChange={()=>console.log("pick id:" + driver.driverId)}
+                                                    />
+                                                </label>
+                                                {/*{handleDriverSelection(values)}*/}
+                                            </Form>
+                                            {/*// )}*/}
+                                        </Formik>
+                                        :
+                                        <div></div>
+                                        // <Field id="pick-button"
+                                        //        type="radio"
+                                        //        name="driverSelectedDisabled"
+                                        //        value={driver.driverId}
+                                        //        onChange={() => handleDriverSelection(driver)}
+                                        //        disabled
+                                        //     // onChange={()=>console.log("pick id:" + driver.driverId)}
+                                        // />
+                                    }
+                                </td>
+                                <td>{driver.surname}</td>
+                                <td>{driver.standing}</td>
+                                <td>{driver.points}</td>
+                                <td>{driver.nationality}</td>
+                                <td>{driver.constructor}</td>
+                            </tr>
+                        )
+                    })}
+                    </tbody>
+
+                </table>
+                <div>
+                    <h6>
+                        * Driver Changes:
+                        <br/>Ricciardo replaced de Vries on July 11th 2023.
+                        <br/>Lawson replaced Ricciardo on August 27th 2023.
+                        <br/>Ricciardo replaced Lawson on October 20th 2023.
+                    </h6>
+                </div>
+                {/*</div>*/}
+                {/*</Form>*/}
+                {/*)}*/}
+                {/*// </Formik>*/}
+                {/*    </form>*/
+                }
+                {/*</div>*/
+                }
             </div>
         </>
-    );
+    )
+        ;
 }
 
 // const navigate: NavigateFunction = useNavigate();

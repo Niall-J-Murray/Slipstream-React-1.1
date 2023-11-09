@@ -2,7 +2,6 @@ package me.niallmurray.slipstream.webrest;
 
 import jakarta.validation.Valid;
 import me.niallmurray.slipstream.domain.Driver;
-import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
 import me.niallmurray.slipstream.service.DriverService;
 import me.niallmurray.slipstream.service.TeamService;
@@ -31,6 +30,7 @@ public class DriverController {
   @GetMapping("/{driverId}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<Driver> getDriverData(@PathVariable Long driverId) {
+    System.out.println("getDriverData: " + driverId);
     Driver driver = driverService.findById(driverId);
 //    System.out.println("driver entity: " + ResponseEntity.ok(driverOpt.orElse(null)));
     return ResponseEntity.ok(driver);
@@ -44,7 +44,7 @@ public class DriverController {
     return ResponseEntity.ok(allDrivers);
   }
 
-  @GetMapping("/{teamId}")
+  @GetMapping("/teamDrivers/{teamId}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<List<Driver>> getDriversInTeam(@PathVariable Long teamId) {
     Team team = teamService.findById(teamId);
@@ -69,7 +69,7 @@ public class DriverController {
 
   @PostMapping("/pick/{userId}")
   public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, @Valid @RequestBody Map<String, Long> requestData) {
-    System.out.println("driverID: " + requestData.get("driverId"));
+    System.out.println("postPickDriver driverID: " + requestData.get("driverId"));
 
     Long driverId = requestData.get("driverId");
     Long userLeagueId = userService.findById(userId).getTeam().getLeague().getLeagueId();
