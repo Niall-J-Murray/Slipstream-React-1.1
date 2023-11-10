@@ -13,13 +13,15 @@ export default function DraftControls({
                                           isDraftInProgress,
                                           currentPickNumber,
                                           currentPickName,
-                                          selectedDriver
+                                          selectedDriver,
+                                          lastDriverPicked,
+                                          lastPickTime
                                       }) {
     return (
         <>
             <div className="col-start-2 col-span-3 box-shadow">
                 {!isLeagueFull ?
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-5">
                         <PracticeDraftOptions
                             currentLeague={currentLeague}
                             isPracticeLeague={isPracticeLeague}
@@ -36,7 +38,9 @@ export default function DraftControls({
                             isDraftInProgress={isDraftInProgress}
                             currentPickNumber={currentPickNumber}
                             currentPickName={currentPickName}
-                            selectedDriver={selectedDriver}/>
+                            selectedDriver={selectedDriver}
+                            lastDriverPicked={lastDriverPicked}
+                            lastPickTime={lastPickTime}/>
                     </div>
                 }
             </div>

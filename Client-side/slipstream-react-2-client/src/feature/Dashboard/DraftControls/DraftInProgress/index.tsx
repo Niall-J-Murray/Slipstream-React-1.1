@@ -1,11 +1,11 @@
-import {postPickDriver} from "../../../../services/driver.service.ts";
-
 export default function DraftInProgress({
                                             currentUser,
                                             isDraftInProgress,
                                             currentPickNumber,
                                             currentPickName,
-                                            selectedDriver
+                                            selectedDriver,
+                                            lastDriverPicked,
+                                            lastPickTime
                                         }) {
 
 // const handlePick = (userId: number | null | undefined, driverId: string) => {
@@ -61,7 +61,14 @@ export default function DraftInProgress({
                                 :
                                 "Select a driver below..."}
                         </h4>
-                        <button form="driver-pick-form" className={"btn btn-proceed"} type="submit">
+                        <button form="driver-pick-form" className={"btn btn-proceed"} type="submit"
+                            //         onSubmit={(values) => {
+                            //     console.log("pick id:")
+                            //     console.log(values)
+                            //     handlePick(currentUser?.id, values)
+                            //     navigate("/dashboard");
+                            // }}>
+                        >
                             Confirm Pick
                         </button>
                     </div>
@@ -81,18 +88,14 @@ export default function DraftInProgress({
                 </div>
                 <div className="col-start-4 col-span-1">
                     <h4>
-                        Last driver selected was:
+                        Last pick was made at:
                     </h4>
                     <h4>
-                        {selectedDriver
-                            ?
-                            selectedDriver?.firstName + " " + selectedDriver?.surname
-                            :
-                            "No picks made yet"}
+                        {lastPickTime ? lastPickTime : "No picks made yet"}
                     </h4>
-                    <h4>
-                        Picked by previousPick
-                    </h4>
+                    <button disabled={true} className={"btn btn-disabled"} type="submit">
+                        Confirm Pick
+                    </button>
                 </div>
             </>
         }
@@ -106,29 +109,29 @@ export default function DraftInProgress({
 
 }
 
-export const handlePick = (userId: number | null | undefined, driverId: number | null | undefined) => {
-    // const {driverId} = formValue;
-    console.log("handlePick");
-    console.log(userId);
-    console.log(driverId);
-    // setMessage("");
-    // setLoading(true);
-    // driverId = 3;
-
-    postPickDriver(userId, driverId).then(
-        () => {
-            window.location.reload();
-        },
-        (error) => {
-            const resMessage =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
-
-            // setLoading(false);
-            // setMessage(resMessage);
-        }
-    );
-};
+// export const handlePick = (userId: number | null | undefined, driverId: number | null | undefined) => {
+//     // const {driverId} = formValue;
+//     console.log("handlePick");
+//     console.log(userId);
+//     console.log(driverId);
+//     // setMessage("");
+//     // setLoading(true);
+//     // driverId = 3;
+//
+//     postPickDriver(userId, driverId).then(
+//         () => {
+//             window.location.reload();
+//         },
+//         (error) => {
+//             const resMessage =
+//                 (error.response &&
+//                     error.response.data &&
+//                     error.response.data.message) ||
+//                 error.message ||
+//                 error.toString();
+//
+//             // setLoading(false);
+//             // setMessage(resMessage);
+//         }
+//     );
+// };

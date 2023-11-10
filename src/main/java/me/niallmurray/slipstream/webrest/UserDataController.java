@@ -22,12 +22,12 @@ public class UserDataController {
     Optional<User> userOpt = userRepository.findById(userId);
 //    return userOpt.orElse(null);
 //    System.out.println("user entity: " + ResponseEntity.ok(userOpt.orElse(null)));
-    if (userOpt.isPresent()) {
-      System.out.println("user entity: " + ResponseEntity.ok(userOpt.orElse(null).getUsername()));
-      if (userOpt.orElse(null).getTeam() != null) {
-        System.out.println(userOpt.orElse(null).getTeam().getDrivers());
-      }
-    }
+//    if (userOpt.isPresent()) {
+//      System.out.println("user entity: " + ResponseEntity.ok(userOpt.orElse(null).getUsername()));
+//      if (userOpt.orElse(null).getTeam() != null) {
+//        System.out.println(userOpt.orElse(null).getTeam().getDrivers());
+//      }
+//    }
     return ResponseEntity.ok(userOpt.orElse(null));
   }
 

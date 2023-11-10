@@ -1,13 +1,15 @@
 import * as Yup from "yup";
 import {NavigateFunction, useNavigate} from 'react-router-dom';
 import {ErrorMessage, Field, Form, Formik} from "formik";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {createTeam} from "../../../services/team.service.ts";
+import IDriver from "../../../types/driver.type.ts";
 
 export default function DashTop({
                                     currentUser,
                                     userData,
                                     team,
+                                    driversInTeam,
                                     openLeague,
                                     currentLeague,
                                     leagueTeams,
@@ -18,17 +20,10 @@ export default function DashTop({
                                     currentPickName
                                 }) {
     const navigate: NavigateFunction = useNavigate();
-
     const [loading, setLoading]
         = useState<boolean>(false);
     const [message, setMessage]
         = useState<string>("");
-
-
-    // useEffect(() => {
-    //     setLeagueSize(currentLeague?.teams.length);
-    // }, [currentLeague]);
-
 
     const initialValues: {
         // userId: number | null | undefined;
@@ -71,6 +66,26 @@ export default function DashTop({
     const teamName = team?.teamName
     const firstPickNumber = team?.firstPickNumber
     const secondPickNumber = team?.secondPickNumber
+
+    console.log(driversInTeam)
+    let tds: IDriver[]
+    let driver1: IDriver | undefined
+    let driver2: IDriver | undefined
+
+    // function getDrivers(drivers: IDriver[]) {
+    //     tds = drivers;
+    //     driver1 = tds[0]
+    //     driver2 = tds[1]
+    // }
+
+    // getDrivers(driversInTeam)
+    console.log(driver1)
+    console.log(driver2)
+
+    // const tds:IDriver[] = teamDrivers;
+    // console.log(tds)
+
+
     // const leagueFull = "leagueFull"
     // const timeToPick = "timeToPick";
     // const leagueActive = "leagueActive";
@@ -144,32 +159,6 @@ export default function DashTop({
         }
     }
 
-    // function PickInstructions() {
-    //     if (isDraftInProgress) {
-    //         if (firstPickNumber == currentPickNumber || secondPickNumber == currentPickNumber) {
-    //             return <>
-    //                 <h4 className={"text-#2ea44f; text-decoration-line: underline"}>
-    //                     Current pick number: {currentPickNumber}
-    //                 </h4>
-    //                 <h4 className="color: #2ea44f; text-decoration-line: underline">
-    //                     It's your turn to pick {currentUser.username}!
-    //                 </h4>
-    //             </>
-    //         }
-    //         return <>
-    //             <p>
-    //                 Draft in progress, please wait for your turn to pick.
-    //             </p>
-    //             <h4 className={"color: #2ea44f; text-decoration-line: underline"}>
-    //                 Current pick number: {currentPickNumber}
-    //             </h4>
-    //             <h4 className="color: #2ea44f; text-decoration-line: underline">
-    //                 It's {currentPickName}'s turn to select a driver.
-    //             </h4>
-    //         </>
-    //     }
-    // }
-
     function UserGreeting() {
         if (team != null) {
             if (isLeagueFull) {
@@ -177,13 +166,33 @@ export default function DashTop({
                     <h2>{currentUser?.username}'s Dashboard </h2>
                     <hr/>
                     <p>Your team: "{teamName}"</p>
-                    <p>Random 1st pick draft number: {firstPickNumber}</p>
-                    <p>Random 2nd pick draft number: {secondPickNumber}</p>
+                    <p>1st pick number: {firstPickNumber}</p>
+                    <p>2nd pick number: {secondPickNumber}</p>
+                    {/*<p>1st driver: {"d1"}</p>*/}
+                    {/*<p>2nd driver: {"d2"}</p>*/}
+                    {/*<p>1st driver: {driver1?.surname}</p>*/}
+                    {/*<p>2nd driver: {driver2?.surname}</p>*/}
+                    {/*<p>1st driver: {driversInTeam[0].surname}</p>*/}
+                    {/*<p>2nd driver: {driversInTeam[1].surname}</p>*/}
+                    <p>Selected Drivers -</p>
+                    {driversInTeam?.map((driver: IDriver, i) => {
+                        return (
+                            <p key={driver.driverId}>
+                                {i+1}. {driver.surname}
+                            </p>
+                        )
+                    })}
+
+                    {/*{teamDrivers ?*/}
+                    {/*    <div>*/}
+                    {/*        <p>Selected Drivers -</p>*/}
+                    {/*        {driver1 ? driver1.surname : "none"}*/}
+                    {/*    </div>*/}
+                    {/*    :*/}
+                    {/*    <div></div>}*/}
                     <hr/>
                     <h3>League is {leagueTeams?.length} of 10 teams full.</h3>
                     <PracticeGreeting/>
-                    <hr/>
-                    {/*<PickInstructions/>*/}
                 </div>
             }
             return <div>

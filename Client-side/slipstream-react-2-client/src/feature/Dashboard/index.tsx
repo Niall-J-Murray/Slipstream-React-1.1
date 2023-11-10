@@ -6,7 +6,7 @@ import DashTop from "./DashTop";
 import Reminders from "./Reminders";
 import Table1 from "./Table1";
 import Table2 from "./Table2";
-import {SetStateAction, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {
     getAllLeagueTeams,
     getIsDraftInProgress,
@@ -24,8 +24,9 @@ import ITeam from "../../types/team.type.ts";
 import ILeague from "../../types/league.type.ts";
 import {createTestTeam, getTeam} from "../../services/team.service.ts";
 import IDriver from "../../types/driver.type.ts";
-import {getDriverData, getUndraftedDrivers} from "../../services/driver.service.ts";
+import {getDriverData, getDriversInTeam, getUndraftedDrivers, postPickDriver} from "../../services/driver.service.ts";
 import DraftControls from "./DraftControls";
+import {date} from "yup";
 
 export default function Dashboard() {
     const [currentUser, setCurrentUser]
@@ -34,6 +35,8 @@ export default function Dashboard() {
         = useState<IUser | undefined>();
     const [team, setTeam]
         = useState<ITeam | undefined>();
+    const [driversInTeam, setDriversInTeam]
+        = useState<Array<IDriver> | undefined>();
     const [openLeague, setOpenLeague]
         = useState<ILeague | undefined>();
     const [currentLeague, setCurrentLeague]
@@ -58,6 +61,10 @@ export default function Dashboard() {
         = useState<string | undefined>("");
     const [selectedDriver, setSelectedDriver]
         = useState<IDriver | undefined>();
+    const [lastDriverPicked, setLastDriverPicked]
+        = useState<IDriver | undefined>();
+    const [lastPickTime, setLastPickTime]
+        = useState();
     // const navigate: NavigateFunction = useNavigate();
     // const [loading, setLoading]
     //     = useState<boolean>(false);
@@ -81,7 +88,7 @@ export default function Dashboard() {
     // Todo Display correct info and options in dash-top depending on users team/league status.
     //  ---
     //  Enable draft picking functionality.
-    //  Fix so only team owner can add to their team, or test teams.
+    //  Fix draft instructions to display according to user status.
     //  Check picking function to show driver selected before confirming pick.
 
     useEffect(() => {
@@ -91,13 +98,9 @@ export default function Dashboard() {
             if (user != null) {
                 const userData = await getUserData(user.id);
                 setUserData(userData);
-                console.log("userData");
-                console.log(userData);
-                console.log("userData drivers");
-                console.log(userData?.team?.drivers);
 
                 if (userData.team) {
-                    setTeam(await getTeam(userData?.team?.id));
+                    setTeam(await getTeam(userData?.team?.id))
                 }
                 getOpenLeague()
                     .then(function (response) {
@@ -108,6 +111,10 @@ export default function Dashboard() {
                     await getAllLeagueTeams(leagueData.leagueId)
                         .then(function (response) {
                             setLeagueTeams(response)
+                        })
+                    getDriversInTeam(userData.team.id)
+                        .then(function (response) {
+                            setDriversInTeam(response);
                         })
                     getIsLeagueActive(leagueData.leagueId)
                         .then(function (response) {
@@ -138,8 +145,6 @@ export default function Dashboard() {
                     if (leagueData.teams.length >= 10) {
                         setIsLeagueFull(true)
                     }
-                    ;
-                    setSelectedDriver(selectedDriver);
                 } else {
                     await getOpenLeague()
                         .then(function (response) {
@@ -161,11 +166,6 @@ export default function Dashboard() {
         }
         fetchUserData().catch(console.error);
     }, []);
-
-    console.log("dash team")
-    console.log(team)
-    console.log("dash team drivers")
-    console.log(team?.drivers)
 
     function togglePracticeOptions() {
         if (showPracticeOptions) {
@@ -198,42 +198,31 @@ export default function Dashboard() {
             })
     }
 
-    const handleDriverSelection = (driver) => {
-        setSelectedDriver(driver);
+    // const handleDriverSelection = (driver) => {
+    //     setSelectedDriver(driver);
+    // }
+
+    const handleDriverSelection = (driverId: number | null | undefined) => {
+        getDriverData(driverId)
+            .then(function (response) {
+                setSelectedDriver(response);
+            })
+        return driverId;
     }
 
-    // const handleDriverSelection = (driverId: number | null | undefined) => {
-    //     getDriverData(driverId)
-    //         .then(function (response) {
-    //             setSelectedDriver(response);
-    //         })
-    // }
-    // const handlePick = (driverId: string) => {
-    //     // const {driverId} = formValue;
-    //     console.log("handlePick");
-    //     console.log(currentUser?.id);
-    //     console.log(driverId);
-    //     setMessage("");
-    //     setLoading(true);
-    //
-    //     postPickDriver(currentUser?.id, driverId).then(
-    //         () => {
-    //             navigate("/dashboard");
-    //             window.location.reload();
-    //         },
-    //         (error) => {
-    //             const resMessage =
-    //                 (error.response &&
-    //                     error.response.data &&
-    //                     error.response.data.message) ||
-    //                 error.message ||
-    //                 error.toString();
-    //
-    //             setLoading(false);
-    //             setMessage(resMessage);
-    //         }
-    //     );
-    // };
+    const handlePick = (driverId: number | null | undefined) => {
+        postPickDriver(currentUser?.id, driverId)
+            .then(function (response) {
+                console.log(response)
+                setLastDriverPicked(response);
+                const timeElapsed = Date.now();
+                const today = new Date(timeElapsed);
+                setLastPickTime(today);
+            })
+
+        console.log(lastDriverPicked)
+        console.log(lastPickTime)
+    };
 
     return (
         <>
@@ -245,6 +234,7 @@ export default function Dashboard() {
                             currentUser={currentUser}
                             userData={userData}
                             team={team}
+                            driversInTeam={driversInTeam}
                             openLeague={openLeague}
                             currentLeague={currentLeague}
                             leagueTeams={leagueTeams}
@@ -266,7 +256,9 @@ export default function Dashboard() {
                             isDraftInProgress={isDraftInProgress}
                             currentPickNumber={currentPickNumber}
                             currentPickName={currentPickName}
-                            selectedDriver={selectedDriver}/>
+                            selectedDriver={selectedDriver}
+                            lastDriverPicked={lastDriverPicked}
+                            lastPickTime={lastPickTime}/>
                         <Table1
                             isLeagueActive={isLeagueActive}
                             openLeague={openLeague}
@@ -280,7 +272,8 @@ export default function Dashboard() {
                             isDraftInProgress={isDraftInProgress}
                             undraftedDrivers={undraftedDrivers}
                             currentPickName={currentPickName}
-                            handleDriverSelection={handleDriverSelection}/>
+                            handleDriverSelection={handleDriverSelection}
+                            handlePick={handlePick}/>
                     </Body>
                 </BackgroundImage>
             </View>

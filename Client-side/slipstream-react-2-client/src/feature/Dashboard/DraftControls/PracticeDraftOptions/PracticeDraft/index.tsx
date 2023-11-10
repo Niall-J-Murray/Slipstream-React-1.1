@@ -88,7 +88,7 @@ export default function PracticeDraft({
 
     return (
         <>
-            <PracticeDraftToggle/>
+                <PracticeDraftToggle/>
         </>
     );
 }

@@ -118,8 +118,6 @@ a {
 .btn-dropdown {
     text-align: center;
     cursor: pointer;
-    /*font-size:24px;*/
-    /*margin: 0 0 0 100px;*/
     border-radius: 4px;
     background-color: red;
     border: none;
@@ -180,6 +178,15 @@ a {
 .btn-proceed:focus,
 .btn-dropdown:focus {
     background-color: #2ea44f;
+}
+
+.btn-disabled{
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+    padding: 5px;
+    width: 200px;
 }
 
 a:hover,

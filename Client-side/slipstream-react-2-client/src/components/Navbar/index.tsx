@@ -134,7 +134,7 @@ export default function Navbar() {
                                                             active ? "bg-black-100" : "",
                                                             "block px-4 py-2 text-sm text-black-700"
                                                         )}
-                                                    >Settings</a>
+                                                    >Change Password</a>
                                                 )}
                                             </Menu.Item>
                                             <Menu.Item>

@@ -29,8 +29,6 @@ export const getAllLeagueTeams = async (leagueId: number | null | undefined) => 
 export const getTeamLeague = async (teamId: number | null | undefined) => {
     const data = await axios.get(API_DATA_URL + "team/" + teamId, {headers: authHeader()})
         .then(response => response.data);
-    console.log("getTeamLeague")
-    console.log(data)
     return data;
 };
 
@@ -65,8 +63,6 @@ export const postToggleTestLeague = async (leagueId: number | null | undefined) 
             leagueId
         });
     if (response.data) {
-        console.log("postToggleTestLeague:")
-        console.log(response.data)
         return response.data;
     }
 };
