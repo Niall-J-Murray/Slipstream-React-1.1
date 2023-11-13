@@ -22,7 +22,15 @@ export default function Table2({
                 currentPick={currentPick}
                 handlePick={handlePick}/>;
         }
-        return <DriverStandingsTable/>;
+        // if (isLeagueActive) {
+        //     return <div className="col-start-2 col-span-3">
+        //         <DriverStandingsTable/>
+        //     </div>
+        // }
+        return <div className="col-start-3 col-span-2">
+            <DriverStandingsTable/>
+        </div>
+
     }
 
     return (

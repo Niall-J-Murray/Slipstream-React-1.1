@@ -170,7 +170,7 @@ export default function DashTop({
                     <p>1st pick number: {firstPickNumber}</p>
                     <p>2nd pick number: {secondPickNumber}</p>
                     <p>Selected Drivers -</p>
-                    {driversInTeam?.map((driver: IDriver, i) => {
+                    {driversInTeam?.map((driver: IDriver, i:number) => {
                         return (
                             <p key={driver.driverId}>
                                 {i + 1}. {driver.surname}
@@ -217,11 +217,11 @@ export default function DashTop({
 
     return (
         <>
-            <div className="col-start-2 col-span-1 box-shadow">
-                <div className="p-2">
+            {/*<div className="col-start-2 col-span-1">*/}
+                <div className="box-shadow">
                     <Greeting/>
                 </div>
-            </div>
+            {/*</div>*/}
         </>
     );
 }

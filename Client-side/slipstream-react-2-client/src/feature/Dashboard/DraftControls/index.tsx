@@ -25,7 +25,8 @@ export default function DraftControls({
             {isLeagueActive ?
                 <div></div>
                 :
-                <div className="col-start-2 col-span-3 box-shadow">
+                // <div className="col-start-2 col-span-3 box-shadow">
+                <div className="box-shadow">
                     {!isLeagueFull ?
                         <div className="grid grid-cols-5">
                             <PracticeDraftOptions

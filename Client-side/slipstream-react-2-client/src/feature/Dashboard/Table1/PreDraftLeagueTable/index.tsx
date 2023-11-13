@@ -10,7 +10,6 @@ export default function PreDraftLeagueTable({openLeague, currentLeague, leagueTe
 
     return (
         <>
-            <div className="col-start-2 col-span-1.5">
                 <table className="league-table">
                     <caption>
                         <h3>{currentLeague ?
@@ -19,10 +18,10 @@ export default function PreDraftLeagueTable({openLeague, currentLeague, leagueTe
                     </caption>
                     <thead>
                     <tr>
-                        <th className={"username"}>Username</th>
-                        <th className={"teamname"}>Teamname</th>
-                        <th>1st<br/>Pick</th>
-                        <th>2nd<br/>Pick</th>
+                        <th className={"username"}>User Name</th>
+                        <th className={"teamname"}>Team Name</th>
+                        <th>1st Pick</th>
+                        <th>2nd Pick</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -38,7 +37,6 @@ export default function PreDraftLeagueTable({openLeague, currentLeague, leagueTe
                     })}
                     </tbody>
                 </table>
-            </div>
         </>
     );
 }

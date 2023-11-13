@@ -44,17 +44,14 @@ public class TeamService {
       user.setTeam(team);
       user.setEmail(user.getEmail());
     }
-//     if (isUniqueTeamName(user.getTeam().getTeamName())) {
-//      team.setTeamName(user.getTeam().getTeamName());
-//      user.setTeam(team);
-//      user.setEmail(user.getEmail());
-//    }
+
     String userDisplayName = formatUserDisplayName(user); //To handle longer usernames which may cause irregular table layout displays.
     team.setUsername(userDisplayName);
     team.setFirstPickNumber(randomPickNumber());
     team.setSecondPickNumber(21 - team.getFirstPickNumber()); //So players get 1&20, 2&19 etc. up to 10&11.
     team.setRanking(team.getFirstPickNumber());
     team.setStartingPoints(0.0);
+    team.setTeamPoints(0.0);
     team.setIsTestTeam(false);
     team.setLeague(leagueService.findAvailableLeague());
     addOneTeamToLeague(team);
@@ -93,6 +90,7 @@ public class TeamService {
       team.setSecondPickNumber(21 - team.getFirstPickNumber());
       team.setRanking(team.getFirstPickNumber());
       team.setStartingPoints(0.0);
+      team.setTeamPoints(0.0);
       team.setIsTestTeam(true);
       team.setLeague(league);
 

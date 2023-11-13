@@ -1,7 +1,8 @@
 export default function Reminders() {
     return (
         <>
-            <div className="col-span-2 box-shadow">
+            {/*<div className="col-span-2 box-shadow">*/}
+            <div className="box-shadow">
                 <h4>Reminders</h4>
                 <ul className="text-block">
                     <li>When you create a team, it is automatically added to the current open league, as shown

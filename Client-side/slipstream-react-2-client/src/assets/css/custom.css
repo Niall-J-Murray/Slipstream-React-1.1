@@ -51,8 +51,9 @@ body {
 }
 
 .box-shadow {
-    padding: 1%;
+    padding: 2%;
     box-shadow: inset 0 0 25em 25em rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
 }
 
 .home-text {
@@ -180,7 +181,7 @@ a {
     background-color: #2ea44f;
 }
 
-.btn-disabled{
+.btn-disabled {
     text-align: center;
     cursor: pointer;
     border-radius: 4px;
@@ -199,11 +200,10 @@ a:hover,
     text-decoration-line: underline
 }
 
-.pick-instructions-go{
+.pick-instructions-go {
     color: #2ea44f;
     text-decoration-line: underline
 }
-
 
 
 #confirm-pick,
@@ -266,44 +266,54 @@ a:hover,
     /*table-layout: fixed;*/
     /*caption-side: top;*/
     table-layout: auto;
-    width: 100%;
+    /*width: 100%;*/
+    opacity: 80%;
 }
 
 .league-table thead th {
+    /*table-layout: auto;*/
     table-layout: auto;
-    width: 100%;
+    /*width: 100%;*/
+    padding: 2px 5px;
     border: 1px solid white;
     background-color: black;
     color: white;
     text-shadow: none;
 }
 
+/*.username{*/
+/*    width: 100%;*/
+/*}*/
+
 .league-table td {
     border: 1px solid black;
     text-align: center;
 }
 
-.league-table .ranking {
-    width: 10%;
+.league-table caption,
+.drivers-table caption {
+    border: 1px solid white;
+    border-radius: 10px;
 }
 
-.league-table .username {
-    width: 50%;
+th:first-of-type {
+    border-top-left-radius: 10px;
 }
 
-/*.league-table .teamname,*/
-/*.league-table .points,*/
-/*.league-table .drivers {*/
-/*    width: 100%;*/
-/*}*/
+th:last-of-type {
+    border-top-right-radius: 10px;
+}
 
-thead caption {
-    text-align: center;
+tr:last-of-type td:first-of-type {
+    border-bottom-left-radius: 10px;
+}
+
+tr:last-of-type td:last-of-type {
+    border-bottom-right-radius: 10px;
 }
 
 .league-table td,
-.league-table th,
-.league-table caption {
+.league-table th {
     border: 1px solid white;
 }
 
@@ -322,7 +332,9 @@ thead caption {
 }
 
 .league-table tr:hover {
-    background-color: gray;
+    /*background-color: gray;*/
+    /*text-decoration-line: underline;*/
+    /*border: 5px solid black;*/
 }
 
 .drivers-table {
@@ -335,6 +347,7 @@ thead caption {
     /*caption-side: top;*/
     table-layout: auto;
     width: 100%;
+    opacity: 80%;
 }
 
 .drivers-table {
@@ -364,9 +377,9 @@ thead caption {
     text-align: center;
 }
 
-.drivers-table .username {
-    width: 75%;
-}
+/*.drivers-table .username {*/
+/*    width: 75%;*/
+/*}*/
 
 thead caption {
     text-align: center;

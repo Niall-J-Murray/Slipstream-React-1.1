@@ -86,9 +86,10 @@ export default function Dashboard() {
 
     // Todo Display correct info and options in dash-top depending on users team/league status.
     //  ---
-    //  Enable draft picking functionality.
+    //  Add toggles to show/hide certain boxes.
+    //  Fix layouts for consistency.
     //  Fix draft instructions to display according to user status.
-    //  Check picking function to show driver selected before confirming pick.
+    //  fix data missing data on page reloads.
 
     useEffect(() => {
         const user = getCurrentUser();
@@ -195,6 +196,11 @@ export default function Dashboard() {
             .then((response) => {
                 setLeagueTeams(response)
             })
+            .then(() => {
+                if (leagueTeams.length >= 10) {
+                    setIsLeagueFull(true);
+                }
+            });
     }
 
     // const handleDriverSelection = (driver) => {
@@ -229,55 +235,93 @@ export default function Dashboard() {
                 <BackgroundImage>
                     <Navbar/>
                     <Body>
-                        <DashTop
-                            currentUser={currentUser}
-                            userData={userData}
-                            team={team}
-                            driversInTeam={driversInTeam}
-                            openLeague={openLeague}
-                            currentLeague={currentLeague}
-                            leagueTeams={leagueTeams}
-                            isPracticeLeague={isPracticeLeague}
-                            isLeagueFull={isLeagueFull}
-                            isDraftInProgress={isDraftInProgress}
-                            currentPickNumber={currentPickNumber}
-                            currentPick={currentPick}
-                            isLeagueActive={isLeagueActive}/>
-                        <Reminders/>
-                        <DraftControls
-                            currentLeague={currentLeague}
-                            isPracticeLeague={isPracticeLeague}
-                            isLeagueFull={isLeagueFull}
-                            showPracticeOptions={showPracticeOptions}
-                            togglePracticeOptions={togglePracticeOptions}
-                            togglePracticeLeague={togglePracticeLeague}
-                            addTestTeam={addTestTeam}
-                            currentUser={currentUser}
-                            isDraftInProgress={isDraftInProgress}
-                            currentPickNumber={currentPickNumber}
-                            currentPick={currentPick}
-                            selectedDriver={selectedDriver}
-                            lastDriverPicked={lastDriverPicked}
-                            lastPickTime={lastPickTime}
-                            isLeagueActive={isLeagueActive}/>
-                        <Table1
-                            isLeagueActive={isLeagueActive}
-                            openLeague={openLeague}
-                            currentLeague={currentLeague}
-                            leagueTeams={leagueTeams}
-                            isDraftInProgress={isDraftInProgress}/>
-                        <Table2
-                            currentUser={currentUser}
-                            isLeagueFull={isLeagueFull}
-                            isLeagueActive={isLeagueActive}
-                            isDraftInProgress={isDraftInProgress}
-                            undraftedDrivers={undraftedDrivers}
-                            currentPick={currentPick}
-                            handleDriverSelection={handleDriverSelection}
-                            handlePick={handlePick}/>
+                        <div className="grid grid-cols-5 gap-2">
+                            <div className="col-start-2 col-span-1">
+                                <DashTop
+                                    currentUser={currentUser}
+                                    userData={userData}
+                                    team={team}
+                                    driversInTeam={driversInTeam}
+                                    openLeague={openLeague}
+                                    currentLeague={currentLeague}
+                                    leagueTeams={leagueTeams}
+                                    isPracticeLeague={isPracticeLeague}
+                                    isLeagueFull={isLeagueFull}
+                                    isDraftInProgress={isDraftInProgress}
+                                    currentPickNumber={currentPickNumber}
+                                    currentPick={currentPick}
+                                    isLeagueActive={isLeagueActive}/>
+                            </div>
+                            <div className="col-start-3 col-span-2">
+                                <Reminders/>
+                            </div>
+                            <div className="col-start-2 col-span-3">
+                                <DraftControls
+                                    currentLeague={currentLeague}
+                                    isPracticeLeague={isPracticeLeague}
+                                    isLeagueFull={isLeagueFull}
+                                    showPracticeOptions={showPracticeOptions}
+                                    togglePracticeOptions={togglePracticeOptions}
+                                    togglePracticeLeague={togglePracticeLeague}
+                                    addTestTeam={addTestTeam}
+                                    currentUser={currentUser}
+                                    isDraftInProgress={isDraftInProgress}
+                                    currentPickNumber={currentPickNumber}
+                                    currentPick={currentPick}
+                                    selectedDriver={selectedDriver}
+                                    lastDriverPicked={lastDriverPicked}
+                                    lastPickTime={lastPickTime}
+                                    isLeagueActive={isLeagueActive}/>
+                            </div>
+                            {isLeagueActive ?
+                                <>
+                                    <div className="col-start-2 col-span-3">
+                                        <Table1
+                                            isLeagueActive={isLeagueActive}
+                                            openLeague={openLeague}
+                                            currentLeague={currentLeague}
+                                            leagueTeams={leagueTeams}
+                                            isDraftInProgress={isDraftInProgress}/>
+                                    </div>
+                                    <div className="col-start-2 col-span-3">
+                                        <Table2
+                                            currentUser={currentUser}
+                                            isLeagueFull={isLeagueFull}
+                                            isLeagueActive={isLeagueActive}
+                                            isDraftInProgress={isDraftInProgress}
+                                            undraftedDrivers={undraftedDrivers}
+                                            currentPick={currentPick}
+                                            handleDriverSelection={handleDriverSelection}
+                                            handlePick={handlePick}/>
+                                    </div>
+                                </>
+                                :
+                                <>
+                                    <div className="col-start-2 col-span-1"><Table1
+                                        isLeagueActive={isLeagueActive}
+                                        openLeague={openLeague}
+                                        currentLeague={currentLeague}
+                                        leagueTeams={leagueTeams}
+                                        isDraftInProgress={isDraftInProgress}/>
+                                    </div>
+                                    <div className="col-start-3 col-span-2">
+                                        <Table2
+                                            currentUser={currentUser}
+                                            isLeagueFull={isLeagueFull}
+                                            isLeagueActive={isLeagueActive}
+                                            isDraftInProgress={isDraftInProgress}
+                                            undraftedDrivers={undraftedDrivers}
+                                            currentPick={currentPick}
+                                            handleDriverSelection={handleDriverSelection}
+                                            handlePick={handlePick}/>
+                                    </div>
+                                </>
+                            }
+                        </div>
                     </Body>
                 </BackgroundImage>
             </View>
         </>
-    );
+    )
+        ;
 }
