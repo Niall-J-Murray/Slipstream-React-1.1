@@ -11,7 +11,7 @@ import {
     getAllLeagueTeams,
     getIsDraftInProgress,
     getIsLeagueActive,
-    getNextPickName,
+    getNextPick,
     getOpenLeague,
     getPickNumber,
     getTeamLeague,
@@ -26,7 +26,6 @@ import {createTestTeam, getTeam} from "../../services/team.service.ts";
 import IDriver from "../../types/driver.type.ts";
 import {getDriverData, getDriversInTeam, getUndraftedDrivers, postPickDriver} from "../../services/driver.service.ts";
 import DraftControls from "./DraftControls";
-import {date} from "yup";
 
 export default function Dashboard() {
     const [currentUser, setCurrentUser]
@@ -57,14 +56,14 @@ export default function Dashboard() {
         = useState<Array<IDriver> | undefined>([]);
     const [currentPickNumber, setCurrentPickNumber]
         = useState<number>(0)
-    const [currentPickName, setCurrentPickName]
-        = useState<string | undefined>("");
+    const [currentPick, setCurrentPick]
+        = useState<IUser | undefined>("");
     const [selectedDriver, setSelectedDriver]
         = useState<IDriver | undefined>();
     const [lastDriverPicked, setLastDriverPicked]
         = useState<IDriver | undefined>();
     const [lastPickTime, setLastPickTime]
-        = useState();
+        = useState<Date>();
     // const navigate: NavigateFunction = useNavigate();
     // const [loading, setLoading]
     //     = useState<boolean>(false);
@@ -132,9 +131,9 @@ export default function Dashboard() {
                         .then(function (response) {
                             setCurrentPickNumber(response);
                         })
-                    getNextPickName(leagueData.leagueId)
+                    getNextPick(leagueData.leagueId)
                         .then(function (response) {
-                            setCurrentPickName(response);
+                            setCurrentPick(response);
                         })
                     getUndraftedDrivers(leagueData.leagueId)
                         .then(function (response) {
@@ -242,7 +241,8 @@ export default function Dashboard() {
                             isLeagueFull={isLeagueFull}
                             isDraftInProgress={isDraftInProgress}
                             currentPickNumber={currentPickNumber}
-                            currentPickName={currentPickName}/>
+                            currentPick={currentPick}
+                            isLeagueActive={isLeagueActive}/>
                         <Reminders/>
                         <DraftControls
                             currentLeague={currentLeague}
@@ -255,10 +255,11 @@ export default function Dashboard() {
                             currentUser={currentUser}
                             isDraftInProgress={isDraftInProgress}
                             currentPickNumber={currentPickNumber}
-                            currentPickName={currentPickName}
+                            currentPick={currentPick}
                             selectedDriver={selectedDriver}
                             lastDriverPicked={lastDriverPicked}
-                            lastPickTime={lastPickTime}/>
+                            lastPickTime={lastPickTime}
+                            isLeagueActive={isLeagueActive}/>
                         <Table1
                             isLeagueActive={isLeagueActive}
                             openLeague={openLeague}
@@ -271,7 +272,7 @@ export default function Dashboard() {
                             isLeagueActive={isLeagueActive}
                             isDraftInProgress={isDraftInProgress}
                             undraftedDrivers={undraftedDrivers}
-                            currentPickName={currentPickName}
+                            currentPick={currentPick}
                             handleDriverSelection={handleDriverSelection}
                             handlePick={handlePick}/>
                     </Body>

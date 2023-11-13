@@ -12,38 +12,46 @@ export default function DraftControls({
                                           currentUser,
                                           isDraftInProgress,
                                           currentPickNumber,
-                                          currentPickName,
+                                          currentPick,
                                           selectedDriver,
                                           lastDriverPicked,
-                                          lastPickTime
+                                          lastPickTime,
+                                          isLeagueActive
                                       }) {
+
+    // if (currentUser?.team?.league?.isLeagueActive) {
     return (
         <>
-            <div className="col-start-2 col-span-3 box-shadow">
-                {!isLeagueFull ?
-                    <div className="grid grid-cols-5">
-                        <PracticeDraftOptions
-                            currentLeague={currentLeague}
-                            isPracticeLeague={isPracticeLeague}
-                            isLeagueFull={isLeagueFull}
-                            showPracticeOptions={showPracticeOptions}
-                            togglePracticeOptions={togglePracticeOptions}
-                            togglePracticeLeague={togglePracticeLeague}
-                            addTestTeam={addTestTeam}/>
-                    </div>
-                    :
-                    <div className="grid grid-cols-5">
-                        <DraftInProgress
-                            currentUser={currentUser}
-                            isDraftInProgress={isDraftInProgress}
-                            currentPickNumber={currentPickNumber}
-                            currentPickName={currentPickName}
-                            selectedDriver={selectedDriver}
-                            lastDriverPicked={lastDriverPicked}
-                            lastPickTime={lastPickTime}/>
-                    </div>
-                }
-            </div>
+            {isLeagueActive ?
+                <div></div>
+                :
+                <div className="col-start-2 col-span-3 box-shadow">
+                    {!isLeagueFull ?
+                        <div className="grid grid-cols-5">
+                            <PracticeDraftOptions
+                                currentLeague={currentLeague}
+                                isPracticeLeague={isPracticeLeague}
+                                isLeagueFull={isLeagueFull}
+                                showPracticeOptions={showPracticeOptions}
+                                togglePracticeOptions={togglePracticeOptions}
+                                togglePracticeLeague={togglePracticeLeague}
+                                addTestTeam={addTestTeam}/>
+                        </div>
+                        :
+                        <div className="grid grid-cols-5">
+                            <DraftInProgress
+                                currentUser={currentUser}
+                                isDraftInProgress={isDraftInProgress}
+                                currentPickNumber={currentPickNumber}
+                                currentPick={currentPick}
+                                selectedDriver={selectedDriver}
+                                lastDriverPicked={lastDriverPicked}
+                                lastPickTime={lastPickTime}/>
+                        </div>
+                    }
+                </div>
+            }
         </>
     )
+    // }
 }

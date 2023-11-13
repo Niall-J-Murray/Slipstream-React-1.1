@@ -2,6 +2,7 @@ package me.niallmurray.slipstream.webrest;
 
 import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
+import me.niallmurray.slipstream.domain.User;
 import me.niallmurray.slipstream.service.LeagueService;
 import me.niallmurray.slipstream.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,7 @@ public class LeagueController {
     boolean isDraftInProgress = false;
     League league = leagueService.findById(leagueId);
     if (league.getTeams().size() >= 10) {
-      if (leagueService.getCurrentPickNumber(leagueId) < 21) {
+      if (leagueService.checkCurrentPickNumber(leagueId) < 21) {
         isDraftInProgress = true;
       }
     }
@@ -77,6 +78,7 @@ public class LeagueController {
   @GetMapping("/{leagueId}/isLeagueActive")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<Boolean> getIsLeagueActive(@PathVariable Long leagueId) {
+    leagueService.checkCurrentPickNumber(leagueId);
     League league = leagueService.findById(leagueId);
     return ResponseEntity.ok(league.getIsActive());
   }
@@ -90,9 +92,13 @@ public class LeagueController {
 
   @GetMapping("/{leagueId}/getNextPickName")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-  public ResponseEntity<String> getNextPickName(@PathVariable Long leagueId) {
-//    League league = leagueService.findById(leagueId);
-    return ResponseEntity.ok(leagueService.getNextToPick(leagueId).getUsername());
+  public ResponseEntity<User> getNextPickName(@PathVariable Long leagueId) {
+//    Integer leagueSize = leagueService.findById(leagueId).getTeams().size();
+//    Boolean isLeagueActive = leagueService.findById(leagueId).getIsActive();
+    if (leagueService.getNextToPick(leagueId) != null) {
+      return ResponseEntity.ok(leagueService.getNextToPick(leagueId));
+    }
+    return ResponseEntity.ok(null);
   }
 
   @PostMapping("/{leagueId}/toggleTestLeague")

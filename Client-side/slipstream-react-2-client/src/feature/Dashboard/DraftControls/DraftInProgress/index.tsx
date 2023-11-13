@@ -2,7 +2,7 @@ export default function DraftInProgress({
                                             currentUser,
                                             isDraftInProgress,
                                             currentPickNumber,
-                                            currentPickName,
+                                            currentPick,
                                             selectedDriver,
                                             lastDriverPicked,
                                             lastPickTime
@@ -37,7 +37,7 @@ export default function DraftInProgress({
 
     function PickInstructions() {
         if (isDraftInProgress) {
-            if (currentUser.username == currentPickName || currentUser.username == currentPickName) {
+            if (currentUser.username == currentPick.username || currentPick.isTestUser) {
                 return <>
                     <div className="col-start-2 col-span-1">
                         <h4>
@@ -46,10 +46,27 @@ export default function DraftInProgress({
                         <h4 className={"pick-instructions-go"}>
                             Current pick number: {currentPickNumber}
                         </h4>
-                        <h4 className={"pick-instructions-go"}>
-                            It's your turn to pick {currentUser.username}!
-                        </h4>
+                        {currentPick.isTestUser ?
+                            <h4 className={"pick-instructions-go"}>
+                                It's {currentPick.username}'s turn to pick.
+                            </h4>
+                            :
+                            <h4 className={"pick-instructions-go"}>
+                                It's your turn to pick {currentPick.username}!
+                            </h4>
+                        }
                     </div>
+                    {currentPick.isTestUser ?
+                        <div className="col-start-3 col-span-1">
+                            <h4>------------------------------------</h4>
+                            <h4>
+                                Please select a driver<br/> for this test team.
+                            </h4>
+                            <h4>------------------------------------</h4>
+                        </div>
+                        :
+                        <div></div>
+                    }
                     <div className="col-start-4 col-span-1">
                         <h4>
                             You have selected:
@@ -83,7 +100,7 @@ export default function DraftInProgress({
                         Current pick number: {currentPickNumber}
                     </h4>
                     <h4 className="pick-instructions-wait">
-                        It's {currentPickName}'s turn to pick.
+                        It's {currentPick}'s turn to pick.
                     </h4>
                 </div>
                 <div className="col-start-4 col-span-1">

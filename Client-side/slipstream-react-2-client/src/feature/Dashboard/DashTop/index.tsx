@@ -17,7 +17,8 @@ export default function DashTop({
                                     isLeagueFull,
                                     isDraftInProgress,
                                     currentPickNumber,
-                                    currentPickName
+                                    currentPick,
+                                    isLeagueActive
                                 }) {
     const navigate: NavigateFunction = useNavigate();
     const [loading, setLoading]
@@ -148,7 +149,7 @@ export default function DashTop({
     }
 
     function PracticeGreeting() {
-        if (isPracticeLeague) {
+        if (isPracticeLeague && !isLeagueActive) {
             return <div>
                 <h4>This is a practice league -
                     <br/> {">"} You may make picks for your team and test teams.
@@ -168,30 +169,22 @@ export default function DashTop({
                     <p>Your team: "{teamName}"</p>
                     <p>1st pick number: {firstPickNumber}</p>
                     <p>2nd pick number: {secondPickNumber}</p>
-                    {/*<p>1st driver: {"d1"}</p>*/}
-                    {/*<p>2nd driver: {"d2"}</p>*/}
-                    {/*<p>1st driver: {driver1?.surname}</p>*/}
-                    {/*<p>2nd driver: {driver2?.surname}</p>*/}
-                    {/*<p>1st driver: {driversInTeam[0].surname}</p>*/}
-                    {/*<p>2nd driver: {driversInTeam[1].surname}</p>*/}
                     <p>Selected Drivers -</p>
                     {driversInTeam?.map((driver: IDriver, i) => {
                         return (
                             <p key={driver.driverId}>
-                                {i+1}. {driver.surname}
+                                {i + 1}. {driver.surname}
                             </p>
                         )
                     })}
-
-                    {/*{teamDrivers ?*/}
-                    {/*    <div>*/}
-                    {/*        <p>Selected Drivers -</p>*/}
-                    {/*        {driver1 ? driver1.surname : "none"}*/}
-                    {/*    </div>*/}
-                    {/*    :*/}
-                    {/*    <div></div>}*/}
                     <hr/>
-                    <h3>League is {leagueTeams?.length} of 10 teams full.</h3>
+                    {isLeagueActive ?
+                        <h3>Your league is active, points will be scored from races after:
+                            <br/>{currentLeague.activeTimestamp.slice(0,8)}</h3>
+                        :
+                        <h3>Draft in progress...</h3>
+                    }
+
                     <PracticeGreeting/>
                 </div>
             }

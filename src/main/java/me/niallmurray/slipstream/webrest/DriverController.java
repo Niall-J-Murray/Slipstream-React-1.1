@@ -70,7 +70,6 @@ public class DriverController {
   @PostMapping("/pick/{userId}")
   public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, @Valid @RequestBody Map<String, Long> requestData) {
     System.out.println("postPickDriver driverID: " + requestData.get("driverId"));
-
     Long driverId = requestData.get("driverId");
     Long userLeagueId = userService.findById(userId).getTeam().getLeague().getLeagueId();
 

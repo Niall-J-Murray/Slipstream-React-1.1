@@ -108,6 +108,7 @@ public class TeamService {
     List<Team> teams = league.getTeams();
     teams.add(team);
     league.setTeams(teams);
+    teamRepository.save(team);
     leagueService.save(league);
   }
 

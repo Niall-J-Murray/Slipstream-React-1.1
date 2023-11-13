@@ -9,7 +9,7 @@ export default function Table2({
                                    isDraftInProgress,
                                    undraftedDrivers,
                                    handleDriverSelection,
-                                   currentPickName,
+                                   currentPick,
                                    handlePick
                                }) {
 
@@ -19,7 +19,7 @@ export default function Table2({
                 currentUser={currentUser}
                 undraftedDrivers={undraftedDrivers}
                 handleDriverSelection={handleDriverSelection}
-                currentPickName={currentPickName}
+                currentPick={currentPick}
                 handlePick={handlePick}/>;
         }
         return <DriverStandingsTable/>;

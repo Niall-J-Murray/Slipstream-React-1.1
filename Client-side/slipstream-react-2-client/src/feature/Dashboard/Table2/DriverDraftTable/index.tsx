@@ -1,12 +1,11 @@
 import IDriver from "../../../../types/driver.type.ts";
-// import {handlePick} from "../../../../services/league.service.ts";
 
 export default function DriverDraftTable({
                                              currentUser,
                                              undraftedDrivers,
                                              handleDriverSelection,
-                                             currentPickName,
-                                             handlePick
+                                             currentPick,
+                                             handlePick,
                                          }) {
     return (
         <>
@@ -17,7 +16,7 @@ export default function DriverDraftTable({
                     </caption>
                     <thead>
                     <tr>
-                        {(currentUser.username == currentPickName) ?
+                        {(currentUser.username == currentPick.username || currentPick.isTestUser) ?
                             <th>Pick</th>
                             :
                             <th>
@@ -35,7 +34,7 @@ export default function DriverDraftTable({
                     {undraftedDrivers?.map((driver: IDriver) => {
                         return (
                             <tr key={driver.driverId}>
-                                {(currentUser.username == currentPickName) ?
+                                {(currentUser.username == currentPick.username || currentPick.isTestUser) ?
                                     <td>
                                         <form id="driver-pick-form" onSubmit={() => handlePick(driver.driverId)}>
                                             <input

@@ -42,6 +42,7 @@ teamDrivers = getDrivers(rankedTeams.at(0));
                 <table className="league-table">
                     <caption>
                         <h3>{currentLeague?.leagueName}</h3>
+                        {/*<h3>{currentLeague?.isActive ? "League is active" : "League not active"}</h3>*/}
                     </caption>
                     <thead>
                     <tr>
