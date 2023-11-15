@@ -4,7 +4,7 @@ import IUser from "../../../types/user.type.ts";
 import ITeam from "../../../types/team.type.ts";
 import {getUserData} from "../../../services/user.service.ts";
 
-export default function HomeWelcome() {
+export default function HomeWelcome({toggleLoading}) {
     const [currentUser, setCurrentUser]
         = useState<IUser | undefined>();
     const [userData, setUserData]
@@ -13,6 +13,7 @@ export default function HomeWelcome() {
         = useState<ITeam | undefined>();
 
     useEffect(() => {
+        toggleLoading(true);
         const user = getCurrentUser();
         setCurrentUser(user);
         const fetchUserData = async () => {
@@ -24,6 +25,7 @@ export default function HomeWelcome() {
         }
         fetchUserData()
             .catch(console.error);
+        toggleLoading(false);
     }, []);
 
     function Greeting(props: any) {
@@ -67,10 +69,10 @@ export default function HomeWelcome() {
 
     return (
         <>
-                <div className="p-5">
-                    <h2>Welcome to Slipstream F1 Draft Picks!</h2>
-                    <Greeting user={currentUser} team={team}/>
-                </div>
+            <div className="p-5">
+                <h2>Welcome to Slipstream F1 Draft Picks!</h2>
+                <Greeting user={currentUser} team={team}/>
+            </div>
         </>
     );
 }

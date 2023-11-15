@@ -100,7 +100,7 @@ export default function DraftInProgress({
                         Current pick number: {currentPickNumber}
                     </h4>
                     <h4 className="pick-instructions-wait">
-                        It's {currentPick}'s turn to pick.
+                        It's {currentPick.username}'s turn to pick.
                     </h4>
                 </div>
                 <div className="col-start-4 col-span-1">

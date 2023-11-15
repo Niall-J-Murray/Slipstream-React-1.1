@@ -27,7 +27,7 @@ import IDriver from "../../types/driver.type.ts";
 import {getDriverData, getDriversInTeam, getUndraftedDrivers, postPickDriver} from "../../services/driver.service.ts";
 import DraftControls from "./DraftControls";
 
-export default function Dashboard() {
+export default function Dashboard({loading, toggleLoading}) {
     const [currentUser, setCurrentUser]
         = useState<IUser | undefined>();
     const [userData, setUserData]
@@ -89,12 +89,15 @@ export default function Dashboard() {
     //  Add toggles to show/hide certain boxes.
     //  Fix layouts for consistency.
     //  Fix draft instructions to display according to user status.
-    //  fix data missing data on page reloads.
+    //  Finish loading spinner graphic, and pause page loading until all data is fetched.
+    //  Fix data missing data on page reloads.
+    //  Check test teams disappearing mid-draft after user logout.
 
     useEffect(() => {
         const user = getCurrentUser();
         setCurrentUser(user);
         const fetchUserData = async () => {
+            // toggleLoading(true);
             if (user != null) {
                 const userData = await getUserData(user.id);
                 setUserData(userData);
@@ -163,8 +166,11 @@ export default function Dashboard() {
                         })
                 }
             }
+            setTimeout(toggleLoading(false), 5000);
         }
         fetchUserData().catch(console.error);
+
+        // toggleLoading(false);
     }, []);
 
     function togglePracticeOptions() {
@@ -190,17 +196,24 @@ export default function Dashboard() {
     }
 
     const addTestTeam = async () => {
-        await createTestTeam(currentLeague?.leagueId);
-
-        getAllLeagueTeams(currentLeague?.leagueId)
-            .then((response) => {
-                setLeagueTeams(response)
-            })
+        await createTestTeam(currentLeague?.leagueId)
             .then(() => {
-                if (leagueTeams.length >= 10) {
-                    setIsLeagueFull(true);
+                    if (currentLeague?.teams?.length >= 10) {
+                        setIsLeagueFull(true);
+                    }
                 }
-            });
+            )
+
+
+        // getAllLeagueTeams(currentLeague?.leagueId)
+        //     .then((response) => {
+        //         setLeagueTeams(response)
+        //     })
+        //     .then(() => {
+        //         if (currentLeague?.teams?.length >= 10) {
+        //             setIsLeagueFull(true);
+        //         }
+        //     });
     }
 
     // const handleDriverSelection = (driver) => {
@@ -231,7 +244,7 @@ export default function Dashboard() {
 
     return (
         <>
-            <View>
+            <View loading={loading}>
                 <BackgroundImage>
                     <Navbar/>
                     <Body>

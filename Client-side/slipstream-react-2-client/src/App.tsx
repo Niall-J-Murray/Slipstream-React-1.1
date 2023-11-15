@@ -25,6 +25,8 @@ export default function App() {
     // const [showAdminBoard, setShowAdminBoard] = useState<boolean>(false);
     // const [successful, setSuccessful] = useState<boolean>(false);
     // const [message, setMessage] = useState<string>("");
+    const [loading, setLoading]
+        = useState(true);
     const [currentUser, setCurrentUser]
         = useState<IUser | undefined>({
         email: "",
@@ -37,6 +39,10 @@ export default function App() {
         team: null,
         username: ""
     });
+
+    function toggleLoading(){
+        setLoading(!loading);
+    }
 
     useEffect(() => {
         const user = AuthService.getCurrentUser();
@@ -84,11 +90,11 @@ export default function App() {
                 {/*<CssVarsProvider>*/}
                 {/*    <Sheet variant="outlined">*/}
                 <Routes>
-                    <Route path="/" element={<Home/>}/>
-                    <Route path="/home" element={<Home/>}/>
+                    <Route path="/" element={<Home loading={loading} toggleLoading={toggleLoading}/>}/>
+                    <Route path="/home" element={<Home loading={loading} toggleLoading={toggleLoading}/>}/>
                     <Route path="/register" element={<Register/>}/>
                     <Route path="/login" element={<Login/>}/>
-                    <Route path="/dashboard" element={<Dashboard/>}/>
+                    <Route path="/dashboard" element={<Dashboard loading={loading} toggleLoading={toggleLoading}/>}/>
                     <Route path="/admin" element={<Admin/>}/>
                     <Route path="/logout" element={<Logout/>}/>
                     {/*<Route path="/user" element={<BoardUser/>}/>*/}

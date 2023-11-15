@@ -96,6 +96,7 @@ public class TeamService {
 
       testUser.setTeam(team);
       addOneTeamToLeague(team);
+      leagueService.save(league);
       return team;
     }
     return null;
