@@ -12,7 +12,11 @@ export default function Register() {
                 <BackgroundImage>
                     <Navbar/>
                     <Body>
-                        <RegistrationForm/>
+                        <div className="grid grid-cols-5 gap-2">
+                            <div className="col-start-3 col-span-1 box-shadow">
+                                <RegistrationForm/>
+                            </div>
+                        </div>
                     </Body>
                 </BackgroundImage>
             </View>

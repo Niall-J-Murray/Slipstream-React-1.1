@@ -93,7 +93,6 @@ export default function App() {
                     <Route path="/logout" element={<Logout/>}/>
                     {/*<Route path="/user" element={<BoardUser/>}/>*/}
                     {/*<Route path="/mod" element={<BoardModerator/>}/>*/}
-
                 </Routes>
                 {/*    </Sheet>*/}
                 {/*</CssVarsProvider>*/}

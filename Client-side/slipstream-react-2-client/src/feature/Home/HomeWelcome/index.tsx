@@ -67,12 +67,10 @@ export default function HomeWelcome() {
 
     return (
         <>
-            <div className="col-start-2 col-span-1 box-shadow">
                 <div className="p-5">
                     <h2>Welcome to Slipstream F1 Draft Picks!</h2>
                     <Greeting user={currentUser} team={team}/>
                 </div>
-            </div>
         </>
     );
 }

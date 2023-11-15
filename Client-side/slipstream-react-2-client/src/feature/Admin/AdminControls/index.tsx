@@ -88,75 +88,72 @@ export default function AdminControls() {
 
     return (
         <>
-            <div className="col-start-2 col-span-1" id="email">
-                <table className="league-table">
-                    <caption><h3>Admin Controls</h3></caption>
-                    <thead>
-                    <tr>
-                        <th>Email Type</th>
-                        <th>Email Address</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <div>
-                                <label htmlFor="emailType">Choose an email type:</label>
-                            </div>
-                            <div>
-                                <select name="emailType" id="emailType">
-                                    <option value="1">1: Send Custom Email</option>
-                                    <option value="2">2: Send Email Template</option>
-                                    <option value="3">3: Send Custom Html Email</option>
-                                    <option value="4">4: Send HTML Email Template</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <label htmlFor="emailAddress">Enter Recipient Address: </label>
-                            </div>
-                            <div>
-                                <input type="email" name="emailAddress" id="emailAddress"/>
-                            </div>
-                            <div className="padding: 3px">
-                                <button type="submit" className="btn btn-danger navbar-btn">Send Email</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>API</th>
-                        <th>Response</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div>
-                                <button className="btn btn-proceed"
-                                        type={"submit"}
-                                        onClick={() => handleAddDrivers()}>
-                                    <span>Add Drivers</span>
-                                </button>
-                            </div>
-                            <div>
-                                <button className="btn btn-proceed"
-                                        type={"submit"}
-                                        onClick={() => handleUpdateStandings()}>
-                                    <span>Update Standings</span>
-                                </button>
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <div>{loading ? "loading" : ""}</div>
-                                <div>{message ? message : ""}</div>
-                                {/*<div onLoad={() => getMessage()}>{updateMessage}</div>*/}
-                                {/*<div>{updateSuccessful ? sessionStorage.getItem("updateMessage") : ""}</div>*/}
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table className="league-table" id="email">
+                <caption><h3>Admin Controls</h3></caption>
+                <thead>
+                <tr>
+                    <th>Email Type</th>
+                    <th>Email Address</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <div>
+                            <label htmlFor="emailType">Choose an email type:</label>
+                        </div>
+                        <div>
+                            <select name="emailType" id="emailType">
+                                <option value="1">1: Send Custom Email</option>
+                                <option value="2">2: Send Email Template</option>
+                                <option value="3">3: Send Custom Html Email</option>
+                                <option value="4">4: Send HTML Email Template</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <label htmlFor="emailAddress">Enter Recipient Address: </label>
+                        </div>
+                        <div>
+                            <input type="email" name="emailAddress" id="emailAddress"/>
+                        </div>
+                        <div className="padding: 3px">
+                            <button type="submit" className="btn btn-danger navbar-btn">Send Email</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>API</th>
+                    <th>Response</th>
+                </tr>
+                <tr>
+                    <td>
+                        <div className={"p-1"}>
+                            <button className="btn btn-proceed"
+                                    type={"submit"}
+                                    onClick={() => handleAddDrivers()}>
+                                <span>Add Drivers</span>
+                            </button>
+                        </div>
+                        <div className={"p-1"}>                            <button className="btn btn-proceed"
+                                    type={"submit"}
+                                    onClick={() => handleUpdateStandings()}>
+                                <span>Update Standings</span>
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <div>{loading ? "loading" : ""}</div>
+                            <div>{message ? message : ""}</div>
+                            {/*<div onLoad={() => getMessage()}>{updateMessage}</div>*/}
+                            {/*<div>{updateSuccessful ? sessionStorage.getItem("updateMessage") : ""}</div>*/}
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </>
     );
 }

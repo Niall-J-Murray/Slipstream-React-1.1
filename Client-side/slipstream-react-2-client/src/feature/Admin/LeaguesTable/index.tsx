@@ -18,33 +18,32 @@ export default function LeaguesTable() {
 
     return (
         <>
-            <div className="col-start-3 col-span-2">
-                <table className="drivers-table">
-                    <caption><h3>Leagues</h3></caption>
-                    <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>League Name</th>
-                        <th>Creation Time</th>
-                        <th>Active Time</th>
-                        <th>Practice League?</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {allLeagues?.map((league: ILeague) => {
-                        return (
-                            <tr key={league.leagueId}>
-                                <td>{league.leagueId}</td>
-                                <td>{league.leagueName}</td>
-                                <td>{league.creationTimestamp}</td>
-                                <td>{league.activeTimestamp}</td>
-                                <td>{league.isPracticeLeague}</td>
-                            </tr>
-                        )
-                    })}
-                    </tbody>
-                </table>
-            </div>
+
+            <table className="drivers-table">
+                <caption><h3>Leagues</h3></caption>
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>League Name</th>
+                    <th>Creation Time</th>
+                    <th>Active Time</th>
+                    <th>Practice League?</th>
+                </tr>
+                </thead>
+                <tbody>
+                {allLeagues?.map((league: ILeague) => {
+                    return (
+                        <tr key={league.leagueId}>
+                            <td>{league.leagueId}</td>
+                            <td>{league.leagueName}</td>
+                            <td>{league.creationTimestamp}</td>
+                            <td>{league.activeTimestamp}</td>
+                            <td>{league.isPracticeLeague}</td>
+                        </tr>
+                    )
+                })}
+                </tbody>
+            </table>
         </>
     );
 }

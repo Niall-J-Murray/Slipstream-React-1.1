@@ -19,22 +19,24 @@ export default function Logout() {
     };
 
     function LogOutForm() {
-        return <div className="col-start-3 col-span-1 box-shadow">
+        return (
             <div className="grid grid-cols-5 gap-3 p-5">
                 <img
+                    id={"login-pic"}
+                    className={"col-start-1 col-span-3"}
                     src={checkered_flag}
                     height={180}
                     width={330}
                     alt="red-lights"
-                    className="login-pic col-start-1 col-span-3"
+
                 />
-                <label className={"col-start-2 col-span-3"}>Are you sure?
-                    <button className="btn btn-proceed" type="submit" onClick={logOut}>
-                        <span>Confirm Logout</span>
-                    </button>
-                </label>
+                <div className={"col-start-2 col-span-3 p-1"}>
+                        <button className="btn btn-proceed" type="submit" onClick={logOut}>
+                            <span>Confirm Logout</span>
+                        </button>
+                </div>
             </div>
-        </div>;
+        );
     }
 
     return (
@@ -43,7 +45,11 @@ export default function Logout() {
                 <BackgroundImage>
                     <Navbar/>
                     <Body>
-                        <LogOutForm/>
+                        <div className="grid grid-cols-5 gap-2">
+                            <div className="col-start-3 col-span-1 box-shadow">
+                                <LogOutForm/>
+                            </div>
+                        </div>
                     </Body>
                 </BackgroundImage>
             </View>
