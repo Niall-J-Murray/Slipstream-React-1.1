@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {Route, Routes} from "react-router-dom";
 import "./App.css";
 
@@ -19,6 +19,12 @@ import Logout from "./feature/Logout";
 import Dashboard from "./feature/Dashboard";
 import Admin from "./feature/Admin";
 
+const loader = document.querySelector('.loader');
+
+// if you want to show the loader when React loads data again
+const showLoader = () => loader.classList.remove('loader--hide');
+
+const hideLoader = () => loader.classList.add('loader--hide');
 
 export default function App() {
     // const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
@@ -40,9 +46,16 @@ export default function App() {
         username: ""
     });
 
-    function toggleLoading(){
-        setLoading(!loading);
-    }
+    const toggleLoading = useCallback(() => {
+        setLoading(!loading)
+    }, []);
+    // function toggleLoading(){
+    //     setLoading(!loading);
+    // }
+
+    useEffect(() => {
+        hideLoader();
+    }, []);
 
     useEffect(() => {
         const user = AuthService.getCurrentUser();

@@ -22,48 +22,60 @@ import {getUserData} from "../../services/user.service.ts";
 import IUser from "../../types/user.type.ts";
 import ITeam from "../../types/team.type.ts";
 import ILeague from "../../types/league.type.ts";
-import {createTestTeam, getTeam} from "../../services/team.service.ts";
+import {createTestTeam} from "../../services/team.service.ts";
 import IDriver from "../../types/driver.type.ts";
 import {getDriverData, getDriversInTeam, getUndraftedDrivers, postPickDriver} from "../../services/driver.service.ts";
 import DraftControls from "./DraftControls";
 
+
+// Todo Display correct info and options in dash-top depending on users team/league status.
+//  ---
+//  Check draft add test team and draft picking functions after dashboard refactor.
+//  Fix draft instructions to display according to user status.
+//  Finish loading spinner graphic, and pause page loading until all data is fetched.
+//  Fix data missing data on page reloads.
+//  Check test teams disappearing mid-draft after user logout.
+//  Add toggles to show/hide certain boxes.
+//  Fix layouts for consistency.
+
 export default function Dashboard({loading, toggleLoading}) {
     const [currentUser, setCurrentUser]
-        = useState<IUser | undefined>();
+        = useState<IUser | undefined | null>(null);
     const [userData, setUserData]
-        = useState<IUser | undefined>();
+        = useState<IUser | undefined | null>();
     const [team, setTeam]
-        = useState<ITeam | undefined>();
+        = useState<ITeam | undefined | null>();
     const [driversInTeam, setDriversInTeam]
-        = useState<Array<IDriver> | undefined>();
+        = useState<Array<IDriver> | undefined | []>([]);
     const [openLeague, setOpenLeague]
-        = useState<ILeague | undefined>();
+        = useState<ILeague | undefined | null>(null);
     const [currentLeague, setCurrentLeague]
-        = useState<ILeague | undefined>();
+        = useState<ILeague | undefined | null>(null);
     const [leagueTeams, setLeagueTeams]
-        = useState<Array<ITeam> | undefined>([]);
+        = useState<Array<ITeam> | undefined | []>([]);
     const [isLeagueActive, setIsLeagueActive]
-        = useState<boolean>(false);
+        = useState<boolean | undefined | null>(false);
     const [isLeagueFull, setIsLeagueFull]
-        = useState<boolean>(false);
+        = useState<boolean | undefined | null>(false);
     const [showPracticeOptions, setShowPracticeOptions]
-        = useState<boolean>(false);
+        = useState<boolean | undefined | null>(false);
     const [isPracticeLeague, setIsPracticeLeague]
-        = useState<boolean>();
+        = useState<boolean | undefined | null>(false);
     const [isDraftInProgress, setIsDraftInProgress]
-        = useState<boolean>(false);
+        = useState<boolean | undefined | null>(false);
     const [undraftedDrivers, setUndraftedDrivers]
-        = useState<Array<IDriver> | undefined>([]);
+        = useState<Array<IDriver> | undefined | null>([]);
     const [currentPickNumber, setCurrentPickNumber]
-        = useState<number>(0)
+        = useState<number | undefined | null>(0);
     const [currentPick, setCurrentPick]
-        = useState<IUser | undefined>("");
+        = useState<IUser | undefined | null>(null);
     const [selectedDriver, setSelectedDriver]
-        = useState<IDriver | undefined>();
+        = useState<IDriver | undefined | null>(null);
     const [lastDriverPicked, setLastDriverPicked]
-        = useState<IDriver | undefined>();
+        = useState<IDriver | undefined | null>(null);
     const [lastPickTime, setLastPickTime]
-        = useState<Date>();
+        = useState<Date | undefined | null>(null);
+
     // const navigate: NavigateFunction = useNavigate();
     // const [loading, setLoading]
     //     = useState<boolean>(false);
@@ -84,94 +96,237 @@ export default function Dashboard({loading, toggleLoading}) {
     // there's no way to track its settlement anymore,
     // and the promise is said to be "floating".
 
-    // Todo Display correct info and options in dash-top depending on users team/league status.
-    //  ---
-    //  Add toggles to show/hide certain boxes.
-    //  Fix layouts for consistency.
-    //  Fix draft instructions to display according to user status.
-    //  Finish loading spinner graphic, and pause page loading until all data is fetched.
-    //  Fix data missing data on page reloads.
-    //  Check test teams disappearing mid-draft after user logout.
+    // export default function Page() {
+    //     const [person, setPerson] = useState('Alice');
+    //     const [bio, setBio] = useState(null);
+    //     useEffect(() => {
+    //         async function startFetching() {
+    //             setBio(null);
+    //             const result = await fetchBio(person);
+    //             if (!ignore) {
+    //                 setBio(result);
+    //             }
+    //         }
+    //
+    //         let ignore = false;
+    //         startFetching();
+    //         return () => {
+    //             ignore = true;
+    //         }
+    //     }, [person]);
+    //
+    //     return (
+    //         <>.....
 
+    //user + team
     useEffect(() => {
-        const user = getCurrentUser();
-        setCurrentUser(user);
-        const fetchUserData = async () => {
-            // toggleLoading(true);
-            if (user != null) {
-                const userData = await getUserData(user.id);
-                setUserData(userData);
+        toggleLoading();
 
-                if (userData.team) {
-                    setTeam(await getTeam(userData?.team?.id))
+        async function fetchUserData() {
+            setCurrentUser(null)
+            const user = await getCurrentUser();
+            if (!ignore) {
+                setCurrentUser(user);
+                await getUserData(user.id)
+                    .then(res => {
+                        setUserData(res)
+                        setTeam(res.team);
+                    });
+            }
+        }
+
+        setTimeout(
+            toggleLoading()
+            , 5000)
+        let ignore = false;
+        fetchUserData()
+            .then(() => {
+                    ignore = true;
                 }
-                getOpenLeague()
-                    .then(function (response) {
-                        setOpenLeague(response);
+            );
+
+    }, [toggleLoading]);
+    // }, [currentUser, userData, team]);
+
+    //league
+    useEffect(() => {
+        async function fetchLeagueData() {
+            setOpenLeague(null);
+            setCurrentLeague(null);
+            if (!ignore) {
+                await getUserData(getCurrentUser().id)
+                    .then(async res => {
+                        console.log("res.team")
+                        console.log(res.team)
+                        if (res.team) {
+                            await getTeamLeague(res.team.id)
+                                .then(async res => {
+                                    setCurrentLeague(res);
+                                    setLeagueTeams(await getAllLeagueTeams(res.leagueId));
+                                    setIsPracticeLeague(res.isPracticeLeague);
+                                    // setIsLeagueFull(currentLeague?.teams?.length >= 10);
+                                    if (res.teams?.length) {
+                                        if (res.teams?.length >= 10) {
+                                            setIsLeagueFull(true)
+                                        }
+                                    }
+                                    setIsLeagueActive(await getIsLeagueActive(res.leagueId));
+                                })
+                                .then(async () => setOpenLeague(await getOpenLeague()));
+                        } else {
+                            await getOpenLeague()
+                                .then(async res => {
+                                    setOpenLeague(res);
+                                    setCurrentLeague(res);
+                                    setLeagueTeams(await getAllLeagueTeams(res.leagueId))
+                                    setIsLeagueActive(await getIsLeagueActive(res.leagueId));
+                                });
+                        }
                     })
-                if (userData.team) {
-                    const leagueData = await getTeamLeague(userData.team.id);
-                    await getAllLeagueTeams(leagueData.leagueId)
-                        .then(function (response) {
-                            setLeagueTeams(response)
-                        })
-                    getDriversInTeam(userData.team.id)
-                        .then(function (response) {
-                            setDriversInTeam(response);
-                        })
-                    getIsLeagueActive(leagueData.leagueId)
-                        .then(function (response) {
-                            setIsLeagueActive(response);
-                        })
-                    getIsLeagueActive(leagueData.leagueId)
-                        .then(function (response) {
-                            setIsLeagueActive(response);
-                        })
-                    getIsDraftInProgress(leagueData.leagueId)
-                        .then(function (response) {
-                            setIsDraftInProgress(response);
-                        })
-                    getPickNumber(leagueData.leagueId)
-                        .then(function (response) {
-                            setCurrentPickNumber(response);
-                        })
-                    getNextPick(leagueData.leagueId)
-                        .then(function (response) {
-                            setCurrentPick(response);
-                        })
-                    getUndraftedDrivers(leagueData.leagueId)
-                        .then(function (response) {
-                            setUndraftedDrivers(response);
-                        })
-                    setCurrentLeague(leagueData);
-                    setIsPracticeLeague(leagueData.isPracticeLeague);
-                    if (leagueData.teams.length >= 10) {
-                        setIsLeagueFull(true)
-                    }
-                } else {
-                    await getOpenLeague()
-                        .then(function (response) {
-                            setOpenLeague(response);
-                            setCurrentLeague(response);
-                            getIsLeagueActive(response.leagueId)
-                                .then(function (response) {
-                                    setIsLeagueActive(response);
-                                })
-                            getAllLeagueTeams(response.leagueId)
-                                .then(function (response) {
-                                    console.log("getAllLeagueTeams(response.leagueId)")
-                                    console.log(response)
-                                    setLeagueTeams(response)
-                                })
-                        })
+            }
+        }
+
+        let ignore = false;
+        fetchLeagueData()
+            .then(() => {
+                    ignore = true;
+                    toggleLoading();
+                }
+            );
+    }, [toggleLoading]);
+    // }, [openLeague, currentLeague, leagueTeams, isPracticeLeague, isLeagueFull, isLeagueActive]);
+
+    //drivers
+    useEffect(() => {
+        async function fetchDriverData() {
+            setDriversInTeam([]);
+            setUndraftedDrivers([]);
+            if (!ignore) {
+                if (team) {
+                    setDriversInTeam(await getDriversInTeam(team.id));
+                    setUndraftedDrivers(await getUndraftedDrivers(team.league?.leagueId));
                 }
             }
-            setTimeout(toggleLoading(false), 5000);
         }
-        fetchUserData().catch(console.error);
 
-        // toggleLoading(false);
-    }, []);
+        let ignore = false;
+        fetchDriverData()
+            .then(() => {
+                    ignore = true;
+                    toggleLoading();
+                }
+            );
+    }, [toggleLoading]);
+    // }, [driversInTeam, undraftedDrivers]);
+
+    //draft
+    useEffect(() => {
+        async function fetchDraftData() {
+            setIsDraftInProgress(null);
+            if (!ignore) {
+                if (team?.league) {
+                    setIsDraftInProgress(await getIsDraftInProgress(team.league.leagueId));
+                    setCurrentPickNumber(await getPickNumber(team.league.leagueId));
+                    setCurrentPick(await getNextPick(team.league.leagueId));
+                }
+            }
+        }
+
+        let ignore = false;
+        fetchDraftData()
+            .then(() => {
+                    ignore = true;
+                    toggleLoading();
+                }
+            );
+    }, [toggleLoading]);
+    // }, [isDraftInProgress, currentPickNumber, currentPick]);
+
+
+// useEffect(() => {
+//     const user = getCurrentUser();
+//     setCurrentUser(user);
+//     const fetchUserData = async () => {
+//         // toggleLoading(true);
+//         if (user != null) {
+//             const userData = await getUserData(user.id);
+//             setUserData(userData);
+//
+//             if (userData.team) {
+//                 setTeam(await getTeam(userData?.team?.id))
+//             }
+//             getOpenLeague()
+//                 .then(function (response) {
+//                     setOpenLeague(response);
+//                 })
+//             if (userData.team) {
+//                 const leagueData = await getTeamLeague(userData.team.id);
+//                 await getAllLeagueTeams(leagueData.leagueId)
+//                     .then(function (response) {
+//                         setLeagueTeams(response)
+//                     })
+//                 getDriversInTeam(userData.team.id)
+//                     .then(function (response) {
+//                         setDriversInTeam(response);
+//                     })
+//                 getIsLeagueActive(leagueData.leagueId)
+//                     .then(function (response) {
+//                         setIsLeagueActive(response);
+//                     })
+//                 getIsLeagueActive(leagueData.leagueId)
+//                     .then(function (response) {
+//                         setIsLeagueActive(response);
+//                     })
+//                 getIsDraftInProgress(leagueData.leagueId)
+//                     .then(function (response) {
+//                         setIsDraftInProgress(response);
+//                     })
+//                 getPickNumber(leagueData.leagueId)
+//                     .then(function (response) {
+//                         setCurrentPickNumber(response);
+//                     })
+//                 getNextPick(leagueData.leagueId)
+//                     .then(function (response) {
+//                         setCurrentPick(response);
+//                     })
+//                 getUndraftedDrivers(leagueData.leagueId)
+//                     .then(function (response) {
+//                         setUndraftedDrivers(response);
+//                     })
+//                 setCurrentLeague(leagueData);
+//                 setIsPracticeLeague(leagueData.isPracticeLeague);
+//                 if (leagueData.teams.length >= 10) {
+//                     setIsLeagueFull(true)
+//                 }
+//             } else {
+//                 await getOpenLeague()
+//                     .then(function (response) {
+//                         setOpenLeague(response);
+//                         setCurrentLeague(response);
+//                         getIsLeagueActive(response.leagueId)
+//                             .then(function (response) {
+//                                 setIsLeagueActive(response);
+//                             })
+//                         getAllLeagueTeams(response.leagueId)
+//                             .then(function (response) {
+//                                 console.log("getAllLeagueTeams(response.leagueId)")
+//                                 console.log(response)
+//                                 setLeagueTeams(response)
+//                             })
+//                     })
+//             }
+//         }
+//         setTimeout(toggleLoading(false), 5000);
+//     }
+//
+//     let ignore = false;
+//     fetchUserData().catch(console.error);
+//     return () => {
+//         ignore = true;
+//     }
+//
+//     // toggleLoading(false);
+// }, []);
 
     function togglePracticeOptions() {
         if (showPracticeOptions) {
@@ -216,9 +371,9 @@ export default function Dashboard({loading, toggleLoading}) {
         //     });
     }
 
-    // const handleDriverSelection = (driver) => {
-    //     setSelectedDriver(driver);
-    // }
+// const handleDriverSelection = (driver) => {
+//     setSelectedDriver(driver);
+// }
 
     const handleDriverSelection = (driverId: number | null | undefined) => {
         getDriverData(driverId)

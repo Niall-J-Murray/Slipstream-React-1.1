@@ -7,11 +7,30 @@
     url('https://www.formula1.com/etc/designs/fom-website/fonts/F1Wide/Formula1-Black.ttf') format('truetype');
 }
 
-body {
-    font-family: Font1, Arial, Helvetica, sans-serif;
-    color: white;
-    text-shadow: 0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black;
-    background-color: black;
+.loader {
+    position: absolute;
+    top: calc(50% - 4em);
+    left: calc(50% - 4em);
+    width: 6em;
+    height: 6em;
+    border: 1.1em solid rgba(255, 255, 255, 0.5);
+    border-left: 1.1em solid #ffffff;
+    border-radius: 50%;
+    animation: load8 2.1s infinite linear;
+    transition: opacity 0.5s;
+}
+
+@keyframes load8 {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loader--hide {
+    opacity: 0;
 }
 
 .loading-gif {
@@ -30,6 +49,14 @@ body {
     display: inline-block;
     width: 150px;
 }
+
+body {
+    font-family: Font1, Arial, Helvetica, sans-serif;
+    color: white;
+    text-shadow: 0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black;
+    background-color: black;
+}
+
 
 .text-block {
     font-family: Arial, Helvetica, sans-serif;

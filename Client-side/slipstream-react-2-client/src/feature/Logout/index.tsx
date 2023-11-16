@@ -20,7 +20,7 @@ export default function Logout() {
 
     function LogOutForm() {
         return (
-            <div className="grid grid-cols-5 gap-3 p-5">
+            <div className="grid grid-cols-7 gap-3 p-5">
                 <img
                     id={"login-pic"}
                     className={"col-start-1 col-span-3"}
@@ -30,10 +30,11 @@ export default function Logout() {
                     alt="red-lights"
 
                 />
-                <div className={"col-start-2 col-span-3 p-1"}>
-                        <button className="btn btn-proceed" type="submit" onClick={logOut}>
-                            <span>Confirm Logout</span>
-                        </button>
+                <div className={"col-start-2 col-span-5 p-1"}>
+                    <div className={"p-6"}>Are you sure...? </div>
+                    <button className="btn btn-proceed" type="submit" onClick={logOut}>
+                        <span>Confirm Logout</span>
+                    </button>
                 </div>
             </div>
         );
