@@ -11,7 +11,7 @@ export const getTeam = async (teamId: number | null | undefined) => {
 
 export const createTeam = async (userId: number | null | undefined, teamName: string) => {
     const response = await axios
-        .post(API_DATA_URL + "team/" + userId, {
+        .post(API_DATA_URL + userId, {
             // headers: authHeader(),
             teamName,
         });
@@ -22,7 +22,7 @@ export const createTeam = async (userId: number | null | undefined, teamName: st
 
 export const createTestTeam = async (leagueId: number | null | undefined) => {
     const response = await axios
-        .post(API_DATA_URL + "team/" + leagueId + "/createTestTeam", {
+        .post(API_DATA_URL + leagueId + "/createTestTeam", {
             // headers: authHeader(),
             leagueId,
         });

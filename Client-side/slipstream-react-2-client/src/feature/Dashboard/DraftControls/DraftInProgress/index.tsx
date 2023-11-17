@@ -8,33 +8,6 @@ export default function DraftInProgress({
                                             lastPickTime
                                         }) {
 
-// const handlePick = (userId: number | null | undefined, driverId: string) => {
-//         // const {driverId} = formValue;
-//         console.log("handlePick");
-//         console.log(userId);
-//         console.log(driverId);
-//         // setMessage("");
-//         // setLoading(true);
-//
-//         postPickDriver(userId, driverId).then(
-//             () => {
-//                 window.location.reload();
-//             },
-//             (error) => {
-//                 const resMessage =
-//                     (error.response &&
-//                         error.response.data &&
-//                         error.response.data.message) ||
-//                     error.message ||
-//                     error.toString();
-//
-//                 // setLoading(false);
-//                 // setMessage(resMessage);
-//             }
-//         );
-//     };
-
-
     function PickInstructions() {
         if (isDraftInProgress) {
             if (currentUser.username == currentPick.username || currentPick.isTestUser) {
@@ -78,14 +51,9 @@ export default function DraftInProgress({
                                 :
                                 "Select a driver below..."}
                         </h4>
-                        <button form="driver-pick-form" className={"btn btn-proceed"} type="submit"
-                            //         onSubmit={(values) => {
-                            //     console.log("pick id:")
-                            //     console.log(values)
-                            //     handlePick(currentUser?.id, values)
-                            //     navigate("/dashboard");
-                            // }}>
-                        >
+                        <button form="driver-pick-form"
+                                className={"btn btn-proceed"}
+                                type="submit">
                             Confirm Pick
                         </button>
                     </div>

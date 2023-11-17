@@ -62,34 +62,10 @@ export default function DashTop({
             }
         );
     };
-    // const isAdmin = "isAdmin";
-    // const hasTeam = "hasTeam";
+
     const teamName = team?.teamName
     const firstPickNumber = team?.firstPickNumber
     const secondPickNumber = team?.secondPickNumber
-
-    console.log(driversInTeam)
-    let tds: IDriver[]
-    let driver1: IDriver | undefined
-    let driver2: IDriver | undefined
-
-    // function getDrivers(drivers: IDriver[]) {
-    //     tds = drivers;
-    //     driver1 = tds[0]
-    //     driver2 = tds[1]
-    // }
-
-    // getDrivers(driversInTeam)
-    console.log(driver1)
-    console.log(driver2)
-
-    // const tds:IDriver[] = teamDrivers;
-    // console.log(tds)
-
-
-    // const leagueFull = "leagueFull"
-    // const timeToPick = "timeToPick";
-    // const leagueActive = "leagueActive";
 
     function CreateTeam() {
         return (

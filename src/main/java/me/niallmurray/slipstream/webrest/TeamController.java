@@ -48,7 +48,7 @@ public class TeamController {
     return ResponseEntity.ok(team);
   }
 
-  @PostMapping("team/{userId}")
+  @PostMapping("/{userId}")
   public ResponseEntity<Team> postCreateTeam(@Valid @RequestBody String teamName, @PathVariable Long userId) {
     User user = userService.findById(userId);
     String teamNameFromJson = teamName.substring(13, (teamName.length() - 2));
@@ -71,7 +71,7 @@ public class TeamController {
     return "redirect:/dashboard/" + userId;
   }
 
-  @PostMapping("team/{leagueId}/createTestTeam")
+  @PostMapping("/{leagueId}/createTestTeam")
   public ResponseEntity<Team> postCreateTestTeam(@PathVariable Long leagueId) {
     Team testTeam = teamService.createTestTeam(leagueId);
     if (testTeam != null) {

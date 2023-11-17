@@ -318,16 +318,17 @@ a:hover,
     /*table-layout: auto;*/
     table-layout: auto;
     /*width: 100%;*/
-    padding: 2px 5px;
+    padding: 2px;
     border: 1px solid white;
     background-color: black;
     color: white;
     text-shadow: none;
 }
 
-/*.username{*/
-/*    width: 100%;*/
-/*}*/
+#username,
+#team-name {
+    padding: 2px 20px;
+}
 
 .league-table td {
     border: 1px solid black;
