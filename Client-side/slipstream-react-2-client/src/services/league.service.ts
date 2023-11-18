@@ -51,7 +51,7 @@ export const getPickNumber = async (leagueId: number | null | undefined) => {
 };
 
 export const getNextPick = async (leagueId: number | null | undefined) => {
-    const data = await axios.get(API_DATA_URL + leagueId + "/getNextPickName", {headers: authHeader()})
+    const data = await axios.get(API_DATA_URL + leagueId + "/getNextPick", {headers: authHeader()})
         .then(response => response.data);
     return data;
 };

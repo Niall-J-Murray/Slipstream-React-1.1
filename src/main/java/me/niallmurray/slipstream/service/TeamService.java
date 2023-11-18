@@ -54,6 +54,7 @@ public class TeamService {
     team.setTeamPoints(0.0);
     team.setIsTestTeam(false);
     team.setLeague(leagueService.findAvailableLeague());
+    team.setLeagueId(team.getLeague().getLeagueId());
     addOneTeamToLeague(team);
     return team;
   }

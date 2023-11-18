@@ -1,4 +1,4 @@
-import {getCurrentUser} from "../../../services/auth.service.ts";
+import {getUserFromLocalStorage} from "../../../services/auth.service.ts";
 import {useEffect, useState} from "react";
 import IUser from "../../../types/user.type.ts";
 import ITeam from "../../../types/team.type.ts";
@@ -14,7 +14,7 @@ export default function HomeWelcome({toggleLoading}) {
 
     useEffect(() => {
         toggleLoading(true);
-        const user = getCurrentUser();
+        const user = getUserFromLocalStorage();
         setCurrentUser(user);
         const fetchUserData = async () => {
             if (user != null) {

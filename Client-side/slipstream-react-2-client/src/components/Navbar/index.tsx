@@ -2,7 +2,7 @@ import slipstreamLogo from "/src/assets/images/slipstreamLogoWhite.png";
 import {Fragment, useEffect, useState} from "react";
 import {Disclosure, Menu, Transition} from "@headlessui/react";
 import {Bars3Icon, XMarkIcon} from "@heroicons/react/24/outline";
-import {getCurrentUser, logout} from "../../services/auth.service";
+import {getUserFromLocalStorage, logout} from "../../services/auth.service";
 import IUser from "../../types/user.type.ts";
 
 const navigation = [
@@ -31,7 +31,7 @@ export default function Navbar() {
         = useState<IUser | undefined>();
 
     useEffect(() => {
-        const user = getCurrentUser();
+        const user = getUserFromLocalStorage();
         if (user) {
             setCurrentUser(user);
             // setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));

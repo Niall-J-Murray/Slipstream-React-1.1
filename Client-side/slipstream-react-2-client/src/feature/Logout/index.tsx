@@ -1,5 +1,5 @@
 import * as AuthService from "../../services/auth.service.ts";
-import {getCurrentUser} from "../../services/auth.service.ts";
+import {getUserFromLocalStorage} from "../../services/auth.service.ts";
 import View from "../../components/View";
 import BackgroundImage from "../../components/BackgroundImage";
 import Navbar from "../../components/Navbar";
@@ -10,7 +10,7 @@ import {NavigateFunction, useNavigate} from "react-router-dom";
 export default function Logout() {
     const navigate: NavigateFunction = useNavigate();
     const logOut = () => {
-        AuthService.logout(getCurrentUser().id);
+        AuthService.logout(getUserFromLocalStorage().id);
         // setShowModeratorBoard(false);
         // setShowAdminBoard(false);
         // setCurrentUser(undefined);

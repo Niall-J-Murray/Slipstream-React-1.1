@@ -1,8 +1,8 @@
 import React from "react";
-import {getCurrentUser} from "../services/auth.service";
+import {getUserFromLocalStorage} from "../services/auth.service";
 
 const Profile: React.FC = () => {
-  const currentUser = getCurrentUser();
+  const currentUser = getUserFromLocalStorage();
 
   return (
     <div className="container">

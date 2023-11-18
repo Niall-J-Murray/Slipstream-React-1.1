@@ -90,9 +90,9 @@ public class LeagueController {
     return ResponseEntity.ok(league.getCurrentPickNumber());
   }
 
-  @GetMapping("/{leagueId}/getNextPickName")
+  @GetMapping("/{leagueId}/getNextPick")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-  public ResponseEntity<User> getNextPickName(@PathVariable Long leagueId) {
+  public ResponseEntity<User> getNextPick(@PathVariable Long leagueId) {
 //    Integer leagueSize = leagueService.findById(leagueId).getTeams().size();
 //    Boolean isLeagueActive = leagueService.findById(leagueId).getIsActive();
     if (leagueService.getNextToPick(leagueId) != null) {

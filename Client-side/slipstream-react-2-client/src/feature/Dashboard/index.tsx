@@ -10,21 +10,17 @@ import {useEffect, useState} from "react";
 import {
     getAllLeagueTeams,
     getIsDraftInProgress,
-    getIsLeagueActive,
     getNextPick,
-    getOpenLeague,
-    getPickNumber,
-    getTeamLeague,
     postToggleTestLeague
 } from "../../services/league.service.ts";
-import {getCurrentUser} from "../../services/auth.service.ts";
+import {getUserFromLocalStorage} from "../../services/auth.service.ts";
 import {getUserData} from "../../services/user.service.ts";
 import IUser from "../../types/user.type.ts";
 import ITeam from "../../types/team.type.ts";
 import ILeague from "../../types/league.type.ts";
-import {createTestTeam, getTeam} from "../../services/team.service.ts";
+import {createTestTeam} from "../../services/team.service.ts";
 import IDriver from "../../types/driver.type.ts";
-import {getDriverData, getDriversInTeam, getUndraftedDrivers, postPickDriver} from "../../services/driver.service.ts";
+import {getDriverData, postPickDriver} from "../../services/driver.service.ts";
 import DraftControls from "./DraftControls";
 
 
@@ -41,8 +37,8 @@ import DraftControls from "./DraftControls";
 export default function Dashboard({loading, toggleLoading}) {
     const [currentUser, setCurrentUser]
         = useState<IUser | undefined | null>();
-    const [userData, setUserData]
-        = useState<IUser | undefined | null>();
+    // const [userData, setUserData]
+    //     = useState<IUser | undefined | null>();
     const [team, setTeam]
         = useState<ITeam | undefined | null>();
     const [driversInTeam, setDriversInTeam]
@@ -256,80 +252,126 @@ export default function Dashboard({loading, toggleLoading}) {
 
 
     useEffect(() => {
-        const user = getCurrentUser();
-        setCurrentUser(user);
-        const fetchUserData = async () => {
-            // toggleLoading(true);
-            if (user != null) {
-                const userData = await getUserData(user.id);
-                setUserData(userData);
-
-                if (userData.team) {
-                    setTeam(await getTeam(userData?.team?.id))
-                }
-                getOpenLeague()
-                    .then(function (response) {
-                        setOpenLeague(response);
-                    })
-                if (userData.team) {
-                    const leagueData = await getTeamLeague(userData.team.id);
-                    await getAllLeagueTeams(leagueData.leagueId)
-                        .then(function (response) {
-                            setLeagueTeams(response)
-                        })
-                    getDriversInTeam(userData.team.id)
-                        .then(function (response) {
-                            setDriversInTeam(response);
-                        })
-                    getIsLeagueActive(leagueData.leagueId)
-                        .then(function (response) {
-                            setIsLeagueActive(response);
-                        })
-                    getIsLeagueActive(leagueData.leagueId)
-                        .then(function (response) {
-                            setIsLeagueActive(response);
-                        })
-                    getIsDraftInProgress(leagueData.leagueId)
-                        .then(function (response) {
-                            setIsDraftInProgress(response);
-                        })
-                    getPickNumber(leagueData.leagueId)
-                        .then(function (response) {
-                            setCurrentPickNumber(response);
-                        })
-                    getNextPick(leagueData.leagueId)
-                        .then(function (response) {
-                            setCurrentPick(response);
-                        })
-                    getUndraftedDrivers(leagueData.leagueId)
-                        .then(function (response) {
-                            setUndraftedDrivers(response);
-                        })
-                    setCurrentLeague(leagueData);
-                    setIsPracticeLeague(leagueData.isPracticeLeague);
-                    if (leagueData.teams.length >= 10) {
-                        setIsLeagueFull(true)
-                    }
-                } else {
-                    await getOpenLeague()
-                        .then(function (response) {
-                            setOpenLeague(response);
-                            setCurrentLeague(response);
-                            getIsLeagueActive(response.leagueId)
-                                .then(function (response) {
-                                    setIsLeagueActive(response);
-                                })
-                            getAllLeagueTeams(response.leagueId)
-                                .then(function (response) {
-                                    setLeagueTeams(response)
-                                })
-                        })
-                }
-            }
+        const fetchUser = async () => {
+            await getUserData(getUserFromLocalStorage().id)
+                .then(res => {
+                    console.log("userDate res")
+                    console.log(res)
+                    setCurrentUser(res)
+                    setTeam(res.team)
+                    console.log(res.team.leagueId)
+                    setCurrentLeague(res.team.leagueId)
+                })
+                .then(() => {
+                    console.log("after userData")
+                    console.log(currentUser)
+                    console.log(currentLeague)
+                })
         }
-        fetchUserData().catch(console.error)
-            .then(toggleLoading);
-    }, []);
+        fetchUser()
+            .then(() => {
+                console.log("after-after  userData")
+                console.log(currentUser)
+                console.log(currentLeague)
+            })
+        // console.log("after-after-after  userData")
+        // console.log(currentUser)
+        // console.log(currentLeague)
+    }, [])
+
+    // useEffect(() => {
+    //     // const user = getUserFromLocalStorage();
+    //     // setCurrentUser(user);
+    //     const fetchUserData = async () => {
+    //         // toggleLoading(true);
+    //         if (getUserFromLocalStorage() != null) {
+    //             const userData = await getUserData(getUserFromLocalStorage().id);
+    //             if (userData.team) {
+    //                 setTeam(await getTeam(userData?.team?.id))
+    //             }
+    //             await getOpenLeague()
+    //                 .then(function (response) {
+    //                     setOpenLeague(response);
+    //                 })
+    //             if (userData.team) {
+    //                 const leagueData = await getTeamLeague(userData.team.id);
+    //                 await getAllLeagueTeams(leagueData.leagueId)
+    //                     .then(function (response) {
+    //                         setLeagueTeams(response)
+    //                     })
+    //                 await getDriversInTeam(userData.team.id)
+    //                     .then(function (response) {
+    //                         setDriversInTeam(response);
+    //                     })
+    //                 await getIsLeagueActive(leagueData.leagueId)
+    //                     .then(function (response) {
+    //                         setIsLeagueActive(response);
+    //                     })
+    //                 await getIsLeagueActive(leagueData.leagueId)
+    //                     .then(function (response) {
+    //                         setIsLeagueActive(response);
+    //                     })
+    //                 await getIsDraftInProgress(leagueData.leagueId)
+    //                     .then(function (response) {
+    //                         setIsDraftInProgress(response);
+    //                     })
+    //                 await getPickNumber(leagueData.leagueId)
+    //                     .then(function (response) {
+    //                         setCurrentPickNumber(response);
+    //                     })
+    //                 await getNextPick(leagueData.leagueId)
+    //                     .then(function (response) {
+    //                         setCurrentPick(response);
+    //                     })
+    //                 await getUndraftedDrivers(leagueData.leagueId)
+    //                     .then(function (response) {
+    //                         setUndraftedDrivers(response);
+    //                     })
+    //                 setCurrentLeague(leagueData);
+    //                 setIsPracticeLeague(leagueData.isPracticeLeague);
+    //                 if (leagueData.teams.length >= 10) {
+    //                     setIsLeagueFull(true)
+    //                 }
+    //             } else {
+    //                 await getOpenLeague()
+    //                     .then(async function (response) {
+    //                         setOpenLeague(response);
+    //                         setCurrentLeague(response);
+    //                         getIsLeagueActive(response.leagueId)
+    //                             .then(function (response) {
+    //                                 setIsLeagueActive(response);
+    //                             })
+    //                         await getAllLeagueTeams(response.leagueId)
+    //                             .then(function (response) {
+    //                                 setLeagueTeams(response)
+    //                             })
+    //                     })
+    //             }
+    //         }
+    //     }
+    //     fetchUserData().catch(console.error)
+    //         .then(toggleLoading);
+    // }, []);
+    //
+    // useEffect(() => {
+    //     const fetchNextPick = async () => {
+    //         console.log("currentLeague")
+    //         console.log(currentLeague)
+    //         await getTeamLeague(currentUser?.team?.id)
+    //             .then(async res => {
+    //                 console.log("getTeamLeague")
+    //                 console.log(res)
+    //                 await getNextPick(res.leagueId)
+    //                     .then(function (response) {
+    //                         console.log("getNextPick")
+    //                         console.log(response)
+    //                         setCurrentPick(response);
+    //                     })
+    //             })
+    //     }
+    //     fetchNextPick();
+    // }, []);
+
 
     function togglePracticeOptions() {
         if (showPracticeOptions) {
@@ -356,16 +398,18 @@ export default function Dashboard({loading, toggleLoading}) {
     const addTestTeam = async () => {
         await createTestTeam(currentLeague?.leagueId)
             .then(async () => {
-                const teamsInLeague = await getAllLeagueTeams(currentLeague?.leagueId)
-                setLeagueTeams(teamsInLeague);
-                if (teamsInLeague >= 10) {
-                    setIsLeagueFull(true);
-                    await getIsDraftInProgress(currentLeague?.leagueId)
-                        .then(res => {
-                            setIsDraftInProgress(res);
-                            console.log("2" + isDraftInProgress)
-                        });
-                }
+                await getAllLeagueTeams(currentLeague?.leagueId)
+                    .then(async (res) => {
+                        setLeagueTeams(res)
+                        if (res.length >= 10) {
+                            await getIsDraftInProgress(currentLeague?.leagueId)
+                                .then(res => {
+                                    setIsDraftInProgress(res);
+                                    setIsLeagueFull(true);
+                                    console.log("2" + isDraftInProgress)
+                                })
+                        }
+                    })
             });
     }
 
@@ -377,15 +421,21 @@ export default function Dashboard({loading, toggleLoading}) {
         return driverId;
     }
 
-    const handlePick = (driverId: number | null | undefined) => {
-        postPickDriver(currentUser?.id, driverId)
-            .then(() => getDriverData(driverId)
+    const handlePick = async (driverId: number | null | undefined) => {
+        await postPickDriver(currentUser?.id, driverId)
+            .then(async () => await getDriverData(driverId)
                 .then(res => {
                     setLastDriverPicked(res)
-                    console.log(res)
                     const timeElapsed = Date.now();
                     const today = new Date(timeElapsed);
                     setLastPickTime(today);
+                    getNextPick(currentUser?.team?.league?.leagueId)
+                        .then(res => {
+                            setCurrentPick(res);
+                        })
+
+
+                    console.log(res)
                     console.log("lastDriverPicked")
                     console.log(lastDriverPicked)
                     console.log("lastPickTime")
@@ -429,7 +479,7 @@ export default function Dashboard({loading, toggleLoading}) {
                             <div className="col-start-2 col-span-1">
                                 <DashTop
                                     currentUser={currentUser}
-                                    userData={userData}
+                                    // userData={userData}
                                     team={team}
                                     driversInTeam={driversInTeam}
                                     openLeague={openLeague}

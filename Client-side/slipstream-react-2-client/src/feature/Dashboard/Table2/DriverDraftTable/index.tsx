@@ -7,6 +7,9 @@ export default function DriverDraftTable({
                                              currentPick,
                                              handlePick,
                                          }) {
+    console.log("draft")
+    console.log(currentPick)
+    console.log(currentPick.username)
     return (
         <>
             <div className="col-start-3 col-span-2">

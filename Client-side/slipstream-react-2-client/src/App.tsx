@@ -58,7 +58,7 @@ export default function App() {
     }, []);
 
     useEffect(() => {
-        const user = AuthService.getCurrentUser();
+        const user = AuthService.getUserFromLocalStorage();
         if (user) {
             setCurrentUser(user);
             // setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));

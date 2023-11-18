@@ -7,7 +7,7 @@ import IDriver from "../../../types/driver.type.ts";
 
 export default function DashTop({
                                     currentUser,
-                                    userData,
+                                    // userData,
                                     team,
                                     driversInTeam,
                                     openLeague,

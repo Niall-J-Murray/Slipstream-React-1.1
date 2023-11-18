@@ -46,9 +46,11 @@ public class Team implements Serializable {
   private Double teamPoints;
   @Column()
   private Integer ranking;
+  @Column()
+  private Long leagueId;
   @ManyToOne()
   @JsonIgnore
-  League league;
+ private League league;
   @JsonIgnore
   @Column()
   @ManyToMany(fetch = FetchType.LAZY,

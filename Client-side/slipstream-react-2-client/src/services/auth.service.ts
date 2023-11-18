@@ -37,7 +37,7 @@ export const updateOnLogout = (userId: number | null | undefined) => {
         })
 };
 
-export const getCurrentUser = () => {
+export const getUserFromLocalStorage = () => {
     const userStr = localStorage.getItem("user");
     if (userStr) return JSON.parse(userStr);
     return null;
