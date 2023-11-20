@@ -3,14 +3,15 @@ import BackgroundImage from "../../components/BackgroundImage";
 import Navbar from "../../components/Navbar";
 import Body from "../../components/Body";
 import DashTop from "./DashTop";
-import Reminders from "./Reminders";
 import Table1 from "./Table1";
 import Table2 from "./Table2";
 import {useEffect, useState} from "react";
 import {
     getAllLeagueTeams,
     getIsDraftInProgress,
-    getNextPick,
+    getLeagueData,
+    getNextUserToPick,
+    getOpenLeague,
     postToggleTestLeague
 } from "../../services/league.service.ts";
 import {getUserFromLocalStorage} from "../../services/auth.service.ts";
@@ -20,8 +21,9 @@ import ITeam from "../../types/team.type.ts";
 import ILeague from "../../types/league.type.ts";
 import {createTestTeam} from "../../services/team.service.ts";
 import IDriver from "../../types/driver.type.ts";
-import {getDriverData, postPickDriver} from "../../services/driver.service.ts";
+import {getDriverData, getDriversInTeam, getUndraftedDrivers, postPickDriver} from "../../services/driver.service.ts";
 import DraftControls from "./DraftControls";
+import Reminders from "./Reminders";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -35,10 +37,10 @@ import DraftControls from "./DraftControls";
 //  Fix layouts for consistency.
 
 export default function Dashboard({loading, toggleLoading}) {
-    const [currentUser, setCurrentUser]
-        = useState<IUser | undefined | null>();
     // const [userData, setUserData]
     //     = useState<IUser | undefined | null>();
+    const [currentUser, setCurrentUser]
+        = useState<IUser | undefined | null>();
     const [team, setTeam]
         = useState<ITeam | undefined | null>();
     const [driversInTeam, setDriversInTeam]
@@ -48,23 +50,25 @@ export default function Dashboard({loading, toggleLoading}) {
     const [currentLeague, setCurrentLeague]
         = useState<ILeague | undefined | null>();
     const [leagueTeams, setLeagueTeams]
-        = useState<Array<ITeam> | undefined | []>();
+        = useState<Array<ITeam> | undefined | null | []>();
     const [isLeagueActive, setIsLeagueActive]
         = useState<boolean | undefined | null>();
     const [isLeagueFull, setIsLeagueFull]
-        = useState<boolean | undefined | null>();
+        = useState<boolean | undefined | null>(true);
     const [showPracticeOptions, setShowPracticeOptions]
         = useState<boolean | undefined | null>();
     const [isPracticeLeague, setIsPracticeLeague]
         = useState<boolean | undefined | null>();
     const [isDraftInProgress, setIsDraftInProgress]
-        = useState<boolean | undefined | null>();
+        = useState<boolean | undefined | null>(true);
     const [undraftedDrivers, setUndraftedDrivers]
         = useState<Array<IDriver> | undefined | null>();
     const [currentPickNumber, setCurrentPickNumber]
         = useState<number | undefined | null>();
-    const [currentPick, setCurrentPick]
+    const [nextUserToPick, setNextUserToPick]
         = useState<IUser | undefined | null>();
+    const [isUsersTurnToPick, setIsUsersTurnToPick]
+        = useState<boolean | undefined | null>();
     const [selectedDriver, setSelectedDriver]
         = useState<IDriver | undefined | null>();
     const [lastDriverPicked, setLastDriverPicked]
@@ -248,37 +252,124 @@ export default function Dashboard({loading, toggleLoading}) {
     //         );
     // }, [toggleLoading]);
     //
-    // // }, [isDraftInProgress, currentPickNumber, currentPick]);
+    // // }, [isDraftInProgress, currentPickNumber, isUsersTurnToPick]);
 
 
     useEffect(() => {
-        const fetchUser = async () => {
-            await getUserData(getUserFromLocalStorage().id)
-                .then(res => {
-                    console.log("userDate res")
-                    console.log(res)
+        toggleLoading(true);
+        const fetchUser = () => {
+            getUserData(getUserFromLocalStorage().id)
+                .then((res: IUser) => {
+                    // console.log("getUserData res")
+                    // console.log(res)
                     setCurrentUser(res)
-                    setTeam(res.team)
-                    console.log(res.team.leagueId)
-                    setCurrentLeague(res.team.leagueId)
+                    if (res.team) {
+                        setTeam(res.team)
+                        getDriversInTeam(res.team.id)
+                            .then(res => {
+                                setDriversInTeam(res);
+                            })
+                        getLeagueData(res.team.leagueId)
+                            .then((res: ILeague) => {
+                                setCurrentLeague(res)
+                                setLeagueTeams(res.teams)
+                                setIsPracticeLeague(res.isPracticeLeague)
+                                setIsLeagueActive(res.isActive)
+                                setCurrentPickNumber(res.currentPickNumber)
+                            });
+                    } else {
+                        getOpenLeague()
+                            .then((res: ILeague) => {
+                                setCurrentLeague(res);
+                                setLeagueTeams(res.teams);
+                            })
+                    }
                 })
-                .then(() => {
-                    console.log("after userData")
-                    console.log(currentUser)
-                    console.log(currentLeague)
-                })
+            // .then(() => {
+            //     console.log("getUserData 1")
+            //     console.log(currentUser)
+            //     console.log(team)
+            //     console.log(currentLeague)
+            // })
         }
         fetchUser()
-            .then(() => {
-                console.log("after-after  userData")
-                console.log(currentUser)
-                console.log(currentLeague)
-            })
+        //     .then(() => {
+        //         console.log("getUserData 2")
+        //         console.log(currentUser)
+        //         console.log(team)
+        //         console.log(currentLeague?.leagueName)
+        //     }).finally(() => {
+        //         console.log("getUserData 3")
+        //         console.log(currentUser)
+        //         console.log(team)
+        //         console.log(currentLeague?.leagueName)
+        //     }
+        // )
         // console.log("after-after-after  userData")
         // console.log(currentUser)
         // console.log(currentLeague)
-    }, [])
+        toggleLoading(false);
+    }, []);
+    // console.log("getUserData 4")
+    // console.log(currentUser)
+    // console.log(team)
+    // console.log(currentLeague?.leagueName)
 
+    useEffect(() => {
+        toggleLoading(true);
+        const fetchLeague = () => {
+            if (currentLeague) {
+                getLeagueData(currentLeague.leagueId)
+                    .then(() => {
+                        // .then(async res => {
+                        //     console.log("teams length")
+                        //     console.log(res.teams.length)
+                        //     if (res.teams.length >= 10) {
+                        //         setIsLeagueFull(true)
+                        //     }
+                        // setIsPracticeLeague()
+                        // setIsLeagueActive()
+                        getUndraftedDrivers(currentLeague.leagueId)
+                            .then(res => {
+                                setUndraftedDrivers(res);
+                            })
+                        getNextUserToPick(currentLeague.leagueId)
+                            .then(res => {
+                                setNextUserToPick(res)
+                            })
+                        // setLastDriverPicked()
+                        // setLastPickTime()
+                        // setSelectedDriver()
+                    });
+            } else {
+                getOpenLeague()
+                    .then(res => {
+                        setOpenLeague(res);
+                    })
+            }
+
+        }
+        fetchLeague();
+        // .then(() => {
+        //     console.log("fetchLeague 1")
+        //     console.log(openLeague)
+        //     console.log(currentLeague)
+        //     console.log(isUsersTurnToPick)
+        //     console.log(undraftedDrivers)
+        //     console.log(isLeagueFull)
+        // })
+        getLeagueSize();
+        checkIfTimeToPick(currentLeague);
+        toggleLoading(false);
+    }, [isLeagueFull]);
+
+
+    // console.log("fetchLeague 2")
+    // console.log(openLeague)
+    // console.log(currentLeague)
+    // console.log(isUsersTurnToPick)
+    // console.log(undraftedDrivers)
+    // console.log(isLeagueFull)
     // useEffect(() => {
     //     // const user = getUserFromLocalStorage();
     //     // setCurrentUser(user);
@@ -307,10 +398,6 @@ export default function Dashboard({loading, toggleLoading}) {
     //                     .then(function (response) {
     //                         setIsLeagueActive(response);
     //                     })
-    //                 await getIsLeagueActive(leagueData.leagueId)
-    //                     .then(function (response) {
-    //                         setIsLeagueActive(response);
-    //                     })
     //                 await getIsDraftInProgress(leagueData.leagueId)
     //                     .then(function (response) {
     //                         setIsDraftInProgress(response);
@@ -321,7 +408,7 @@ export default function Dashboard({loading, toggleLoading}) {
     //                     })
     //                 await getNextPick(leagueData.leagueId)
     //                     .then(function (response) {
-    //                         setCurrentPick(response);
+    //                         setNextUserToPick(response);
     //                     })
     //                 await getUndraftedDrivers(leagueData.leagueId)
     //                     .then(function (response) {
@@ -384,14 +471,24 @@ export default function Dashboard({loading, toggleLoading}) {
     function togglePracticeLeague() {
         if (isPracticeLeague) {
             postToggleTestLeague(currentLeague?.leagueId)
-                .then(function (response) {
-                    setIsPracticeLeague(response);
+                .then(res => {
+                    setIsPracticeLeague(res);
                 })
         } else {
             postToggleTestLeague(currentLeague?.leagueId)
-                .then(function (response) {
-                    setIsPracticeLeague(response);
+                .then(res => {
+                    setIsPracticeLeague(res);
                 })
+        }
+    }
+
+    function getLeagueSize() {
+        if (currentLeague?.teams?.length < 10) {
+            setIsLeagueFull(false);
+            setIsDraftInProgress(false);
+        } else {
+            setIsLeagueFull(true);
+            setIsDraftInProgress(true);
         }
     }
 
@@ -413,6 +510,16 @@ export default function Dashboard({loading, toggleLoading}) {
             });
     }
 
+    function checkIfTimeToPick(currentLeague) {
+        getNextUserToPick(currentLeague?.leagueId)
+            .then(res => {
+                setNextUserToPick(res)
+            })
+        if (nextUserToPick?.isTestUser || nextUserToPick?.id == currentUser?.id) {
+            setIsUsersTurnToPick(true);
+        }
+    }
+
     const handleDriverSelection = (driverId: number | null | undefined) => {
         getDriverData(driverId)
             .then(function (response) {
@@ -429,17 +536,15 @@ export default function Dashboard({loading, toggleLoading}) {
                     const timeElapsed = Date.now();
                     const today = new Date(timeElapsed);
                     setLastPickTime(today);
-                    getNextPick(currentUser?.team?.league?.leagueId)
-                        .then(res => {
-                            setCurrentPick(res);
-                        })
-
-
-                    console.log(res)
-                    console.log("lastDriverPicked")
-                    console.log(lastDriverPicked)
-                    console.log("lastPickTime")
-                    console.log(lastPickTime)
+                    // getNextUserToPick(currentUser?.team?.league?.leagueId)
+                    //     .then(res => {
+                    //         setIsUsersTurnToPick(res);
+                    //     })
+                    // console.log(res)
+                    // console.log("lastDriverPicked")
+                    // console.log(lastDriverPicked)
+                    // console.log("lastPickTime")
+                    // console.log(lastPickTime)
                 }));
         //     .then(response => {
         //         console.log("postPickDriver")
@@ -464,10 +569,10 @@ export default function Dashboard({loading, toggleLoading}) {
         // console.log(lastPickTime)
 
     };
-    console.log("lastDriverPicked")
-    console.log(lastDriverPicked)
-    console.log("lastPickTime")
-    console.log(lastPickTime)
+    // console.log("lastDriverPicked")
+    // console.log(lastDriverPicked)
+    // console.log("lastPickTime")
+    // console.log(lastPickTime)
 
     return (
         <>
@@ -489,11 +594,51 @@ export default function Dashboard({loading, toggleLoading}) {
                                     isLeagueFull={isLeagueFull}
                                     isDraftInProgress={isDraftInProgress}
                                     currentPickNumber={currentPickNumber}
-                                    currentPick={currentPick}
+                                    currentPick={isUsersTurnToPick}
                                     isLeagueActive={isLeagueActive}/>
                             </div>
                             <div className="col-start-3 col-span-2">
                                 <Reminders/>
+                            </div>
+                            <div className="col-start-2 col-span-3">
+                                <div className="grid grid-cols-5">
+                                    <div className="col-start-1 col-span-1">
+                                        <br/>1.{currentUser?.username}
+                                        <br/>2.{team?.teamName}
+                                        <br/>3.{team?.leagueId}
+                                        <br/>4.{currentLeague?.leagueName}
+                                        <br/>5.{currentLeague?.teams?.length}
+                                        <br/>6.{openLeague?.leagueName}
+                                        <br/>7.{isLeagueActive ? "LA" : "LNA"}
+                                        <br/>8.{isLeagueFull ? "LF" : "LNF"}
+                                        <br/>9.{isPracticeLeague ? "PL" : "NPL"}
+                                        <br/>10.{showPracticeOptions ? "PO" : "NP0"}
+                                        <br/>11.{isDraftInProgress ? "DIP" : "NIP"}
+                                    </div>
+                                    <div className="col-start-2 col-span-1">
+                                        <br/>12.{currentPickNumber}
+                                        <br/>13.{nextUserToPick?.username}
+                                        <br/>14.{isUsersTurnToPick ? "pick" : "no pick"}
+                                        <br/>15.{selectedDriver?.surname}
+                                        <br/>16.{lastDriverPicked?.surname}
+                                        <br/>17.{lastPickTime?.getTime()}
+                                    </div>
+                                    <div className="col-start-3 col-span-1">
+                                        <br/>18.{leagueTeams?.map((team: ITeam) => {
+                                        return <div key={team.id}>{team.teamName}</div>
+                                    })}
+                                    </div>
+                                    <div className="col-start-4 col-span-1">
+                                        19.{driversInTeam?.map((driver: IDriver) => {
+                                        return <div key={driver.driverId}>{driver.surname}</div>
+                                    })}
+                                    </div>
+                                    <div className="col-start-5 col-span-1">
+                                        20.{undraftedDrivers?.map((driver: IDriver) => {
+                                        return <div key={driver.driverId}>{driver.surname}</div>
+                                    })}
+                                    </div>
+                                </div>
                             </div>
                             <div className="col-start-2 col-span-3">
                                 <DraftControls
@@ -507,7 +652,8 @@ export default function Dashboard({loading, toggleLoading}) {
                                     currentUser={currentUser}
                                     isDraftInProgress={isDraftInProgress}
                                     currentPickNumber={currentPickNumber}
-                                    currentPick={currentPick}
+                                    isUsersTurnToPick={isUsersTurnToPick}
+                                    nextUserToPick={isUsersTurnToPick}
                                     selectedDriver={selectedDriver}
                                     lastDriverPicked={lastDriverPicked}
                                     lastPickTime={lastPickTime}
@@ -530,7 +676,8 @@ export default function Dashboard({loading, toggleLoading}) {
                                             isLeagueActive={isLeagueActive}
                                             isDraftInProgress={isDraftInProgress}
                                             undraftedDrivers={undraftedDrivers}
-                                            currentPick={currentPick}
+                                            isUsersTurnToPick={isUsersTurnToPick}
+                                            nextUserToPick={nextUserToPick}
                                             handleDriverSelection={handleDriverSelection}
                                             handlePick={handlePick}/>
                                     </div>
@@ -551,7 +698,8 @@ export default function Dashboard({loading, toggleLoading}) {
                                             isLeagueActive={isLeagueActive}
                                             isDraftInProgress={isDraftInProgress}
                                             undraftedDrivers={undraftedDrivers}
-                                            currentPick={currentPick}
+                                            isUsersTurnToPick={isUsersTurnToPick}
+                                            nextUserToPick={nextUserToPick}
                                             handleDriverSelection={handleDriverSelection}
                                             handlePick={handlePick}/>
                                     </div>

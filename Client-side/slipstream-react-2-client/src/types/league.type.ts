@@ -4,9 +4,10 @@ export default interface ILeague {
     leagueId: number | null,
     leagueName?: string | null,
     creationTimestamp?: string | null,
-    activeTimestamp?: string | null,
-    isActive?: boolean | null,
     isPracticeLeague?: boolean | null,
+    currentPickNumber: number | null,
+    isActive?: boolean | null,
+    activeTimestamp?: string | null,
     teams?: Array<ITeam> | null
 }
 

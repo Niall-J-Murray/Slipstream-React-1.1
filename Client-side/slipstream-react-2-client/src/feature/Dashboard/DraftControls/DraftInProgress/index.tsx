@@ -2,7 +2,8 @@ export default function DraftInProgress({
                                             currentUser,
                                             isDraftInProgress,
                                             currentPickNumber,
-                                            currentPick,
+                                            isUsersTurnToPick,
+                                            nextUserToPick,
                                             selectedDriver,
                                             lastDriverPicked,
                                             lastPickTime
@@ -10,7 +11,8 @@ export default function DraftInProgress({
 
     function PickInstructions() {
         if (isDraftInProgress) {
-            if (currentUser.username == currentPick.username || currentPick.isTestUser) {
+            // if (currentUser?.username == nextUserToPick?.username || nextUserToPick?.isTestUser) {
+            if (isUsersTurnToPick) {
                 return <>
                     <div className="col-start-2 col-span-1">
                         <h4>
@@ -19,17 +21,17 @@ export default function DraftInProgress({
                         <h4 className={"pick-instructions-go"}>
                             Current pick number: {currentPickNumber}
                         </h4>
-                        {currentPick.isTestUser ?
+                        {nextUserToPick.isTestUser ?
                             <h4 className={"pick-instructions-go"}>
-                                It's {currentPick.username}'s turn to pick.
+                                It's {nextUserToPick.username}'s turn to pick.
                             </h4>
                             :
                             <h4 className={"pick-instructions-go"}>
-                                It's your turn to pick {currentPick.username}!
+                                It's your turn to pick {nextUserToPick.username}!
                             </h4>
                         }
                     </div>
-                    {currentPick.isTestUser ?
+                    {nextUserToPick.isTestUser ?
                         <div className="col-start-3 col-span-1">
                             <h4>------------------------------------</h4>
                             <h4>
@@ -68,7 +70,7 @@ export default function DraftInProgress({
                         Current pick number: {currentPickNumber}
                     </h4>
                     <h4 className="pick-instructions-wait">
-                        It's {currentPick.username}'s turn to pick.
+                        It's {nextUserToPick?.username}'s turn to pick.
                     </h4>
                 </div>
                 <div className="col-start-4 col-span-1">

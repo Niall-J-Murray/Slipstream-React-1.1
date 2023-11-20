@@ -12,7 +12,8 @@ export default function DraftControls({
                                           currentUser,
                                           isDraftInProgress,
                                           currentPickNumber,
-                                          currentPick,
+                                          isUsersTurnToPick,
+                                          nextUserToPick,
                                           selectedDriver,
                                           lastDriverPicked,
                                           lastPickTime,
@@ -44,7 +45,8 @@ export default function DraftControls({
                                 currentUser={currentUser}
                                 isDraftInProgress={isDraftInProgress}
                                 currentPickNumber={currentPickNumber}
-                                currentPick={currentPick}
+                                isUsersTurnToPick={isUsersTurnToPick}
+                                nextUserToPick={nextUserToPick}
                                 selectedDriver={selectedDriver}
                                 lastDriverPicked={lastDriverPicked}
                                 lastPickTime={lastPickTime}/>

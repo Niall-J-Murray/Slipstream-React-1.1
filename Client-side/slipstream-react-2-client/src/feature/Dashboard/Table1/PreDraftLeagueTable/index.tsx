@@ -3,7 +3,7 @@ import ITeam from "../../../../types/team.type.ts";
 export default function PreDraftLeagueTable({openLeague, currentLeague, leagueTeams, isDraftInProgress}) {
     const rankedTeams: ITeam[] = leagueTeams;
     if (isDraftInProgress) {
-        rankedTeams.sort((a, b) => {
+        rankedTeams?.sort((a, b) => {
             return a.ranking - b.ranking
         });
     }

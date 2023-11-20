@@ -9,7 +9,8 @@ export default function Table2({
                                    isDraftInProgress,
                                    undraftedDrivers,
                                    handleDriverSelection,
-                                   currentPick,
+                                   isUsersTurnToPick,
+                                   nextUserToPick,
                                    handlePick
                                }) {
 
@@ -19,7 +20,8 @@ export default function Table2({
                 currentUser={currentUser}
                 undraftedDrivers={undraftedDrivers}
                 handleDriverSelection={handleDriverSelection}
-                currentPick={currentPick}
+                isUsersTurnToPick={isUsersTurnToPick}
+                nextUserToPick={nextUserToPick}
                 handlePick={handlePick}/>;
         }
         // if (isLeagueActive) {

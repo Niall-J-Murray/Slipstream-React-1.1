@@ -4,12 +4,14 @@ export default function DriverDraftTable({
                                              currentUser,
                                              undraftedDrivers,
                                              handleDriverSelection,
-                                             currentPick,
+                                             isUsersTurnToPick,
+                                             nextUserToPick,
                                              handlePick,
                                          }) {
     console.log("draft")
-    console.log(currentPick)
-    console.log(currentPick.username)
+    console.log(nextUserToPick)
+    console.log(nextUserToPick?.username)
+    console.log(isUsersTurnToPick)
     return (
         <>
             <div className="col-start-3 col-span-2">
@@ -19,7 +21,8 @@ export default function DriverDraftTable({
                     </caption>
                     <thead>
                     <tr>
-                        {(currentUser.username == currentPick.username || currentPick.isTestUser) ?
+                        {/*{(currentUser.username == nextUserToPick.username || nextUserToPick.isTestUser) ?*/}
+                        {(isUsersTurnToPick) ?
                             <th>Pick</th>
                             :
                             <th>
@@ -37,7 +40,8 @@ export default function DriverDraftTable({
                     {undraftedDrivers?.map((driver: IDriver) => {
                         return (
                             <tr key={driver.driverId}>
-                                {(currentUser.username == currentPick.username || currentPick.isTestUser) ?
+                                {/*{(currentUser.username == nextUserToPick.username || nextUserToPick.isTestUser) ?*/}
+                                {(isUsersTurnToPick) ?
                                     <td>
                                         <form id="driver-pick-form" onSubmit={() => handlePick(driver.driverId)}>
                                             <input
