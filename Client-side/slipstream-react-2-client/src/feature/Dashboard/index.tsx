@@ -36,7 +36,8 @@ import Reminders from "./Reminders";
 //  Add toggles to show/hide certain boxes.
 //  Fix layouts for consistency.
 
-export default function Dashboard({loading, toggleLoading}) {
+// export default function Dashboard({loading, toggleLoading}) {
+export default function Dashboard() {
     // const [userData, setUserData]
     //     = useState<IUser | undefined | null>();
     const [currentUser, setCurrentUser]
@@ -256,33 +257,61 @@ export default function Dashboard({loading, toggleLoading}) {
 
 
     useEffect(() => {
+        let active = true;
         toggleLoading(true);
         const fetchUser = () => {
             getUserData(getUserFromLocalStorage().id)
                 .then((res: IUser) => {
                     // console.log("getUserData res")
                     // console.log(res)
-                    setCurrentUser(res)
-                    if (res.team) {
-                        setTeam(res.team)
-                        getDriversInTeam(res.team.id)
-                            .then(res => {
-                                setDriversInTeam(res);
-                            })
-                        getLeagueData(res.team.leagueId)
-                            .then((res: ILeague) => {
-                                setCurrentLeague(res)
-                                setLeagueTeams(res.teams)
-                                setIsPracticeLeague(res.isPracticeLeague)
-                                setIsLeagueActive(res.isActive)
-                                setCurrentPickNumber(res.currentPickNumber)
-                            });
-                    } else {
-                        getOpenLeague()
-                            .then((res: ILeague) => {
-                                setCurrentLeague(res);
-                                setLeagueTeams(res.teams);
-                            })
+                    if (active) {
+                        setCurrentUser(res)
+                        if (res.team) {
+                            setTeam(res.team)
+                            getDriversInTeam(res.team.id)
+                                .then(res => {
+                                    setDriversInTeam(res);
+                                })
+                            getLeagueData(res.team.leagueId)
+                                .then((res: ILeague) => {
+                                    setCurrentLeague(res)
+                                    setLeagueTeams(res.teams)
+                                    setIsPracticeLeague(res.isPracticeLeague)
+                                    setIsLeagueActive(res.isActive)
+                                    setCurrentPickNumber(res.currentPickNumber)
+                                });
+                            getUndraftedDrivers(res.team.leagueId)
+                                .then(res => {
+                                    setUndraftedDrivers(res);
+                                })
+                            console.log("getLeagueData")
+                            console.log(res.team.leagueId)
+                            getNextUserToPick(res.team.leagueId)
+                                .then((res2: IUser) => {
+                                    setNextUserToPick(res2);
+                                })
+                                .then(() => {
+                                    if (nextUserToPick.isTestUser) {
+                                        setIsUsersTurnToPick(true);
+                                    }
+                                    console.log("nextUserToPick")
+                                    console.log(nextUserToPick)
+                                    if (res === nextUserToPick || res === nextUserToPick) {
+                                        setIsUsersTurnToPick(true);
+                                    }
+                                    console.log("currentPickNumber")
+                                    console.log(currentPickNumber)
+                                    if (res.team?.firstPickNumber === currentPickNumber || res.team?.secondPickNumber === currentPickNumber) {
+                                        setIsUsersTurnToPick(true);
+                                    }
+                                })
+                        } else {
+                            getOpenLeague()
+                                .then((res: ILeague) => {
+                                    setCurrentLeague(res);
+                                    setLeagueTeams(res.teams);
+                                })
+                        }
                     }
                 })
             // .then(() => {
@@ -308,60 +337,67 @@ export default function Dashboard({loading, toggleLoading}) {
         // console.log("after-after-after  userData")
         // console.log(currentUser)
         // console.log(currentLeague)
+        getLeagueSize();
         toggleLoading(false);
+        return () => {
+            active = false;
+        };
     }, []);
     // console.log("getUserData 4")
     // console.log(currentUser)
     // console.log(team)
     // console.log(currentLeague?.leagueName)
 
-    useEffect(() => {
-        toggleLoading(true);
-        const fetchLeague = () => {
-            if (currentLeague) {
-                getLeagueData(currentLeague.leagueId)
-                    .then(() => {
-                        // .then(async res => {
-                        //     console.log("teams length")
-                        //     console.log(res.teams.length)
-                        //     if (res.teams.length >= 10) {
-                        //         setIsLeagueFull(true)
-                        //     }
-                        // setIsPracticeLeague()
-                        // setIsLeagueActive()
-                        getUndraftedDrivers(currentLeague.leagueId)
-                            .then(res => {
-                                setUndraftedDrivers(res);
-                            })
-                        getNextUserToPick(currentLeague.leagueId)
-                            .then(res => {
-                                setNextUserToPick(res)
-                            })
-                        // setLastDriverPicked()
-                        // setLastPickTime()
-                        // setSelectedDriver()
-                    });
-            } else {
-                getOpenLeague()
-                    .then(res => {
-                        setOpenLeague(res);
-                    })
-            }
-
-        }
-        fetchLeague();
-        // .then(() => {
-        //     console.log("fetchLeague 1")
-        //     console.log(openLeague)
-        //     console.log(currentLeague)
-        //     console.log(isUsersTurnToPick)
-        //     console.log(undraftedDrivers)
-        //     console.log(isLeagueFull)
-        // })
-        getLeagueSize();
-        checkIfTimeToPick(currentLeague);
-        toggleLoading(false);
-    }, [isLeagueFull]);
+    // useEffect(() => {
+    //     toggleLoading(true);
+    //     const fetchLeague = () => {
+    //         // if (currentLeague) {
+    //         getLeagueData(currentLeague.leagueId)
+    //             .then(() => {
+    //                 // .then(async res => {
+    //                 //     console.log("teams length")
+    //                 //     console.log(res.teams.length)
+    //                 //     if (res.teams.length >= 10) {
+    //                 //         setIsLeagueFull(true)
+    //                 //     }
+    //                 // setIsPracticeLeague()
+    //                 // setIsLeagueActive()
+    //                 getUndraftedDrivers(currentLeague.leagueId)
+    //                     .then(res => {
+    //                         setUndraftedDrivers(res);
+    //                     })
+    //                 console.log("getLeagueData")
+    //                 console.log(currentLeague.leagueId)
+    //                 getNextUserToPick(currentLeague.leagueId)
+    //                     .then(res => {
+    //                         setNextUserToPick(res)
+    //                     })
+    //                 // setLastDriverPicked()
+    //                 // setLastPickTime()
+    //                 // setSelectedDriver()
+    //             });
+    //         // }
+    //         // else {
+    //         //     getOpenLeague()
+    //         //         .then(res => {
+    //         //             setOpenLeague(res);
+    //         //         })
+    //         // }
+    //
+    //     }
+    //     fetchLeague();
+    //     // .then(() => {
+    //     //     console.log("fetchLeague 1")
+    //     //     console.log(openLeague)
+    //     //     console.log(currentLeague)
+    //     //     console.log(isUsersTurnToPick)
+    //     //     console.log(undraftedDrivers)
+    //     //     console.log(isLeagueFull)
+    //     // })
+    //     getLeagueSize();
+    //     checkIfTimeToPick(currentLeague);
+    //     toggleLoading(false);
+    // }, [isLeagueFull]);
 
 
     // console.log("fetchLeague 2")
@@ -510,15 +546,20 @@ export default function Dashboard({loading, toggleLoading}) {
             });
     }
 
-    function checkIfTimeToPick(currentLeague) {
-        getNextUserToPick(currentLeague?.leagueId)
-            .then(res => {
-                setNextUserToPick(res)
-            })
-        if (nextUserToPick?.isTestUser || nextUserToPick?.id == currentUser?.id) {
-            setIsUsersTurnToPick(true);
-        }
-    }
+    // function checkIfTimeToPick(league) {
+    //     console.log("checkIfTimeToPick")
+    //     console.log(currentLeague)
+    //     console.log(currentLeague?.leagueId)
+    //     console.log(league)
+    //     // console.log(league.leagueId)
+    //     getNextUserToPick(league?.leagueId)
+    //         .then(res => {
+    //             setNextUserToPick(res)
+    //         })
+    //     if (nextUserToPick?.isTestUser || nextUserToPick?.id == currentUser?.id) {
+    //         setIsUsersTurnToPick(true);
+    //     }
+    // }
 
     const handleDriverSelection = (driverId: number | null | undefined) => {
         getDriverData(driverId)
