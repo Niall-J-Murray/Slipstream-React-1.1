@@ -6,19 +6,27 @@ import {createTeam} from "../../../services/team.service.ts";
 import IDriver from "../../../types/driver.type.ts";
 
 export default function DashTop({
-                                    currentUser,
+                                    // currentUser,
                                     // userData,
-                                    team,
+                                    // team,
+                                    // driversInTeam,
+                                    // openLeague,
+                                    // currentLeague,
+                                    // leagueTeams,
+                                    // isPracticeLeague,
+                                    // isLeagueFull,
+                                    // isDraftInProgress,
+                                    // currentPickNumber,
+                                    // currentPick,
+                                    // isLeagueActive
+
+                                    userData,
                                     driversInTeam,
-                                    openLeague,
                                     currentLeague,
-                                    leagueTeams,
                                     isPracticeLeague,
                                     isLeagueFull,
+                                    isLeagueActive,
                                     isDraftInProgress,
-                                    currentPickNumber,
-                                    currentPick,
-                                    isLeagueActive
                                 }) {
     const navigate: NavigateFunction = useNavigate();
     const [loading, setLoading]
@@ -44,7 +52,7 @@ export default function DashTop({
         setMessage("");
         setLoading(true);
 
-        createTeam(currentUser?.id, teamName).then(
+        createTeam(userData?.id, teamName).then(
             () => {
                 navigate("/dashboard");
                 window.location.reload();
@@ -63,15 +71,16 @@ export default function DashTop({
         );
     };
 
-    const teamName = team?.teamName
-    const firstPickNumber = team?.firstPickNumber
-    const secondPickNumber = team?.secondPickNumber
+    const teamName = userData.team?.teamName
+    const firstPickNumber = userData.team?.firstPickNumber
+    const secondPickNumber = userData.team?.secondPickNumber
 
     function CreateTeam() {
         return (
             <>
                 <div>
-                    <p>{openLeague?.leagueName} is open to join.</p>
+                    {/*<p>{openLeague?.leagueName} is open to join.</p>*/}
+                    <p>{currentLeague?.leagueName} is open to join.</p>
                     <p>Once the league is full, the draft can begin.</p>
                     <p>You must create a team to try a practice draft.</p>
                     <p>Choose a team name to get started...</p>
@@ -115,7 +124,7 @@ export default function DashTop({
 
     function AdminGreeting() {
         return <div>
-            <h2>{currentUser?.username}'s Dashboard </h2>
+            <h2>{userData?.username}'s Dashboard </h2>
             <hr/>
             <h3>Sorry, admins cannot play!</h3>
             <h3><a href="/admin">Go to admin dashboard</a></h3>
@@ -137,16 +146,16 @@ export default function DashTop({
     }
 
     function UserGreeting() {
-        if (team != null) {
+        if (userData.team != null) {
             if (isLeagueFull) {
                 return <div>
-                    <h2>{currentUser?.username}'s Dashboard </h2>
+                    <h2>{userData?.username}'s Dashboard </h2>
                     <hr/>
                     <p>Your team: "{teamName}"</p>
                     <p>1st pick number: {firstPickNumber}</p>
                     <p>2nd pick number: {secondPickNumber}</p>
                     <p>Selected Drivers -</p>
-                    {driversInTeam?.map((driver: IDriver, i:number) => {
+                    {driversInTeam?.map((driver: IDriver, i: number) => {
                         return (
                             <p key={driver.driverId}>
                                 {i + 1}. {driver.surname}
@@ -156,7 +165,7 @@ export default function DashTop({
                     <hr/>
                     {isLeagueActive ?
                         <h3>Your league is active, points will be scored from races after:
-                            <br/>{currentLeague.activeTimestamp.slice(0,8)}</h3>
+                            <br/>{currentLeague.activeTimestamp.slice(0, 8)}</h3>
                         :
                         <h3>Draft in progress...</h3>
                     }
@@ -165,27 +174,27 @@ export default function DashTop({
                 </div>
             }
             return <div>
-                <h2>{currentUser?.username}'s Dashboard </h2>
+                <h2>{userData?.username}'s Dashboard </h2>
                 <hr/>
                 <p>Your team: "{teamName}"</p>
                 <p>Random 1st pick draft number: {firstPickNumber}</p>
                 <p>Random 2nd pick draft number: {secondPickNumber}</p>
                 <hr/>
-                <h3>League is {leagueTeams?.length} of 10 teams full.</h3>
+                <h3>League is {currentLeague.teams.length} of 10 teams full.</h3>
                 <h3> The draft picks will start when the league is full...</h3>
                 <PracticeGreeting/>
                 <hr/>
             </div>;
         }
         return <div>
-            <h2>{currentUser?.username}'s Dashboard </h2>
+            <h2>{userData?.username}'s Dashboard </h2>
             <hr/>
             <CreateTeam/>
         </div>;
     }
 
     function Greeting() {
-        if (currentUser?.roles?.includes("ROLE_ADMIN")) {
+        if (userData?.roles?.includes("ROLE_ADMIN")) {
             return <AdminGreeting/>;
         }
         return <UserGreeting/>;
@@ -194,9 +203,9 @@ export default function DashTop({
     return (
         <>
             {/*<div className="col-start-2 col-span-1">*/}
-                <div className="box-shadow">
-                    <Greeting/>
-                </div>
+            <div className="box-shadow">
+                <Greeting/>
+            </div>
             {/*</div>*/}
         </>
     );

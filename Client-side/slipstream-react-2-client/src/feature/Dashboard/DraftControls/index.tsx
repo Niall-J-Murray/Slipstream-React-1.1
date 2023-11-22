@@ -2,6 +2,10 @@ import PracticeDraftOptions from "./PracticeDraftOptions";
 import DraftInProgress from "./DraftInProgress";
 
 export default function DraftControls({
+                                          // currentUser,
+                                          // currentPickNumber,
+                                          // isUsersTurnToPick,
+                                          // nextUserToPick,
                                           showPracticeOptions,
                                           currentLeague,
                                           isPracticeLeague,
@@ -9,18 +13,13 @@ export default function DraftControls({
                                           togglePracticeOptions,
                                           togglePracticeLeague,
                                           addTestTeam,
-                                          currentUser,
                                           isDraftInProgress,
-                                          currentPickNumber,
-                                          isUsersTurnToPick,
-                                          nextUserToPick,
                                           selectedDriver,
                                           lastDriverPicked,
                                           lastPickTime,
-                                          isLeagueActive
+                                          isLeagueActive,
                                       }) {
 
-    // if (currentUser?.team?.league?.isLeagueActive) {
     return (
         <>
             {isLeagueActive ?
@@ -37,24 +36,25 @@ export default function DraftControls({
                                 showPracticeOptions={showPracticeOptions}
                                 togglePracticeOptions={togglePracticeOptions}
                                 togglePracticeLeague={togglePracticeLeague}
-                                addTestTeam={addTestTeam}/>
+                                addTestTeam={addTestTeam}
+                            />
                         </div>
                         :
                         <div className="grid grid-cols-5">
                             <DraftInProgress
-                                currentUser={currentUser}
                                 isDraftInProgress={isDraftInProgress}
-                                currentPickNumber={currentPickNumber}
-                                isUsersTurnToPick={isUsersTurnToPick}
-                                nextUserToPick={nextUserToPick}
                                 selectedDriver={selectedDriver}
                                 lastDriverPicked={lastDriverPicked}
-                                lastPickTime={lastPickTime}/>
+                                lastPickTime={lastPickTime}
+                                // currentUser={currentUser}
+                                // currentPickNumber={currentPickNumber}
+                                // isUsersTurnToPick={isUsersTurnToPick}
+                                // nextUserToPick={nextUserToPick}
+                            />
                         </div>
                     }
                 </div>
             }
         </>
     )
-    // }
 }

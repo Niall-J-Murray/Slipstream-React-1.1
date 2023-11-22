@@ -1,13 +1,41 @@
+import {useQuery, UseQueryResult} from "react-query";
+import {useState} from "react";
+import {getNextUserToPick, getPickNumber} from "../../../../services/league.service.ts";
+import IUser from "../../../../types/user.type.ts";
+
 export default function DraftInProgress({
-                                            currentUser,
+                                            // currentUser,
+                                            // currentPickNumber,
+                                            // isUsersTurnToPick,
+                                            // nextUserToPick,
                                             isDraftInProgress,
-                                            currentPickNumber,
-                                            isUsersTurnToPick,
-                                            nextUserToPick,
                                             selectedDriver,
+                                            lastPickTime,
                                             lastDriverPicked,
-                                            lastPickTime
                                         }) {
+    // currentUser={currentUser}
+    // currentPickNumber={currentPickNumber}
+    // isUsersTurnToPick={isUsersTurnToPick}
+    // nextUserToPick={nextUserToPick}
+    const [currentPickNumber, setCurrentPickNumber]
+        = useState<number | null | undefined>();
+    const [isUsersTurnToPick, setIsUsersTurnToPick]
+        = useState<boolean>();
+    const [nextUserToPick, setNextUserToPick]
+        = useState<IUser | null | undefined>();
+    const currentUser: UseQueryResult<IUser, undefined> = useQuery("userData");
+    getPickNumber(currentUser?.team?.leagueId)
+        .then(res => {
+                setCurrentPickNumber(res)
+                if (currentUser.team?.firstPickNumber == res || currentUser.team?.secondPickNumber == res) {
+                    setIsUsersTurnToPick(true);
+                }
+            }
+        );
+    getNextUserToPick(currentUser?.team?.leagueId)
+        .then(res => {
+            setNextUserToPick(res)
+        });
 
     function PickInstructions() {
         if (isDraftInProgress) {

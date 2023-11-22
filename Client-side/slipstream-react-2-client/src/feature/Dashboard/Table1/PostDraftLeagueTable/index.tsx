@@ -1,11 +1,17 @@
 import ITeam from "../../../../types/team.type.ts";
 import IDriver from "../../../../types/driver.type.ts";
 import {getDriversInTeam} from "../../../../services/driver.service.ts";
+import {getAllLeagueTeams} from "../../../../services/league.service.ts";
+import ILeague from "../../../../types/league.type.ts";
 
 
-export default function PostDraftLeagueTable({currentLeague, leagueTeams}) {
+export default function PostDraftLeagueTable(currentLeague: ILeague) {
 
-    const rankedTeams: ITeam[] = leagueTeams;
+    // const rankedTeams: ITeam[] = leagueTeams;
+    let rankedTeams: ITeam[] = [];
+    getAllLeagueTeams(currentLeague.leagueId)
+        .then(res =>
+            rankedTeams = res);
 
     function formatLeagueTable() {
         rankedTeams?.map((team: ITeam) => {
@@ -15,7 +21,7 @@ export default function PostDraftLeagueTable({currentLeague, leagueTeams}) {
                 })
         })
         rankedTeams.sort((a, b) => {
-            return a.ranking - b.ranking
+            return a.ranking! - b.ranking!
         });
     }
 
