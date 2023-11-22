@@ -1,4 +1,3 @@
-import {useQuery,} from "react-query";
 import {Route, Routes} from "react-router-dom";
 import "./App.css";
 import {getUserFromLocalStorage, logout} from "./services/auth.service";
