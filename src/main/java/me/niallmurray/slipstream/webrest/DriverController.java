@@ -44,7 +44,7 @@ public class DriverController {
     return ResponseEntity.ok(allDrivers);
   }
 
-  @GetMapping("/teamDrivers/{teamId}")
+  @GetMapping("/driversInTeam/{teamId}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<List<Driver>> getDriversInTeam(@PathVariable Long teamId) {
     Team team = teamService.findById(teamId);

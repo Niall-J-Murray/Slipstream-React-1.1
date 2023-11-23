@@ -1,4 +1,5 @@
 import axios from "axios";
+import IUser from "../types/user.type.ts";
 
 const API_URL = "http://localhost:8080/api/auth/";
 
@@ -37,7 +38,7 @@ export const updateOnLogout = (userId: number | null | undefined) => {
         })
 };
 
-export const getUserFromLocalStorage = () => {
+export const getUserFromLocalStorage = (): IUser | null => {
     const userStr = localStorage.getItem("user");
     if (userStr) return JSON.parse(userStr);
     return null;

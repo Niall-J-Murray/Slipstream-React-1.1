@@ -1,23 +1,27 @@
 import IDriver from "../../../../types/driver.type.ts";
+import {useUndraftedDrivers} from "../../../../hooks/queries/driver-queries.ts";
 
 export default function DriverDraftTable({
-                                             currentUser,
-                                             undraftedDrivers,
-                                             handleDriverSelection,
+                                             // currentUser,
+                                             // undraftedDrivers,
+                                             // nextUserToPick,
+                                             leagueId,
                                              isUsersTurnToPick,
-                                             nextUserToPick,
+                                             handleDriverSelection,
                                              handlePick,
                                          }) {
-    console.log("draft")
-    console.log(nextUserToPick)
-    console.log(nextUserToPick?.username)
-    console.log(isUsersTurnToPick)
+    // console.log("draft")
+    // console.log(nextUserToPick)
+    // console.log(nextUserToPick?.username)
+    // console.log(isUsersTurnToPick)
+    const undraftedDrivers = useUndraftedDrivers(leagueId).data;
+
     return (
         <>
             <div className="col-start-3 col-span-2">
                 <table className="drivers-table">
-                    <caption><h3>Undrafted Drivers -
-                        <small>({undraftedDrivers?.length}/20 remaining)</small></h3>
+                    <caption>
+                        <h3>Undrafted Drivers -<small>({undraftedDrivers?.length}/20 remaining)</small></h3>
                     </caption>
                     <thead>
                     <tr>

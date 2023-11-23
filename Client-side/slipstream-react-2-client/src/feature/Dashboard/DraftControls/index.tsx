@@ -2,10 +2,10 @@ import PracticeDraftOptions from "./PracticeDraftOptions";
 import DraftInProgress from "./DraftInProgress";
 
 export default function DraftControls({
-                                          // currentUser,
-                                          // currentPickNumber,
-                                          // isUsersTurnToPick,
-                                          // nextUserToPick,
+                                          currentUser,
+                                          currentPickNumber,
+                                          isUsersTurnToPick,
+                                          nextUserToPick,
                                           showPracticeOptions,
                                           currentLeague,
                                           isPracticeLeague,
@@ -46,8 +46,10 @@ export default function DraftControls({
                                 selectedDriver={selectedDriver}
                                 lastDriverPicked={lastDriverPicked}
                                 lastPickTime={lastPickTime}
-                                // currentUser={currentUser}
-                                // currentPickNumber={currentPickNumber}
+                                currentUser={currentUser}
+                                currentPickNumber={currentPickNumber}
+                                isUsersTurnToPick={isUsersTurnToPick}
+                                nextUserToPick={nextUserToPick}                                // currentPickNumber={currentPickNumber}
                                 // isUsersTurnToPick={isUsersTurnToPick}
                                 // nextUserToPick={nextUserToPick}
                             />

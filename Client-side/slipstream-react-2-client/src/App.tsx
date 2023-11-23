@@ -7,43 +7,21 @@ import Register from "./feature/Register";
 import Logout from "./feature/Logout";
 import Dashboard from "./feature/Dashboard";
 import Admin from "./feature/Admin";
-import {showLoader} from "./services/loading.service.ts";
 import {useEffect, useState} from "react";
 import EventBus from "./common/EventBus.ts";
+import {useUserAuth} from "./hooks/queries/auth-queries.ts";
+import {useUserData} from "./hooks/queries/user-queries.ts";
+import {hideLoader} from "./services/loading.service.ts";
+import IUser from "./types/user.type.ts";
 
 export default function App() {
-    // const [loading, setLoading]
-    //     = useState(true);
-    // const [currentUser, setCurrentUser]
-    //     = useState<IUser | undefined>({
-    //     email: "",
-    //     emailsReceived: null,
-    //     id: undefined,
-    //     isTestUser: false,
-    //     lastLogout: "",
-    //     password: "",
-    //     roles: undefined,
-    //     team: null,
-    //     username: ""
-    // });
-    // const toggleLoading = useCallback(() => {
-    //     setLoading(!loading)
-    // }, []);
-    //
-    // useEffect(() => {
-    //     hideLoader();
-    // }, []);
-    //
+
     const [currentUser, setCurrentUser]
-        = useState({
-        id: undefined,
-        username: "",
-        roles: undefined,
-    });
+        = useState<IUser | undefined>();
 
     useEffect(() => {
         const user = getUserFromLocalStorage();
-        console.log(user)
+        // console.log;(user)
         if (user) {
             setCurrentUser(user);
         }
@@ -54,35 +32,54 @@ export default function App() {
     }, []);
 
     const logOut = () => {
-        logout(currentUser.id);
+        logout(currentUser?.id);
     }
 
-    // const {
-    //     status,
-    //     error,
-    //     data: user,
-    // } = useQuery({
-    //     queryKey: ["currentUser"],
-    //     queryFn: getUserFromLocalStorage,
-    // })
+    const {
+        data: userAuth,
+        isLoading: userAuthLoading,
+        // status: statUserAuth,
+        error: errUserAuth,
+    } = useUserAuth();
+    // const userId = userAuth ? userAuth.id : null;
+    const {
+        data: userData,
+        isLoading: userDataLoading,
+        // status: statUserData,
+        error: errUserData,
+    } = useUserData(userAuth?.id);
+
+    const isLoading = userAuthLoading || userDataLoading;
+    const error = errUserAuth || errUserData;
+
+    if (isLoading) {
+        return <>showLoader()</>
+    } else {
+        hideLoader();
+    }
+
+    if (error) {
+        return <h1>"Error: Please try again...";</h1>
+    }
+
+    // if (statUserAuth === "loading") return <>showLoader()</>;
+    // if (statUserAuth === "success") hideLoader();
+    // if (statUserAuth === "error") return <h1>{JSON.stringify(errUserAuth)}</h1>
     //
-    //
-    // if (status === "loading") return showLoader();
-    // // if (status === "success") return hideLoader();
-    // // if (status === "success") return <h1>success!</h1>;
-    // // if (status === "loading") return <h1>loading...</h1>;
-    // if (status === "error") return <h1>{JSON.stringify(error)}</h1>
+    // if (statUserData === "loading") return <>showLoader()</>;
+    // if (statUserData === "success") hideLoader();
+    // if (statUserData === "error") return <h1>{JSON.stringify(errUserData)}</h1>
 
     return (
         <>
             <div className="container mt-3">
                 <Routes>
-                    <Route path="/" element={<Home/>}/>
-                    <Route path="/home" element={<Home/>}/>
+                    <Route path="/" element={<Home userData={userData}/>}/>
+                    <Route path="/home" element={<Home userData={userData}/>}/>
                     <Route path="/register" element={<Register/>}/>
                     <Route path="/login" element={<Login/>}/>
-                    <Route path="/dashboard" element={<Dashboard/>}/>
-                    <Route path="/admin" element={<Admin/>}/>
+                    <Route path="/dashboard" element={<Dashboard userData={userData}/>}/>
+                    <Route path="/admin" element={<Admin userData={userData}/>}/>
                     <Route path="/logout" element={<Logout/>}/>
                 </Routes>
             </div>

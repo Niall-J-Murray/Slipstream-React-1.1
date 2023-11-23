@@ -2,8 +2,9 @@ import * as Yup from "yup";
 import {NavigateFunction, useNavigate} from 'react-router-dom';
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {useState} from "react";
-import {createTeam} from "../../../services/team.service.ts";
+import {postCreateTeam} from "../../../services/team.service.ts";
 import IDriver from "../../../types/driver.type.ts";
+import {useDriversInTeam} from "../../../hooks/queries/driver-queries.ts";
 
 export default function DashTop({
                                     // currentUser,
@@ -21,13 +22,14 @@ export default function DashTop({
                                     // isLeagueActive
 
                                     userData,
-                                    driversInTeam,
                                     currentLeague,
                                     isPracticeLeague,
                                     isLeagueFull,
                                     isLeagueActive,
                                     isDraftInProgress,
                                 }) {
+    const driversInTeam = useDriversInTeam(userData?.team.id).data;
+
     const navigate: NavigateFunction = useNavigate();
     const [loading, setLoading]
         = useState<boolean>(false);
@@ -52,7 +54,7 @@ export default function DashTop({
         setMessage("");
         setLoading(true);
 
-        createTeam(userData?.id, teamName).then(
+        postCreateTeam(userData?.id, teamName).then(
             () => {
                 navigate("/dashboard");
                 window.location.reload();
@@ -71,9 +73,9 @@ export default function DashTop({
         );
     };
 
-    const teamName = userData.team?.teamName
-    const firstPickNumber = userData.team?.firstPickNumber
-    const secondPickNumber = userData.team?.secondPickNumber
+    const teamName = userData?.team?.teamName
+    const firstPickNumber = userData?.team?.firstPickNumber
+    const secondPickNumber = userData?.team?.secondPickNumber
 
     function CreateTeam() {
         return (
@@ -146,7 +148,7 @@ export default function DashTop({
     }
 
     function UserGreeting() {
-        if (userData.team != null) {
+        if (userData?.team) {
             if (isLeagueFull) {
                 return <div>
                     <h2>{userData?.username}'s Dashboard </h2>
@@ -180,7 +182,7 @@ export default function DashTop({
                 <p>Random 1st pick draft number: {firstPickNumber}</p>
                 <p>Random 2nd pick draft number: {secondPickNumber}</p>
                 <hr/>
-                <h3>League is {currentLeague.teams.length} of 10 teams full.</h3>
+                <h3>League is {currentLeague?.teams?.length} of 10 teams full.</h3>
                 <h3> The draft picks will start when the league is full...</h3>
                 <PracticeGreeting/>
                 <hr/>

@@ -1,40 +1,13 @@
-import {getUserFromLocalStorage} from "../../../services/auth.service.ts";
-import {getUserData} from "../../../services/user.service.ts";
-import {useQuery} from "react-query";
-import {hideLoader} from "../../../services/loading.service.ts";
+import IUser from "../../../types/user.type.ts";
 
-export default function HomeWelcome() {
-    const {
-        data: userAuth,
-        status: statUserAuth,
-        error: errUserAuth,
-    } = useQuery({
-        queryKey: ["currentUser"],
-        queryFn: getUserFromLocalStorage,
-    })
+interface HomeWelcomeProps {
+    userData: IUser | undefined
+}
 
-    const userId = userAuth ? userAuth.id : null;
-
-    const {
-        data: userData,
-        status: statUserData,
-        error: errUserData,
-    } = useQuery({
-        queryKey: ["userData", userId],
-        queryFn: () => getUserData(userId),
-        enabled: !!userId,
-    });
-
-    if (statUserAuth === "loading") return <>showLoader()</>;
-    if (statUserAuth === "success") hideLoader();
-    if (statUserAuth === "error") return <h1>{JSON.stringify(errUserAuth)}</h1>
-
-    if (statUserData === "loading") return <>showLoader()</>;
-    if (statUserData === "success") hideLoader();
-    if (statUserData === "error") return <h1>{JSON.stringify(errUserData)}</h1>
+export default function HomeWelcome({userData}: HomeWelcomeProps) {
 
     function Greeting() {
-        if (userAuth) {
+        if (userData) {
             return (<UserGreeting/>);
         }
         return (<GuestGreeting/>);
@@ -64,8 +37,9 @@ export default function HomeWelcome() {
         return (
             <>
                 <h4>
-                    Please <br/><a href="/login">Login</a> <br/>- or -<br/>
-                    <a href="/register">Register</a><br/> to play!
+                    <a href="/login">Please Login</a>
+                    <br/><br/>- or -<br/><br/>
+                    <a href="/register">Register to play!</a>
                 </h4>
             </>
         );

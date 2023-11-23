@@ -2,8 +2,13 @@ import HomeWelcome from "./HomeWelcome";
 import AppDescription from "./AppDescription";
 import HowToPlay from "./HowToPlay";
 import Layout from "../../components/Layout/Layout.tsx";
+import IUser from "../../types/user.type.ts";
 
-export default function Home() {
+interface HomeProps {
+    userData: undefined | IUser
+}
+
+export default function Home({userData}: HomeProps) {
 
     return (
         <>
@@ -14,7 +19,7 @@ export default function Home() {
                         {/*TS2786: HomeWelcome cannot be used as a JSX component.*/}
                         {/*Its type () => void | Element is not a valid JSX element type.*/}
                         {/*Caused by returning show/hideLoader() instead of html.*/}
-                        <HomeWelcome/>
+                        <HomeWelcome userData={userData}/>
                     </div>
                     <div className="col-start-3 col-span-2 box-shadow">
                         <AppDescription/>

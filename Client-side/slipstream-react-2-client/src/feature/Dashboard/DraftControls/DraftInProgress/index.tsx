@@ -1,13 +1,12 @@
-import {useQuery, UseQueryResult} from "react-query";
+import {useQuery} from "react-query";
 import {useState} from "react";
 import {getNextUserToPick, getPickNumber} from "../../../../services/league.service.ts";
-import IUser from "../../../../types/user.type.ts";
 
 export default function DraftInProgress({
-                                            // currentUser,
-                                            // currentPickNumber,
-                                            // isUsersTurnToPick,
-                                            // nextUserToPick,
+                                            currentUser,
+                                            currentPickNumber,
+                                            isUsersTurnToPick,
+                                            nextUserToPick,
                                             isDraftInProgress,
                                             selectedDriver,
                                             lastPickTime,
@@ -17,25 +16,61 @@ export default function DraftInProgress({
     // currentPickNumber={currentPickNumber}
     // isUsersTurnToPick={isUsersTurnToPick}
     // nextUserToPick={nextUserToPick}
-    const [currentPickNumber, setCurrentPickNumber]
-        = useState<number | null | undefined>();
-    const [isUsersTurnToPick, setIsUsersTurnToPick]
-        = useState<boolean>();
-    const [nextUserToPick, setNextUserToPick]
-        = useState<IUser | null | undefined>();
-    const currentUser: UseQueryResult<IUser, undefined> = useQuery("userData");
-    getPickNumber(currentUser?.team?.leagueId)
-        .then(res => {
-                setCurrentPickNumber(res)
-                if (currentUser.team?.firstPickNumber == res || currentUser.team?.secondPickNumber == res) {
-                    setIsUsersTurnToPick(true);
-                }
-            }
-        );
-    getNextUserToPick(currentUser?.team?.leagueId)
-        .then(res => {
-            setNextUserToPick(res)
-        });
+    // const [currentPickNumber, setCurrentPickNumber]
+    //     = useState<number | null | undefined>();
+    // const [nextUserToPick, setNextUserToPick]
+    //     = useState<IUser | null | undefined>();
+    // const [isUsersTurnToPick, setIsUsersTurnToPick]
+    //     = useState<boolean>();
+    // const [currentPickNumber, setCurrentPickNumber] = useState()
+    // const currentUser: UseQueryResult<IUser, undefined> = useQuery("userData");
+    // const currentUser = useQuery("userData");
+
+    // console.log("currentUser")
+    // console.log(currentUser)
+    // const leagueId = currentUser?.team?.leagueId;
+    const leagueId = useQuery("leagueData");
+    // queryClient.getQueryData("leagueData");
+
+    // const {
+    //     data: currentPickNumber,
+    //     status: statPickNumber,
+    //     error: errPickNumber,
+    // } = useQuery({
+    //     queryKey: ["currentPickNumber", leagueId],
+    //     queryFn: () => getPickNumber(leagueId)
+    //         .then(res => {
+    //             if (currentUser.team?.firstPickNumber == res || currentUser.team?.secondPickNumber == res) {
+    //                 setIsUsersTurnToPick(true);
+    //             }
+    //         }),
+    //     enabled: !!leagueId,
+    // });
+
+    // const {
+    //     data: nextUserToPick,
+    //     status: statUserToPick,
+    //     error: errUserToPick,
+    // } = useQuery({
+    //     queryKey: ["nextUserToPick", leagueId],
+    //     queryFn: () => getNextUserToPick(leagueId),
+    //     enabled: !!leagueId,
+    // });
+
+    // function pickDetails() {
+    //     getPickNumber(currentUser?.team?.leagueId)
+    //         .then(res => {
+    //                 // setCurrentPickNumber(res)
+    //                 if (currentUser.team?.firstPickNumber == res || currentUser.team?.secondPickNumber == res) {
+    //                     setIsUsersTurnToPick(true);
+    //                 }
+    //             }
+    //         );
+    //     getNextUserToPick(currentUser?.team?.leagueId)
+    //         .then(res => {
+    //             // setNextUserToPick(res)
+    //         });
+    // }
 
     function PickInstructions() {
         if (isDraftInProgress) {
@@ -49,17 +84,17 @@ export default function DraftInProgress({
                         <h4 className={"pick-instructions-go"}>
                             Current pick number: {currentPickNumber}
                         </h4>
-                        {nextUserToPick.isTestUser ?
+                        {nextUserToPick?.isTestUser ?
                             <h4 className={"pick-instructions-go"}>
                                 It's {nextUserToPick.username}'s turn to pick.
                             </h4>
                             :
                             <h4 className={"pick-instructions-go"}>
-                                It's your turn to pick {nextUserToPick.username}!
+                                It's your turn to pick {nextUserToPick?.username}!
                             </h4>
                         }
                     </div>
-                    {nextUserToPick.isTestUser ?
+                    {nextUserToPick?.isTestUser ?
                         <div className="col-start-3 col-span-1">
                             <h4>------------------------------------</h4>
                             <h4>

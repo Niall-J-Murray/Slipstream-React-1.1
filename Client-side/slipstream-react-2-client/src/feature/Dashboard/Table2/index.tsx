@@ -3,26 +3,31 @@ import DriverStandingsTable from "./DriverStandingsTable";
 
 
 export default function Table2({
-                                   currentUser,
-                                   isLeagueFull,
-                                   isLeagueActive,
-                                   isDraftInProgress,
-                                   undraftedDrivers,
-                                   handleDriverSelection,
+                                   // currentUser,
+                                   // undraftedDrivers,
+                                   // nextUserToPick,
                                    isUsersTurnToPick,
-                                   nextUserToPick,
-                                   handlePick
+                                   leagueId,
+                                   isDraftInProgress,
+                                   handleDriverSelection,
+                                   handlePick,
                                }) {
-
+    // currentUser={currentUser}
+    // undraftedDrivers={undraftedDrivers}
+    // isUsersTurnToPick={isUsersTurnToPick}
+    // nextUserToPick={nextUserToPick}
     function DriverTable() {
         if (isDraftInProgress) {
             return <DriverDraftTable
-                currentUser={currentUser}
-                undraftedDrivers={undraftedDrivers}
+                leagueId={leagueId}
                 handleDriverSelection={handleDriverSelection}
+                handlePick={handlePick}
                 isUsersTurnToPick={isUsersTurnToPick}
-                nextUserToPick={nextUserToPick}
-                handlePick={handlePick}/>;
+                // currentUser={currentUser}
+                // undraftedDrivers={undraftedDrivers}
+
+                // nextUserToPick={nextUserToPick}
+            />;
         }
         // if (isLeagueActive) {
         //     return <div className="col-start-2 col-span-3">
