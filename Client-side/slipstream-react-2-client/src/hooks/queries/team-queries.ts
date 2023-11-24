@@ -1,5 +1,6 @@
-import {useQuery} from "react-query";
+import {useMutation, useQuery, useQueryClient} from "react-query";
 import {getTeam, postCreateTeam, postCreateTestTeam} from "../../services/team.service.ts";
+import {useLeagueData} from "./league-queries.ts";
 
 export const useTeamData = (teamId: number | null | undefined) =>
     useQuery({
@@ -9,15 +10,22 @@ export const useTeamData = (teamId: number | null | undefined) =>
     });
 
 export const useCreateTeam = (userId: number | null | undefined, teamName: string) =>
-    useQuery({
-        queryKey: ["createTeam", userId, teamName],
-        queryFn: () => postCreateTeam(userId, teamName),
-        enabled: !!userId,
+    useMutation({
+        mutationKey: ["createTeam", userId],
+        mutationFn: () => postCreateTeam(userId, teamName),
+        // onSuccess: useLeagueData(leagueId),
+        // enabled: !!leagueId,
     });
 
 export const useCreateTestTeam = (leagueId: number | null | undefined) =>
-    useQuery({
-        queryKey: ["createTestTeam", leagueId],
-        queryFn: () => postCreateTestTeam(leagueId),
-        enabled: !!leagueId,
+    useMutation({
+        mutationKey: ["createTestTeam", leagueId],
+        mutationFn: () => postCreateTestTeam(leagueId),
+        onSuccess: ()=> {useLeagueData(leagueId)},
+        // onSuccess: () => {
+        //     useQueryClient()
+        //         .invalidateQueries("leagueData");
+        // }
+        // onSuccess: useLeagueData(leagueId),
+        // enabled: !!leagueId,
     });

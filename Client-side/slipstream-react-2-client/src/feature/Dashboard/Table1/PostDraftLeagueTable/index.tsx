@@ -1,26 +1,33 @@
 import ITeam from "../../../../types/team.type.ts";
 import IDriver from "../../../../types/driver.type.ts";
 import {getDriversInTeam} from "../../../../services/driver.service.ts";
+import {useAllTeamsInLeague} from "../../../../hooks/queries/league-queries.ts";
+import {useDriversInTeam} from "../../../../hooks/queries/driver-queries.ts";
 import {getAllLeagueTeams} from "../../../../services/league.service.ts";
-import ILeague from "../../../../types/league.type.ts";
 
 
-export default function PostDraftLeagueTable(currentLeague: ILeague) {
+export default function PostDraftLeagueTable(currentLeague, teamsInLeague) {
 
-    // const rankedTeams: ITeam[] = leagueTeams;
-    let rankedTeams: ITeam[] = [];
-    getAllLeagueTeams(currentLeague.leagueId)
-        .then(res =>
-            rankedTeams = res);
+    //  const rankedTeams: ITeam[] = leagueTeams;
+    // let rankedTeams: ITeam[] = [];
+    // getAllLeagueTeams(currentLeague?.leagueId)
+    //     .then(res =>
+    //         rankedTeams = res);
+    // const rankedTeams = teamsInLeague;
+    // console.log("rankedTeams")
+    // console.log(rankedTeams)
+    const rankedTeams: Array<ITeam> | undefined = useAllTeamsInLeague(currentLeague?.leagueId).data;
+
 
     function formatLeagueTable() {
-        rankedTeams?.map((team: ITeam) => {
-            getDriversInTeam(team.id)
-                .then(function (response) {
-                    team.drivers = response;
-                })
-        })
-        rankedTeams.sort((a, b) => {
+        // rankedTeams?.map((team: ITeam) => {
+        // team.drivers = useDriversInTeam(team.id).data;
+        //     getDriversInTeam(team.id)
+        //         .then(res =>
+        //             team.drivers = res)
+        //     console.log(team.drivers)
+        // })
+        rankedTeams?.sort((a, b) => {
             return a.ranking! - b.ranking!
         });
     }

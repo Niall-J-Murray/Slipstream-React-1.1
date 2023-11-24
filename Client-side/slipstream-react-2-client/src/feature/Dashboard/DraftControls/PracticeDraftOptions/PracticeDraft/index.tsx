@@ -63,16 +63,16 @@ export default function PracticeDraft({
                             </button>
                         </div>
                     </div>
-                    <form>
-                        <div className="form-check form-switch">
-                            <input className="form-check-input" id="practiceDraftToggle"
-                                   onChange={togglePracticeLeague}
-                                   role="switch" type="checkbox" checked={true}/>
-                            <label className="form-check-label" htmlFor="practiceDraftToggle">
-                                Toggle Practice Draft Mode
-                            </label>
-                        </div>
-                    </form>
+                    {/*<form>*/}
+                    {/*    <div className="form-check form-switch">*/}
+                    {/*        <input className="form-check-input" id="practiceDraftToggle"*/}
+                    {/*               onChange={togglePracticeLeague}*/}
+                    {/*               role="switch" type="checkbox" checked={true} disabled={true}/>*/}
+                    {/*        <label className="form-check-label" htmlFor="practiceDraftToggle">*/}
+                    {/*            Toggle Practice Draft Mode*/}
+                    {/*        </label>*/}
+                    {/*    </div>*/}
+                    {/*</form>*/}
                 </div>
             }
         </>
@@ -88,7 +88,7 @@ export default function PracticeDraft({
 
     return (
         <>
-                <PracticeDraftToggle/>
+            <PracticeDraftToggle/>
         </>
     );
 }

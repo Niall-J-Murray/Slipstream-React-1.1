@@ -28,7 +28,7 @@ export default function DashTop({
                                     isLeagueActive,
                                     isDraftInProgress,
                                 }) {
-    const driversInTeam = useDriversInTeam(userData?.team.id).data;
+    const driversInTeam = useDriversInTeam(userData?.team?.id).data;
 
     const navigate: NavigateFunction = useNavigate();
     const [loading, setLoading]
@@ -196,7 +196,11 @@ export default function DashTop({
     }
 
     function Greeting() {
-        if (userData?.roles?.includes("ROLE_ADMIN")) {
+        console.log("userData?.roles")
+        console.log(userData)
+        console.log(userData.roles)
+        if (userData.roles.includes("name:ROLE_ADMIN")) {
+            // if (userData.roles.includes()) {
             return <AdminGreeting/>;
         }
         return <UserGreeting/>;
@@ -204,11 +208,9 @@ export default function DashTop({
 
     return (
         <>
-            {/*<div className="col-start-2 col-span-1">*/}
             <div className="box-shadow">
                 <Greeting/>
             </div>
-            {/*</div>*/}
         </>
     );
 }

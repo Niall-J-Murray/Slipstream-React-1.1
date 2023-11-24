@@ -4,5 +4,5 @@ import {getUserFromLocalStorage} from "../../services/auth.service.ts";
 export const useUserAuth = () =>
     useQuery({
         queryKey: ["currentUser"],
-        queryFn: getUserFromLocalStorage,
+        queryFn: () => getUserFromLocalStorage(),
     });

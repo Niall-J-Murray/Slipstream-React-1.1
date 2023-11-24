@@ -1,7 +1,3 @@
-import {useQuery} from "react-query";
-import {useState} from "react";
-import {getNextUserToPick, getPickNumber} from "../../../../services/league.service.ts";
-
 export default function DraftInProgress({
                                             currentUser,
                                             currentPickNumber,
@@ -29,7 +25,7 @@ export default function DraftInProgress({
     // console.log("currentUser")
     // console.log(currentUser)
     // const leagueId = currentUser?.team?.leagueId;
-    const leagueId = useQuery("leagueData");
+    // const leagueId = useQuery("leagueData");
     // queryClient.getQueryData("leagueData");
 
     // const {

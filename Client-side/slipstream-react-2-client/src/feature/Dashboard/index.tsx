@@ -3,7 +3,6 @@ import Table1 from "./Table1";
 import Table2 from "./Table2";
 import {useEffect, useState} from "react";
 import {postToggleTestLeague} from "../../services/league.service.ts";
-import {postCreateTestTeam} from "../../services/team.service.ts";
 import {getDriverData, postPickDriver} from "../../services/driver.service.ts";
 import DraftControls from "./DraftControls";
 import Reminders from "./Reminders";
@@ -11,6 +10,7 @@ import Layout from "../../components/Layout/Layout.tsx";
 import IDriver from "../../types/driver.type.ts";
 import IUser from "../../types/user.type.ts";
 import {useLeagueData, useNextUserToPick, useOpenLeague} from "../../hooks/queries/league-queries.ts";
+import {useCreateTestTeam} from "../../hooks/queries/team-queries.ts";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -36,9 +36,9 @@ export default function Dashboard({userData}: DashboardProps) {
     const [isPracticeLeague, setIsPracticeLeague]
         = useState<boolean | undefined | null>();
     const [isLeagueFull, setIsLeagueFull]
-        = useState<boolean | undefined | null>();
+        = useState<boolean | undefined | null>(false);
     const [isDraftInProgress, setIsDraftInProgress]
-        = useState<boolean | undefined | null>();
+        = useState<boolean | undefined | null>(false);
     const [isLeagueActive, setIsLeagueActive]
         = useState<boolean | undefined | null>();
     const [isUsersTurnToPick, setIsUsersTurnToPick]
@@ -60,8 +60,8 @@ export default function Dashboard({userData}: DashboardProps) {
     } = useOpenLeague();
 
     const userId = userData ? userData?.id : null;
-    const leagueId = userData ? userData?.team?.leagueId : openLeague?.leagueId;
-    const teamId = userData ? userData.team?.id : null;
+    const teamId = userData?.team ? userData.team?.id : null;
+    const leagueId = userData?.team ? userData?.team?.leagueId : openLeague?.leagueId;
     const nextUserToPick = useNextUserToPick(leagueId).data;
 
     const {
@@ -71,15 +71,27 @@ export default function Dashboard({userData}: DashboardProps) {
         error: errLeagueData,
     } = useLeagueData(leagueId);
 
+    const {
+        mutateAsync: addTestTeam,
+        // data: addTestTeam,
+        isLoading: addTestTeamLoading,
+        // status: addTestTeamStatus,
+        error: addTestTeamError,
+    } = useCreateTestTeam(leagueId);
 
+    // console.log("leagueData1")
+    // console.log(leagueData)
     // function useLeagueBooleans(league) {
     useEffect(() => {
-
+        console.log("leagueId")
+        console.log(leagueId)
         setCurrentPickNumber(leagueData?.currentPickNumber);
-        console.log("leagueData")
+        setIsPracticeLeague(leagueData?.isPracticeLeague);
+        console.log("leagueData2")
         console.log(leagueData)
         console.log(leagueData?.teams?.length)
-        if (leagueData?.teams?.length < 10) {
+        if (leagueData?.teams?.length
+            && leagueData?.teams?.length < 10) {
             setIsLeagueFull(false);
             setIsDraftInProgress(false);
         } else {
@@ -97,9 +109,10 @@ export default function Dashboard({userData}: DashboardProps) {
         }
 
         if (leagueData?.isActive) {
+            setIsDraftInProgress(false);
             setIsLeagueActive(true);
         }
-    }, []);
+    }, [leagueData, leagueId, nextUserToPick?.isTestUser, userData?.team?.firstPickNumber, userData?.team?.secondPickNumber]);
 // }
 
     console.log("isLeagueFull")
@@ -128,9 +141,9 @@ export default function Dashboard({userData}: DashboardProps) {
         }
     }
 
-    const addTestTeam = async () => {
-        await postCreateTestTeam(leagueId);
-    }
+    // const addTestTeam = async () => {
+    //     useCreateTestTeam(leagueId);
+    // }
 
     const handleDriverSelection = (driverId: number | null | undefined) => {
         getDriverData(driverId)
@@ -233,7 +246,7 @@ export default function Dashboard({userData}: DashboardProps) {
                             isLeagueActive={isLeagueActive}
                             currentPickNumber={currentPickNumber}
                             isUsersTurnToPick={isUsersTurnToPick}
-                            nextUserToPick={isUsersTurnToPick}
+                            nextUserToPick={nextUserToPick}
                         />
                     </div>
                     {isLeagueActive ?
@@ -253,8 +266,8 @@ export default function Dashboard({userData}: DashboardProps) {
                                     isDraftInProgress={isDraftInProgress}
                                     handleDriverSelection={handleDriverSelection}
                                     handlePick={handlePick}
-                                    isLeagueActive={isLeagueActive}
                                     isUsersTurnToPick={isUsersTurnToPick}
+                                    // isLeagueActive={isLeagueActive}
                                     // isLeagueFull={isLeagueFull}
                                     // currentUser={currentUser}
                                     // undraftedDrivers={undraftedDrivers}
@@ -264,13 +277,14 @@ export default function Dashboard({userData}: DashboardProps) {
                         </>
                         :
                         <>
-                            <div className="col-start-2 col-span-1"><Table1
-                                currentLeague={leagueData}
-                                isDraftInProgress={isDraftInProgress}
-                                isLeagueActive={isLeagueActive}
-                                // openLeague={openLeague}
-                                // leagueTeams={leagueTeams}
-                            />
+                            <div className="col-start-2 col-span-1">
+                                <Table1
+                                    currentLeague={leagueData}
+                                    isDraftInProgress={isDraftInProgress}
+                                    isLeagueActive={isLeagueActive}
+                                    // openLeague={openLeague}
+                                    // leagueTeams={leagueTeams}
+                                />
 
                             </div>
                             <div className="col-start-3 col-span-2">
@@ -279,8 +293,8 @@ export default function Dashboard({userData}: DashboardProps) {
                                     isDraftInProgress={isDraftInProgress}
                                     handleDriverSelection={handleDriverSelection}
                                     handlePick={handlePick}
-                                    isLeagueActive={isLeagueActive}
                                     isUsersTurnToPick={isUsersTurnToPick}
+                                    // isLeagueActive={isLeagueActive}
                                     // isLeagueFull={isLeagueFull}
                                     // undraftedDrivers={undraftedDrivers}
                                     // currentUser={currentUser}

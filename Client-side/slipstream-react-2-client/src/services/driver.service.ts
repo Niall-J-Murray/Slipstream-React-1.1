@@ -27,7 +27,7 @@ export const getDriversInTeam = async (teamId: number | null | undefined): Promi
     return data;
 };
 
-export const getUndraftedDrivers = async (leagueId: number | null | undefined) => {
+export const getUndraftedDrivers = async (leagueId: number | null | undefined): Promise<Array<IDriver>> => {
     const data = await axios.get(API_DATA_URL + "/undraftedDrivers/" + leagueId, {headers: authHeader()})
         .then(response => response.data);
     return data;

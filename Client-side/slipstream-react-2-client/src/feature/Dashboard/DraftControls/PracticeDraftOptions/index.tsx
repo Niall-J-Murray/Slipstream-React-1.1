@@ -17,6 +17,7 @@ export default function PracticeDraftOptions({
                     <div className="col-start-1 col-span-5">
                         <div>
                             <PracticeOptionsToggle
+                                isPracticeLeague={isPracticeLeague}
                                 showPracticeOptions={showPracticeOptions}
                                 togglePracticeOptions={togglePracticeOptions}
                             />
@@ -34,6 +35,7 @@ export default function PracticeDraftOptions({
                     :
                     <div className="col-start-1 col-span-5">
                         <PracticeOptionsToggle
+                            isPracticeLeague={isPracticeLeague}
                             showPracticeOptions={showPracticeOptions}
                             togglePracticeOptions={togglePracticeOptions}
                         />

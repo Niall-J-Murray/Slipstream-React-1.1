@@ -27,19 +27,7 @@ export default function DraftControls({
                 :
                 // <div className="col-start-2 col-span-3 box-shadow">
                 <div className="box-shadow">
-                    {!isLeagueFull ?
-                        <div className="grid grid-cols-5">
-                            <PracticeDraftOptions
-                                currentLeague={currentLeague}
-                                isPracticeLeague={isPracticeLeague}
-                                isLeagueFull={isLeagueFull}
-                                showPracticeOptions={showPracticeOptions}
-                                togglePracticeOptions={togglePracticeOptions}
-                                togglePracticeLeague={togglePracticeLeague}
-                                addTestTeam={addTestTeam}
-                            />
-                        </div>
-                        :
+                    {isLeagueFull ?
                         <div className="grid grid-cols-5">
                             <DraftInProgress
                                 isDraftInProgress={isDraftInProgress}
@@ -49,9 +37,22 @@ export default function DraftControls({
                                 currentUser={currentUser}
                                 currentPickNumber={currentPickNumber}
                                 isUsersTurnToPick={isUsersTurnToPick}
-                                nextUserToPick={nextUserToPick}                                // currentPickNumber={currentPickNumber}
+                                nextUserToPick={nextUserToPick}
+                                // currentPickNumber={currentPickNumber}
                                 // isUsersTurnToPick={isUsersTurnToPick}
                                 // nextUserToPick={nextUserToPick}
+                            />
+                        </div>
+                        :
+                        <div className="grid grid-cols-5">
+                            <PracticeDraftOptions
+                                currentLeague={currentLeague}
+                                isPracticeLeague={isPracticeLeague}
+                                isLeagueFull={isLeagueFull}
+                                showPracticeOptions={showPracticeOptions}
+                                togglePracticeOptions={togglePracticeOptions}
+                                togglePracticeLeague={togglePracticeLeague}
+                                addTestTeam={addTestTeam}
                             />
                         </div>
                     }
