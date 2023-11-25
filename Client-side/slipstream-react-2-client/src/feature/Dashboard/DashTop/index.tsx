@@ -5,6 +5,7 @@ import {useState} from "react";
 import {postCreateTeam} from "../../../services/team.service.ts";
 import IDriver from "../../../types/driver.type.ts";
 import {useDriversInTeam} from "../../../hooks/queries/driver-queries.ts";
+import IUser from "../../../types/user.type.ts";
 
 export default function DashTop({
                                     // currentUser,
@@ -20,7 +21,6 @@ export default function DashTop({
                                     // currentPickNumber,
                                     // currentPick,
                                     // isLeagueActive
-
                                     userData,
                                     currentLeague,
                                     isPracticeLeague,
@@ -73,9 +73,20 @@ export default function DashTop({
         );
     };
 
+    const username = userData?.username;
     const teamName = userData?.team?.teamName
     const firstPickNumber = userData?.team?.firstPickNumber
     const secondPickNumber = userData?.team?.secondPickNumber
+    const isAdmin = (user: IUser) => {
+        let isAdmin = false;
+        user?.roles?.map(role => {
+                if (role.name === "ROLE_ADMIN") {
+                    isAdmin = true;
+                }
+            }
+        )
+        return isAdmin;
+    }
 
     function CreateTeam() {
         return (
@@ -126,7 +137,7 @@ export default function DashTop({
 
     function AdminGreeting() {
         return <div>
-            <h2>{userData?.username}'s Dashboard </h2>
+            <h2>{username}'s Dashboard </h2>
             <hr/>
             <h3>Sorry, admins cannot play!</h3>
             <h3><a href="/admin">Go to admin dashboard</a></h3>
@@ -151,7 +162,7 @@ export default function DashTop({
         if (userData?.team) {
             if (isLeagueFull) {
                 return <div>
-                    <h2>{userData?.username}'s Dashboard </h2>
+                    <h2>{username}'s Dashboard </h2>
                     <hr/>
                     <p>Your team: "{teamName}"</p>
                     <p>1st pick number: {firstPickNumber}</p>
@@ -176,7 +187,7 @@ export default function DashTop({
                 </div>
             }
             return <div>
-                <h2>{userData?.username}'s Dashboard </h2>
+                <h2>{username}'s Dashboard </h2>
                 <hr/>
                 <p>Your team: "{teamName}"</p>
                 <p>Random 1st pick draft number: {firstPickNumber}</p>
@@ -189,18 +200,14 @@ export default function DashTop({
             </div>;
         }
         return <div>
-            <h2>{userData?.username}'s Dashboard </h2>
+            <h2>{username}'s Dashboard </h2>
             <hr/>
             <CreateTeam/>
         </div>;
     }
 
     function Greeting() {
-        console.log("userData?.roles")
-        console.log(userData)
-        console.log(userData.roles)
-        if (userData.roles.includes("name:ROLE_ADMIN")) {
-            // if (userData.roles.includes()) {
+        if (isAdmin(userData)) {
             return <AdminGreeting/>;
         }
         return <UserGreeting/>;

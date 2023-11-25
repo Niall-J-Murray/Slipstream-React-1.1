@@ -3,8 +3,21 @@ import BackgroundImage from "../../components/BackgroundImage";
 import Navbar from "../../components/Navbar";
 import Body from "../../components/Body";
 import LoginForm from "./LoginForm";
+import {useEffect} from "react";
+import {NavigateFunction, useNavigate} from "react-router-dom";
+import IUser from "../../types/user.type.ts";
 
-export default function Login() {
+interface LoginProps {
+    userData: IUser | undefined
+}
+
+export default function Login({userData}: LoginProps) {
+    const redirect: NavigateFunction = useNavigate();
+    useEffect(() => {
+        if (userData) {
+            redirect("/dashboard");
+        }
+    }, []);
     return (
         <>
             <View>

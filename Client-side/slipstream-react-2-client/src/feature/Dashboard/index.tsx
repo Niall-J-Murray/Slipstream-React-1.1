@@ -11,6 +11,8 @@ import IDriver from "../../types/driver.type.ts";
 import IUser from "../../types/user.type.ts";
 import {useLeagueData, useNextUserToPick, useOpenLeague} from "../../hooks/queries/league-queries.ts";
 import {useCreateTestTeam} from "../../hooks/queries/team-queries.ts";
+import {useNavigate} from "react-router-dom";
+import {usePickDriver} from "../../hooks/queries/driver-queries.ts";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -79,25 +81,38 @@ export default function Dashboard({userData}: DashboardProps) {
         error: addTestTeamError,
     } = useCreateTestTeam(leagueId);
 
+    const {
+        mutateAsync: pickDriver,
+        // data: addTestTeam,
+        isLoading: addTestTeamLoading,
+        // status: addTestTeamStatus,
+        error: addTestTeamError,
+    } = usePickDriver({userId},{driverId});
+
     // console.log("leagueData1")
     // console.log(leagueData)
     // function useLeagueBooleans(league) {
+    const redirect = useNavigate();
     useEffect(() => {
-        console.log("leagueId")
-        console.log(leagueId)
+        if (!userData) {
+            redirect("/login");
+        }
         setCurrentPickNumber(leagueData?.currentPickNumber);
         setIsPracticeLeague(leagueData?.isPracticeLeague);
         console.log("leagueData2")
         console.log(leagueData)
         console.log(leagueData?.teams?.length)
         if (leagueData?.teams?.length
-            && leagueData?.teams?.length < 10) {
-            setIsLeagueFull(false);
-            setIsDraftInProgress(false);
-        } else {
+            && leagueData?.teams?.length >= 10) {
             setIsLeagueFull(true);
-            setIsDraftInProgress(true);
+            if (!leagueData?.isActive) {
+                setIsDraftInProgress(true);
+            }
         }
+        // else {
+        //     setIsLeagueFull(true);
+        //     setIsDraftInProgress(true);
+        // }
 
         if (nextUserToPick?.isTestUser) {
             setIsUsersTurnToPick(true);
@@ -113,11 +128,9 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsLeagueActive(true);
         }
     }, [leagueData, leagueId, nextUserToPick?.isTestUser, userData?.team?.firstPickNumber, userData?.team?.secondPickNumber]);
-// }
 
     console.log("isLeagueFull")
     console.log(isLeagueFull)
-
 
     function togglePracticeOptions() {
         if (showPracticeOptions) {
@@ -154,6 +167,8 @@ export default function Dashboard({userData}: DashboardProps) {
     }
 
     const handlePick = async (driverId: number | null | undefined) => {
+        usePickDriver(userData?.id, driverId);
+
         await postPickDriver(userData?.id, driverId)
             .then(async () => await getDriverData(driverId)
                 .then(res => {

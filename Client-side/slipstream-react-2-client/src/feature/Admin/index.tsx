@@ -9,24 +9,33 @@ import AdminControls from "./AdminControls";
 import UserTable from "./UserTable";
 import DriverStandingsTable from "../Dashboard/Table2/DriverStandingsTable";
 import LeaguesTable from "./LeaguesTable";
+import {useNavigate} from "react-router-dom";
 
 interface AdminProps {
-    userData: undefined | IUser
+    userData: IUser | undefined,
 }
 
 export default function Admin({userData}: AdminProps) {
-    // function notAdmin(userData) {
-    //     if (!userData?.roles?.includes("ROLE_ADMIN")) {
-    //         return (
-    //             <h1>User is not Admin</h1>
-    //         )
-    //     }
-    // }
+    const redirect = useNavigate();
+    const isAdmin = (user: IUser | undefined) => {
+        let isAdmin = false;
+        user?.roles?.map(role => {
+                if (role.name === "ROLE_ADMIN") {
+                    isAdmin = true;
+                }
+            }
+        )
+        return isAdmin;
+    }
+
 
     const [allUsers, setAllUsers]
         = useState<Array<IUser> | undefined>([]);
 
     useEffect(() => {
+        if (!userData || !isAdmin(userData)) {
+            redirect("/home");
+        }
         getAllUsers().then(response => {
             setAllUsers(response);
         })
@@ -39,7 +48,8 @@ export default function Admin({userData}: AdminProps) {
                     <Navbar/>
                     <Body>
                         <div className="grid grid-cols-5 gap-2">
-                            {!userData?.roles?.includes("ROLE_ADMIN") ? <>
+                            {isAdmin(userData) ?
+                                <>
                                     <div className="col-start-2 col-span-1">
                                         <AdminControls/>
                                     </div>
@@ -54,7 +64,9 @@ export default function Admin({userData}: AdminProps) {
                                     </div>
                                 </>
                                 :
-                                <h1>User is not Admin</h1>
+                                <div className="col-start-2 col-span-3">
+                                    <h1>User is not Admin</h1>
+                                </div>
                             }
                         </div>
                     </Body>

@@ -6,17 +6,29 @@ import Navbar from "../../components/Navbar";
 import Body from "../../components/Body";
 import checkered_flag from "../../assets/images/checkered_flag.jpg";
 import {NavigateFunction, useNavigate} from "react-router-dom";
+import {useEffect} from "react";
+import IUser from "../../types/user.type.ts";
 
-export default function Logout() {
-    const navigate: NavigateFunction = useNavigate();
+interface LogoutProps {
+    userData: undefined | IUser
+}
+
+export default function Logout({userData}: LogoutProps) {
+    const redirect: NavigateFunction = useNavigate();
     const logOut = () => {
-        AuthService.logout(getUserFromLocalStorage().id);
+        AuthService.logout(getUserFromLocalStorage()?.id);
         // setShowModeratorBoard(false);
         // setShowAdminBoard(false);
         // setCurrentUser(undefined);
-        navigate("/home");
+        redirect("/home");
         window.location.reload();
     };
+
+    useEffect(() => {
+        if (!userData) {
+            redirect("/login");
+        }
+    }, []);
 
     function LogOutForm() {
         return (
@@ -31,7 +43,7 @@ export default function Logout() {
 
                 />
                 <div className={"col-start-2 col-span-5 p-1"}>
-                    <div className={"p-6"}>Are you sure...? </div>
+                    <div className={"p-6"}>Are you sure...?</div>
                     <button className="btn btn-proceed" type="submit" onClick={logOut}>
                         <span>Confirm Logout</span>
                     </button>

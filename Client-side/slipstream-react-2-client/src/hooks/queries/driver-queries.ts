@@ -1,5 +1,5 @@
-import {getDriversInTeam, getUndraftedDrivers} from "../../services/driver.service.ts";
-import {useQuery} from "react-query";
+import {getDriversInTeam, getUndraftedDrivers, postPickDriver} from "../../services/driver.service.ts";
+import {useMutation, useQuery} from "react-query";
 
 export const useUndraftedDrivers = (leagueId: number | null | undefined) =>
     useQuery({
@@ -13,6 +13,14 @@ export const useDriversInTeam = (teamId: number | null | undefined) =>
         queryKey: ["driversInTeam", teamId],
         queryFn: () => getDriversInTeam(teamId),
         enabled: !!teamId,
+    });
+
+export const usePickDriver = (userId: number | null | undefined, driverId: string) =>
+    useMutation({
+        mutationKey: ["createTeam", userId, driverId],
+        mutationFn: () => postPickDriver(userId, ),
+        // onSuccess: useLeagueData(leagueId),
+        // enabled: !!leagueId,
     });
 
 // export const getTeamDrivers =useDriversInTeam().data;

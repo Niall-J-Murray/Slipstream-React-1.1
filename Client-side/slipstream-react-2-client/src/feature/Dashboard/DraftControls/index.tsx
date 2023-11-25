@@ -20,12 +20,15 @@ export default function DraftControls({
                                           isLeagueActive,
                                       }) {
 
-    return (
-        <>
-            {isLeagueActive ?
-                <div></div>
-                :
-                // <div className="col-start-2 col-span-3 box-shadow">
+    if (!currentUser?.team || isLeagueActive) {
+        return (
+            <>
+            </>
+        )
+    } else {
+        return (
+            <>
+                {/*// <div className="col-start-2 col-span-3 box-shadow">*/}
                 <div className="box-shadow">
                     {isLeagueFull ?
                         <div className="grid grid-cols-5">
@@ -57,7 +60,7 @@ export default function DraftControls({
                         </div>
                     }
                 </div>
-            }
-        </>
-    )
+            </>
+        )
+    }
 }
