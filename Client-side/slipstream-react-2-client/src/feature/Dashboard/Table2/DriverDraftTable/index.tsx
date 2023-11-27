@@ -47,7 +47,7 @@ export default function DriverDraftTable({
                                 {/*{(currentUser.username == nextUserToPick.username || nextUserToPick.isTestUser) ?*/}
                                 {(isUsersTurnToPick) ?
                                     <td>
-                                        <form id="driver-pick-form" onSubmit={() => handlePick(driver.driverId)}>
+                                        <form id="driver-pick-form" onSubmit={(e) => handlePick(e, driver.driverId)}>
                                             <input
                                                 type="radio"
                                                 name="driverId"

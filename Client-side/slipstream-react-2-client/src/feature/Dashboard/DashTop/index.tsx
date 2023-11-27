@@ -170,9 +170,13 @@ export default function DashTop({
                     <p>Selected Drivers -</p>
                     {driversInTeam?.map((driver: IDriver, i: number) => {
                         return (
-                            <p key={driver.driverId}>
-                                {i + 1}. {driver.surname}
-                            </p>
+                            <div key={driver.driverId}>
+                                {driver ?
+                                    <p> {i + 1} - {driver.surname}</p>
+                                    :
+                                    <p> {i + 1} - </p>
+                                }
+                            </div>
                         )
                     })}
                     <hr/>

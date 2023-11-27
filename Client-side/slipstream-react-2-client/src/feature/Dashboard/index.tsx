@@ -3,15 +3,21 @@ import Table1 from "./Table1";
 import Table2 from "./Table2";
 import {useEffect, useState} from "react";
 import {postToggleTestLeague} from "../../services/league.service.ts";
-import {getDriverData, postPickDriver} from "../../services/driver.service.ts";
+import {getDriverData} from "../../services/driver.service.ts";
 import DraftControls from "./DraftControls";
 import Reminders from "./Reminders";
 import Layout from "../../components/Layout/Layout.tsx";
 import IDriver from "../../types/driver.type.ts";
 import IUser from "../../types/user.type.ts";
-import {useLeagueData, useNextUserToPick, useOpenLeague} from "../../hooks/queries/league-queries.ts";
+import {
+    useLeagueData,
+    useNextPickNumber,
+    useNextUserToPick,
+    useOpenLeague
+} from "../../hooks/queries/league-queries.ts";
 import {useCreateTestTeam} from "../../hooks/queries/team-queries.ts";
 import {useNavigate} from "react-router-dom";
+import {useQueryClient} from "react-query";
 import {usePickDriver} from "../../hooks/queries/driver-queries.ts";
 
 
@@ -45,8 +51,10 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<boolean | undefined | null>();
     const [isUsersTurnToPick, setIsUsersTurnToPick]
         = useState<boolean | undefined | null>(false);
-    const [currentPickNumber, setCurrentPickNumber]
-        = useState<number | null | undefined>();
+    // const [currentPickNumber, setCurrentPickNumber]
+    //     = useState<number | null | undefined>();
+    // const [nextToPick, setNextToPick]
+    //     = useState<IUser | undefined>();
     const [selectedDriver, setSelectedDriver]
         = useState<IDriver | undefined | null>();
     const [lastDriverPicked, setLastDriverPicked]
@@ -64,7 +72,9 @@ export default function Dashboard({userData}: DashboardProps) {
     const userId = userData ? userData?.id : null;
     const teamId = userData?.team ? userData.team?.id : null;
     const leagueId = userData?.team ? userData?.team?.leagueId : openLeague?.leagueId;
+    const currentPickNumber = useNextPickNumber(leagueId).data;
     const nextUserToPick = useNextUserToPick(leagueId).data;
+
 
     const {
         data: leagueData,
@@ -81,13 +91,13 @@ export default function Dashboard({userData}: DashboardProps) {
         error: addTestTeamError,
     } = useCreateTestTeam(leagueId);
 
-    const {
-        mutateAsync: pickDriver,
-        // data: addTestTeam,
-        isLoading: addTestTeamLoading,
-        // status: addTestTeamStatus,
-        error: addTestTeamError,
-    } = usePickDriver({userId},{driverId});
+    // const {
+    //     mutateAsync: pickDriver,
+    //     // data: addTestTeam,
+    //     isLoading: pickDriverStatus,
+    //     // status: addTestTeamStatus,
+    //     error: pickDriverError,
+    // } = usePickDriver({userId}, {driverId});
 
     // console.log("leagueData1")
     // console.log(leagueData)
@@ -97,7 +107,8 @@ export default function Dashboard({userData}: DashboardProps) {
         if (!userData) {
             redirect("/login");
         }
-        setCurrentPickNumber(leagueData?.currentPickNumber);
+        // setNextToPick(nextUserToPick);
+        // setCurrentPickNumber(leagueData?.currentPickNumber);
         setIsPracticeLeague(leagueData?.isPracticeLeague);
         console.log("leagueData2")
         console.log(leagueData)
@@ -127,7 +138,7 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsDraftInProgress(false);
             setIsLeagueActive(true);
         }
-    }, [leagueData, leagueId, nextUserToPick?.isTestUser, userData?.team?.firstPickNumber, userData?.team?.secondPickNumber]);
+    }, [isDraftInProgress, isLeagueActive, leagueData, leagueId, leagueData?.currentPickNumber, nextUserToPick, nextUserToPick?.isTestUser, userData?.team?.firstPickNumber, userData?.team?.secondPickNumber]);
 
     console.log("isLeagueFull")
     console.log(isLeagueFull)
@@ -166,18 +177,91 @@ export default function Dashboard({userData}: DashboardProps) {
         return driverId;
     }
 
-    const handlePick = async (driverId: number | null | undefined) => {
-        usePickDriver(userData?.id, driverId);
+    // const pickDriver = usePickDriver;
+    // const pickDriver = usePickDriver().mutate();
 
-        await postPickDriver(userData?.id, driverId)
-            .then(async () => await getDriverData(driverId)
-                .then(res => {
-                    setLastDriverPicked(res)
-                    const timeElapsed = Date.now();
-                    const today = new Date(timeElapsed);
-                    setLastPickTime(today);
-                }));
-    };
+    // const {
+    //     mutateAsync: pickDriver,
+    //     // data: addTestTeam,
+    //     // isLoading: pickDriverStatus,
+    //     // status: addTestTeamStatus,
+    //     // error: pickDriverError,
+    // } = usePickDriver();
+
+    // const pickDriver = useMutation<
+    //     IDriver, any, { driverId: number | string | undefined }>(
+    //     ({driverId}) =>
+    //         postPickDriver(userId, driverId)
+    //     // .then(res => res.json())
+    // )
+    const queryClient = useQueryClient();
+    const pickDriver = usePickDriver();
+    // const pickDriver = useMutation({
+    //     // mutationFn: ({
+    //     //                  userId: userId,
+    //     //                  driverId: driverId,
+    //     //              }) => {
+    //     // mutationFn: (variables) => {
+    //     //     postPickDriver(variables)
+    //     // },
+    //     // mutationKey<MutationKey>: ["createTeam"],
+    //     mutationKey: ["createTeam"],
+    //     mutationFn: postPickDriver,
+    //     onSuccess: (data: any) => {
+    //         queryClient.invalidateQueries("undraftedDrivers")
+    //         queryClient.invalidateQueries("driversInTeam")
+    //         console.log("data")
+    //         console.log(data)
+    //     },
+    // })
+
+    const handlePick = (e, driverId: number | string | undefined) => {
+        e.preventDefault();
+        pickDriver.mutateAsync({
+            userId: userId,
+            driverId: driverId,
+        })
+            .then(() => {
+                queryClient.invalidateQueries("leagueData")
+                queryClient.invalidateQueries("undraftedDrivers")
+                queryClient.invalidateQueries("driversInTeam")
+                queryClient.invalidateQueries("nextPickNumber")
+                queryClient.invalidateQueries("nextUserToPick")
+                // queryClient.invalidateQueries("allTeamsInLeague")
+            })
+        // console.log("driverId")
+        // console.log(driverId)
+        // e.preventDefault();
+        // pickDriver.mutate(userId, driverId);
+
+    }
+
+// const handlePick = (driverId: number | string | null | undefined) => {
+//     pickDriver.mutate({
+//      userId, driverId
+//     });
+// }
+//     // usePickDriver(userData?.id, driverId);
+//     // const userId = userData?.id;
+//     // pickDriver(userId, driverId);
+//
+//     // await postPickDriver(userData?.id, driverId)
+//     //     .then(async () => await getDriverData(driverId)
+//     //         .then(res => {
+//     //             setLastDriverPicked(res)
+//     //             const timeElapsed = Date.now();
+//     //             const today = new Date(timeElapsed);
+//     //             setLastPickTime(today);
+//     //         }));
+// };
+// const {
+// mutateAsync: pickDriver,
+// // data: addTestTeam,
+// isLoading: pickDriverStatus,
+// // status: addTestTeamStatus,
+// error: pickDriverError,
+// } =
+
 
     return (
         <>
@@ -279,9 +363,9 @@ export default function Dashboard({userData}: DashboardProps) {
                                 <Table2
                                     leagueId={leagueId}
                                     isDraftInProgress={isDraftInProgress}
+                                    isUsersTurnToPick={isUsersTurnToPick}
                                     handleDriverSelection={handleDriverSelection}
                                     handlePick={handlePick}
-                                    isUsersTurnToPick={isUsersTurnToPick}
                                     // isLeagueActive={isLeagueActive}
                                     // isLeagueFull={isLeagueFull}
                                     // currentUser={currentUser}
@@ -306,9 +390,9 @@ export default function Dashboard({userData}: DashboardProps) {
                                 <Table2
                                     leagueId={leagueId}
                                     isDraftInProgress={isDraftInProgress}
+                                    isUsersTurnToPick={isUsersTurnToPick}
                                     handleDriverSelection={handleDriverSelection}
                                     handlePick={handlePick}
-                                    isUsersTurnToPick={isUsersTurnToPick}
                                     // isLeagueActive={isLeagueActive}
                                     // isLeagueFull={isLeagueFull}
                                     // undraftedDrivers={undraftedDrivers}

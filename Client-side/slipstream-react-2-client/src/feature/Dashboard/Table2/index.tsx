@@ -20,9 +20,9 @@ export default function Table2({
         if (isDraftInProgress) {
             return <DriverDraftTable
                 leagueId={leagueId}
+                isUsersTurnToPick={isUsersTurnToPick}
                 handleDriverSelection={handleDriverSelection}
                 handlePick={handlePick}
-                isUsersTurnToPick={isUsersTurnToPick}
                 // currentUser={currentUser}
                 // undraftedDrivers={undraftedDrivers}
 

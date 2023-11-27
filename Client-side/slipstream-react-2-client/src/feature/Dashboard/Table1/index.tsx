@@ -1,6 +1,9 @@
 import PostDraftLeagueTable from "./PostDraftLeagueTable";
 import PreDraftLeagueTable from "./PreDraftLeagueTable";
 import {useAllTeamsInLeague} from "../../../hooks/queries/league-queries.ts";
+import ITeam from "../../../types/team.type.ts";
+import {useDriversInTeam} from "../../../hooks/queries/driver-queries.ts";
+import IDriver from "../../../types/driver.type.ts";
 
 
 export default function Table1({
@@ -10,10 +13,21 @@ export default function Table1({
                                    currentLeague,
                                    isDraftInProgress
                                }) {
+    const rankedTeams: Array<ITeam> | undefined = useAllTeamsInLeague(currentLeague?.leagueId).data;
+    // const driversInTeam: Array<IDriver> | undefined = () => useDriversInTeam;
 
-    // const teamsInLeague = useAllTeamsInLeague(currentLeague?.leagueId).data;
-    // console.log("teamsInLeague")
-    // console.log(teamsInLeague)
+    if (isDraftInProgress) {
+        rankedTeams?.sort((a, b) => {
+            if (currentLeague.currentPickNumber < 11) {
+                return a.firstPickNumber! - b.firstPickNumber!
+            }
+            return a.secondPickNumber! - b.secondPickNumber!
+        });
+    } else {
+        rankedTeams?.sort((a, b) => {
+            return a.ranking! - b.ranking!
+        });
+    }
 
     function LeagueTable() {
         console.log("isLeagueActiveT1")
@@ -22,6 +36,7 @@ export default function Table1({
             // return <div className="col-start-2 col-span-3">
             return <PostDraftLeagueTable
                 currentLeague={currentLeague}
+                rankedTeams={rankedTeams}
                 // teamsInLeague={teamsInLeague}
             />
             // </div>
@@ -30,7 +45,8 @@ export default function Table1({
         return <PreDraftLeagueTable
             // openLeague={openLeague}
             currentLeague={currentLeague}
-            isDraftInProgress={isDraftInProgress}
+            rankedTeams={rankedTeams}
+            // isDraftInProgress={isDraftInProgress}
             // teamsInLeague={teamsInLeague}
         />
         // </div>
