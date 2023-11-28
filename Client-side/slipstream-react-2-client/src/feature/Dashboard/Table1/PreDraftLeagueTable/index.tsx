@@ -1,21 +1,12 @@
 import ITeam from "../../../../types/team.type.ts";
+import {useEffect} from "react";
 
-export default function PreDraftLeagueTable({
-                                                currentLeague,
-                                                rankedTeams,
-                                                // isDraftInProgress,
-                                                // openLeague,
-                                                // teamsInLeague,
-                                            }) {
+export default function PreDraftLeagueTable({currentLeague, rankedTeams}) {
     return (
         <>
             <table className="league-table">
                 <caption>
                     <h3>{currentLeague?.leagueName}</h3>
-                    {/*<h3>{currentLeague ?*/}
-                    {/*    currentLeague?.leagueName*/}
-                    {/*    : openLeague?.leagueName}*/}
-                    {/*</h3>*/}
                 </caption>
                 <thead>
                 <tr>
@@ -27,14 +18,25 @@ export default function PreDraftLeagueTable({
                 </thead>
                 <tbody>
                 {rankedTeams?.map((team: ITeam) => {
-                    return (
-                        <tr key={team.id}>
-                            <td>{team.username}</td>
-                            <td>{team.teamName}</td>
-                            <td>{team.firstPickNumber}</td>
-                            <td>{team.secondPickNumber}</td>
-                        </tr>
-                    )
+                    if (rankedTeams.length != 0) {
+                        return (
+                            <tr key={team.id}>
+                                <td>{team.username}</td>
+                                <td>{team.teamName}</td>
+                                <td>{team.firstPickNumber}</td>
+                                <td>{team.secondPickNumber}</td>
+                            </tr>
+                        )
+                    } else {
+                        return (
+                            <tr>
+                                <td>
+                                    No teams yet
+                                </td>
+                            </tr>
+
+                        )
+                    }
                 })}
                 </tbody>
             </table>

@@ -7,27 +7,7 @@ import IDriver from "../../../types/driver.type.ts";
 import {useDriversInTeam} from "../../../hooks/queries/driver-queries.ts";
 import IUser from "../../../types/user.type.ts";
 
-export default function DashTop({
-                                    // currentUser,
-                                    // userData,
-                                    // team,
-                                    // driversInTeam,
-                                    // openLeague,
-                                    // currentLeague,
-                                    // leagueTeams,
-                                    // isPracticeLeague,
-                                    // isLeagueFull,
-                                    // isDraftInProgress,
-                                    // currentPickNumber,
-                                    // currentPick,
-                                    // isLeagueActive
-                                    userData,
-                                    currentLeague,
-                                    isPracticeLeague,
-                                    isLeagueFull,
-                                    isLeagueActive,
-                                    isDraftInProgress,
-                                }) {
+export default function DashTop({userData, currentLeague, isPracticeLeague, isLeagueFull, isLeagueActive}) {
     const driversInTeam = useDriversInTeam(userData?.team?.id).data;
 
     const navigate: NavigateFunction = useNavigate();
@@ -92,7 +72,6 @@ export default function DashTop({
         return (
             <>
                 <div>
-                    {/*<p>{openLeague?.leagueName} is open to join.</p>*/}
                     <p>{currentLeague?.leagueName} is open to join.</p>
                     <p>Once the league is full, the draft can begin.</p>
                     <p>You must create a team to try a practice draft.</p>

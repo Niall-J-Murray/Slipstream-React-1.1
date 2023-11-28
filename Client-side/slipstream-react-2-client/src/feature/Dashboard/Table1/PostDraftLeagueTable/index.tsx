@@ -79,7 +79,8 @@ export default function PostDraftLeagueTable({currentLeague, rankedTeams}) {
                             {team.drivers?.map((driver: IDriver, i: number) => {
                                 return (
                                     <>
-                                        {i == 0 ? <>
+                                        {i == 0 ?
+                                            <>
                                                 <td>
                                                     {team.drivers[i].surname}
                                                 </td>
@@ -88,7 +89,8 @@ export default function PostDraftLeagueTable({currentLeague, rankedTeams}) {
                                                 </td>
                                             </>
                                             : ""}
-                                        {i == 1 ? <>
+                                        {i == 1 ?
+                                            <>
                                                 <td>
                                                     {(team.drivers[i].points - team.secondPickStartingPoints)}
                                                 </td>

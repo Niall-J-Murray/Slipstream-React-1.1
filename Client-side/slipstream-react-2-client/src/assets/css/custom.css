@@ -66,17 +66,6 @@ body {
     text-shadow: 0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black;
 }
 
-/*.background {*/
-/*    background: url("../images/background.jpg") no-repeat center center;*/
-/*    height: 1200px;*/
-/*    width: 1800px;*/
-/*}*/
-
-/*.dash-background {*/
-/*    background: url("../images/background.jpg") no-repeat center center;*/
-/*    background-size: cover;*/
-/*}*/
-
 .container {
     padding: 1%;
 }
@@ -125,18 +114,10 @@ body {
     text-shadow: 0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black;
 }
 
-/*a,*/
-/*.btn-success,*/
-/*.btn-link {*/
-/*    font-family: Font1, Arial, Helvetica, sans-serif;*/
-/*    color: white;*/
-/*}*/
-
 a {
     font-family: Font1, Arial, Helvetica, sans-serif;
     color: white;
 }
-
 
 /*a:hover{*/
 /*    color:#2ecc71;*/
@@ -249,6 +230,39 @@ a:hover,
     text-decoration-line: underline
 }
 
+#driver-radio {
+    background-color: #2ea44f;
+    color: #2ea44f;
+    z-index: 99;
+}
+
+input[type='radio']:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #d1d3d1;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}
+
+input[type='radio']:checked:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #ffa500;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}
 
 #confirm-pick,
 #confirm-pick-dis,
@@ -261,17 +275,17 @@ a:hover,
     background-color: #2ea44f;
 }
 
-#pick-button,
-#pick-button-dis,
-#test-pick-button {
-    font-family: Font1, Arial, Helvetica, sans-serif;
-    color: white;
-    font-weight: bold;
-    text-decoration-line: underline;
-    padding: 0;
-    border: none;
-    background: none;
-}
+/*#pick-button,*/
+/*#pick-button-dis,*/
+/*#test-pick-button {*/
+/*    font-family: Font1, Arial, Helvetica, sans-serif;*/
+/*    color: white;*/
+/*    font-weight: bold;*/
+/*    text-decoration-line: underline;*/
+/*    padding: 0;*/
+/*    border: none;*/
+/*    background: none;*/
+/*}*/
 
 /*.confirm-pick,*/
 /*.confirm-pick-dis,*/
