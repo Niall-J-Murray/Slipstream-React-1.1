@@ -52,10 +52,12 @@ export default function PostDraftLeagueTable({currentLeague, rankedTeams}) {
                     {/*<th className={"points"}>Points</th>*/}
                     {/*<th className={"drivers"} colSpan={2}>Drivers</th>*/}
                     <th>Rank</th>
-                    <th className={"username"}>Username</th>
-                    <th>Teamname</th>
-                    <th>Points</th>
-                    <th colSpan={2}>Drivers</th>
+                    <th className={"username"}>User Name</th>
+                    <th>Team Name</th>
+                    <th>Team Points</th>
+                    <th>Driver 1</th>
+                    <th colSpan={2}>Driver Points</th>
+                    <th>Driver 2</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -76,17 +78,35 @@ export default function PostDraftLeagueTable({currentLeague, rankedTeams}) {
 
                             {team.drivers?.map((driver: IDriver, i: number) => {
                                 return (
-                                    <td key={driver.driverId}>
-                                        {i==0?
-                                            {{team.drivers[i].surname} - {team.drivers[i].points} - {team.firstPickStartingPoints}}
-                                            :
-                                            {{team.drivers[i].surname} - {team.drivers[i].points} - {team.secondPickStartingPoints}}
-                                        }
-                                        )
-                                        {/*<td>{team.drivers[i].surname} ({team.drivers[i].points} - {team.secondPickStartingPoints})</td>*/}
-                                    </td>
+                                    <>
+                                        {i == 0 ? <>
+                                                <td>
+                                                    {team.drivers[i].surname}
+                                                </td>
+                                                <td>
+                                                    {(team.drivers[i].points - team.firstPickStartingPoints)}
+                                                </td>
+                                            </>
+                                            : ""}
+                                        {i == 1 ? <>
+                                                <td>
+                                                    {(team.drivers[i].points - team.secondPickStartingPoints)}
+                                                </td>
+                                                <td>
+                                                    {team.drivers[i].surname}
+                                                </td>
+                                            </>
+                                            : ""}
+                                    </>
                                 )
-                            })} {/*<td>{team.drivers[1].surname} ({team.drivers[1].points} - {team.firstPickStartingPoints})</td>*/}
+                            })}
+                            {/*{i==0?*/}
+                            {/*    {{team.drivers[i].surname} - {team.drivers[i].points} - {team.firstPickStartingPoints}}*/}
+                            {/*    :*/}
+                            {/*{{team.drivers[i].surname} - {team.drivers[i].points} - {team.secondPickStartingPoints}}*/}
+                            {/*}*/}
+                            {/*<td>{team.drivers[i].surname} ({team.drivers[i].points} - {team.secondPickStartingPoints})</td>*/}
+                            {/*<td>{team.drivers[1].surname} ({team.drivers[1].points} - {team.firstPickStartingPoints})</td>*/}
                             {/*{team.drivers?.map((driver: IDriver,i: number) => {*/}
                             {/*    return (*/}
                             {/*        <td key={driver.driverId}>*/}
