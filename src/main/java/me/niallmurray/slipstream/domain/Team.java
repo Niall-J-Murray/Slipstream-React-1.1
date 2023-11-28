@@ -41,7 +41,9 @@ public class Team implements Serializable {
   @Column()
   private Integer secondPickNumber;
   @Column()
-  private Double startingPoints;
+  private Double firstPickStartingPoints;
+  @Column()
+  private Double secondPickStartingPoints;
   @Column()
   private Double teamPoints;
   @Column()
@@ -50,7 +52,7 @@ public class Team implements Serializable {
   private Long leagueId;
   @ManyToOne()
   @JsonIgnore
- private League league;
+  private League league;
   @JsonIgnore
   @Column()
   @ManyToMany(fetch = FetchType.LAZY,

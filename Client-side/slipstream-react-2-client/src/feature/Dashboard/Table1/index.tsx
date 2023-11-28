@@ -2,9 +2,6 @@ import PostDraftLeagueTable from "./PostDraftLeagueTable";
 import PreDraftLeagueTable from "./PreDraftLeagueTable";
 import {useAllTeamsInLeague} from "../../../hooks/queries/league-queries.ts";
 import ITeam from "../../../types/team.type.ts";
-import {useDriversInTeam} from "../../../hooks/queries/driver-queries.ts";
-import IDriver from "../../../types/driver.type.ts";
-
 
 export default function Table1({
                                    // openLeague,

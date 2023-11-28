@@ -35,6 +35,20 @@ public class TeamService {
     return true;
   }
 
+  private static String formatUserDisplayName(User user) {
+    String userDisplayName = user.getUsername().strip();
+    if (userDisplayName.length() > 16) {
+      String firstInitial = userDisplayName.charAt(0) + ". ";
+      String nameEnding = userDisplayName.substring(userDisplayName.length() - 13);
+      if (!nameEnding.contains(" ")) {
+        int spacePos = nameEnding.indexOf(" ");
+        nameEnding = nameEnding.substring(spacePos + 1, nameEnding.length());
+      }
+      userDisplayName = firstInitial + nameEnding;
+    }
+    return userDisplayName;
+  }
+
   public Team createTeam(User user, String teamName) {
     Team team = new Team();
     team.setUser(user);
@@ -50,27 +64,14 @@ public class TeamService {
     team.setFirstPickNumber(randomPickNumber());
     team.setSecondPickNumber(21 - team.getFirstPickNumber()); //So players get 1&20, 2&19 etc. up to 10&11.
     team.setRanking(team.getFirstPickNumber());
-    team.setStartingPoints(0.0);
+    team.setFirstPickStartingPoints(0.0);
+    team.setSecondPickStartingPoints(0.0);
     team.setTeamPoints(0.0);
     team.setIsTestTeam(false);
     team.setLeague(leagueService.findAvailableLeague());
     team.setLeagueId(team.getLeague().getLeagueId());
     addOneTeamToLeague(team);
     return team;
-  }
-
-  private static String formatUserDisplayName(User user) {
-    String userDisplayName = user.getUsername().strip();
-    if (userDisplayName.length() > 16) {
-      String firstInitial = userDisplayName.charAt(0) + ". ";
-      String nameEnding = userDisplayName.substring(userDisplayName.length() - 13);
-      if (!nameEnding.contains(" ")) {
-        int spacePos = nameEnding.indexOf(" ");
-        nameEnding = nameEnding.substring(spacePos + 1, nameEnding.length());
-      }
-      userDisplayName = firstInitial + nameEnding;
-    }
-    return userDisplayName;
   }
 
   public Team createTestTeam(Long leagueId) {
@@ -90,7 +91,8 @@ public class TeamService {
       team.setFirstPickNumber(randomPickNumber());
       team.setSecondPickNumber(21 - team.getFirstPickNumber());
       team.setRanking(team.getFirstPickNumber());
-      team.setStartingPoints(0.0);
+      team.setFirstPickStartingPoints(0.0);
+      team.setSecondPickStartingPoints(0.0);
       team.setTeamPoints(0.0);
       team.setIsTestTeam(true);
       team.setLeague(league);
@@ -136,11 +138,14 @@ public class TeamService {
       driver.getTeams().add(team);
       driver.setTeams(driver.getTeams());
     }
-    Double startingPoints = team.getDrivers().stream()
-            .mapToDouble(Driver::getPoints).sum();
+//    Double startingPoints = team.getDrivers().stream()
+//            .mapToDouble(Driver::getPoints).sum();
 
     team.setDrivers(teamDrivers);
-    team.setStartingPoints(startingPoints);
+    team.setFirstPickStartingPoints(team.getDrivers().get(0).getPoints());
+    if (teamDrivers.size() > 1) {
+      team.setSecondPickStartingPoints(team.getDrivers().get(1).getPoints());
+    }
     team.setUser(user);
     user.setTeam(user.getTeam());
 
@@ -214,7 +219,7 @@ public class TeamService {
       }
       Double totalDriverPoints = team.getDrivers().stream()
               .mapToDouble(Driver::getPoints).sum();
-      team.setTeamPoints(totalDriverPoints - team.getStartingPoints());
+      team.setTeamPoints(totalDriverPoints - (team.getFirstPickStartingPoints() + team.getSecondPickStartingPoints()));
     }
     // Sort by pick order until all picks made and league is active
     if (Boolean.FALSE.equals(league.getIsActive())) {

@@ -83,13 +83,13 @@ export default function Dashboard({userData}: DashboardProps) {
         error: errLeagueData,
     } = useLeagueData(leagueId);
 
-    const {
-        mutateAsync: addTestTeam,
-        // data: addTestTeam,
-        isLoading: addTestTeamLoading,
-        // status: addTestTeamStatus,
-        error: addTestTeamError,
-    } = useCreateTestTeam(leagueId);
+    // const {
+    //     mutateAsync: mutateTestTeam,
+    //     // data: addTestTeam,
+    //     isLoading: mutateTestTeamLoading,
+    //     // status: addTestTeamStatus,
+    //     error: mutateTestTeamError,
+    // } = useCreateTestTeam(leagueId);
 
     // const {
     //     mutateAsync: pickDriver,
@@ -165,9 +165,21 @@ export default function Dashboard({userData}: DashboardProps) {
         }
     }
 
-    // const addTestTeam = async () => {
-    //     useCreateTestTeam(leagueId);
-    // }
+    const queryClient = useQueryClient();
+    const mutateTestTeam = useCreateTestTeam(leagueId);
+
+    const addTestTeam = (e) => {
+        e.preventDefault();
+        mutateTestTeam.mutateAsync()
+            .then(() => {
+                queryClient.invalidateQueries("leagueData")
+                queryClient.invalidateQueries("allTeamsInLeague")
+                // queryClient.invalidateQueries("undraftedDrivers")
+                // queryClient.invalidateQueries("driversInTeam")
+                // queryClient.invalidateQueries("nextPickNumber")
+                // queryClient.invalidateQueries("nextUserToPick")
+            })
+    }
 
     const handleDriverSelection = (driverId: number | null | undefined) => {
         getDriverData(driverId)
@@ -177,45 +189,9 @@ export default function Dashboard({userData}: DashboardProps) {
         return driverId;
     }
 
-    // const pickDriver = usePickDriver;
-    // const pickDriver = usePickDriver().mutate();
-
-    // const {
-    //     mutateAsync: pickDriver,
-    //     // data: addTestTeam,
-    //     // isLoading: pickDriverStatus,
-    //     // status: addTestTeamStatus,
-    //     // error: pickDriverError,
-    // } = usePickDriver();
-
-    // const pickDriver = useMutation<
-    //     IDriver, any, { driverId: number | string | undefined }>(
-    //     ({driverId}) =>
-    //         postPickDriver(userId, driverId)
-    //     // .then(res => res.json())
-    // )
-    const queryClient = useQueryClient();
     const pickDriver = usePickDriver();
-    // const pickDriver = useMutation({
-    //     // mutationFn: ({
-    //     //                  userId: userId,
-    //     //                  driverId: driverId,
-    //     //              }) => {
-    //     // mutationFn: (variables) => {
-    //     //     postPickDriver(variables)
-    //     // },
-    //     // mutationKey<MutationKey>: ["createTeam"],
-    //     mutationKey: ["createTeam"],
-    //     mutationFn: postPickDriver,
-    //     onSuccess: (data: any) => {
-    //         queryClient.invalidateQueries("undraftedDrivers")
-    //         queryClient.invalidateQueries("driversInTeam")
-    //         console.log("data")
-    //         console.log(data)
-    //     },
-    // })
 
-    const handlePick = (e, driverId: number | string | undefined) => {
+    const handlePick = (e: { preventDefault: () => void; }, driverId: number | string | undefined) => {
         e.preventDefault();
         pickDriver.mutateAsync({
             userId: userId,
@@ -229,11 +205,6 @@ export default function Dashboard({userData}: DashboardProps) {
                 queryClient.invalidateQueries("nextUserToPick")
                 // queryClient.invalidateQueries("allTeamsInLeague")
             })
-        // console.log("driverId")
-        // console.log(driverId)
-        // e.preventDefault();
-        // pickDriver.mutate(userId, driverId);
-
     }
 
 // const handlePick = (driverId: number | string | null | undefined) => {

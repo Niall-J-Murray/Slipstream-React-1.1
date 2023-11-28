@@ -1,5 +1,4 @@
 import ITeam from "../../../../types/team.type.ts";
-import {useAllTeamsInLeague} from "../../../../hooks/queries/league-queries.ts";
 
 export default function PreDraftLeagueTable({
                                                 currentLeague,
@@ -8,16 +7,6 @@ export default function PreDraftLeagueTable({
                                                 // openLeague,
                                                 // teamsInLeague,
                                             }) {
-    // const rankedTeams: undefined | Array<ITeam> = useAllTeamsInLeague(currentLeague?.leagueId).data;
-    // if (isDraftInProgress) {
-    //     rankedTeams?.sort((a, b) => {
-    //         if (currentLeague.currentPickNumber < 11) {
-    //             return a.firstPickNumber! - b.firstPickNumber!
-    //         }
-    //         return a.secondPickNumber! - b.secondPickNumber!
-    //     });
-    // }
-
     return (
         <>
             <table className="league-table">
