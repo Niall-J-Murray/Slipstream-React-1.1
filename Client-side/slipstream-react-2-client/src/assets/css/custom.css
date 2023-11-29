@@ -103,11 +103,11 @@ body {
     padding: 1%;
 }
 
-.form-table,
-.form-table caption {
-    color: white;
-    text-align: center;
-}
+/*.form-table,*/
+/*.form-table caption {*/
+/*    color: white;*/
+/*    text-align: center;*/
+/*}*/
 
 .error-message {
     color: orangered;
@@ -230,10 +230,21 @@ a:hover,
     text-decoration-line: underline
 }
 
+#pick-radio {
+    background-color: #2ea44f;
+}
+
 #driver-radio {
     background-color: #2ea44f;
     color: #2ea44f;
-    z-index: 99;
+}
+
+/*.selected-row {*/
+/*    background-color: #2ea44f;*/
+/*}*/
+
+.highlight {
+    background-color: #2ea44f;
 }
 
 input[type='radio']:after {
@@ -310,6 +321,28 @@ input[type='radio']:checked:after {
 /*    border: 1px solid black;*/
 /*    padding: 0;*/
 /*}*/
+
+.test-page {
+    display: flex;
+    justify-content: center;
+    /*align-content: center;*/
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+}
+
+.test-table,
+.test-table th,
+.test-table td  {
+    /*background-color: gray;*/
+    table-layout: auto;
+    padding: 2px;
+    border: 1px solid black;
+    /*background-color: black;*/
+    color: black;
+    text-shadow: none;
+    text-align: center;
+}
 
 .form-check-label {
     padding: 0;

@@ -1,4 +1,4 @@
-import {getDriversInTeam, getUndraftedDrivers, postPickDriver} from "../../services/driver.service.ts";
+import {getDriverData, getDriversInTeam, getUndraftedDrivers, postPickDriver} from "../../services/driver.service.ts";
 import {useMutation, useQuery, useQueryClient} from "react-query";
 
 const useGetQueryClient = () => useQueryClient();
@@ -17,9 +17,9 @@ export const useDriversInTeam = (teamId: number | null | undefined) =>
         enabled: !!teamId,
     });
 
-export const useDriversInTeam2 = () => useQuery({
-    queryKey: ["driversInTeam"],
-    queryFn: () => getDriversInTeam,
+export const useDriverData = () => useQuery({
+    queryKey: ["driverData"],
+    queryFn: () => getDriverData,
 });
 
 export const usePickDriver = () => useMutation({

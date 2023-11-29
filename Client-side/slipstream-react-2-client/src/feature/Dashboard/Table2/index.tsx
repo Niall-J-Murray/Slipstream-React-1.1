@@ -11,6 +11,7 @@ export default function Table2({
                                    isDraftInProgress,
                                    handleDriverSelection,
                                    handlePick,
+                                   selectedDriver,
                                }) {
     // currentUser={currentUser}
     // undraftedDrivers={undraftedDrivers}
@@ -23,6 +24,7 @@ export default function Table2({
                 isUsersTurnToPick={isUsersTurnToPick}
                 handleDriverSelection={handleDriverSelection}
                 handlePick={handlePick}
+                selectedDriver={selectedDriver}
                 // currentUser={currentUser}
                 // undraftedDrivers={undraftedDrivers}
 

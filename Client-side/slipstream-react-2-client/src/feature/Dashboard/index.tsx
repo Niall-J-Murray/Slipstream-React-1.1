@@ -3,7 +3,6 @@ import Table1 from "./Table1";
 import Table2 from "./Table2";
 import {useEffect, useState} from "react";
 import {postToggleTestLeague} from "../../services/league.service.ts";
-import {getDriverData} from "../../services/driver.service.ts";
 import DraftControls from "./DraftControls";
 import Reminders from "./Reminders";
 import Layout from "../../components/Layout/Layout.tsx";
@@ -18,7 +17,7 @@ import {
 import {useCreateTestTeam} from "../../hooks/queries/team-queries.ts";
 import {useNavigate} from "react-router-dom";
 import {useQueryClient} from "react-query";
-import {usePickDriver} from "../../hooks/queries/driver-queries.ts";
+import {useDriverData, usePickDriver} from "../../hooks/queries/driver-queries.ts";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -187,12 +186,17 @@ export default function Dashboard({userData}: DashboardProps) {
         //     // queryClient.invalidateQueries("nextUserToPick")
         // })
     }
+    const driverData = useDriverData().data;
 
     const handleDriverSelection = (driverId: number | null | undefined) => {
-        getDriverData(driverId)
-            .then(function (response) {
-                setSelectedDriver(response);
-            })
+        if (driverData) {
+            driverData(driverId)
+                .then(res => setSelectedDriver(res));
+        }
+        // getDriverData(driverId)
+        //     .then(function (response) {
+        //         setSelectedDriver(response);
+        //     })
         return driverId;
     }
 
@@ -292,6 +296,7 @@ export default function Dashboard({userData}: DashboardProps) {
                                     leagueId={leagueId}
                                     isDraftInProgress={isDraftInProgress}
                                     isUsersTurnToPick={isUsersTurnToPick}
+                                    selectedDriver={selectedDriver}
                                     handleDriverSelection={handleDriverSelection}
                                     handlePick={handlePick}
                                 />
@@ -312,6 +317,7 @@ export default function Dashboard({userData}: DashboardProps) {
                                     leagueId={leagueId}
                                     isDraftInProgress={isDraftInProgress}
                                     isUsersTurnToPick={isUsersTurnToPick}
+                                    selectedDriver={selectedDriver}
                                     handleDriverSelection={handleDriverSelection}
                                     handlePick={handlePick}
                                 />
