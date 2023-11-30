@@ -1,7 +1,14 @@
 import ITeam from "../../../../types/team.type.ts";
-import {useEffect} from "react";
 
-export default function PreDraftLeagueTable({currentLeague, rankedTeams}) {
+export default function PreDraftLeagueTable({currentLeague, teamsInLeague}) {
+    // if (isDraftInProgress) {
+    teamsInLeague?.sort((a: ITeam, b: ITeam) => {
+        if (currentLeague.currentPickNumber < 11) {
+            return a.firstPickNumber! - b.firstPickNumber!
+        }
+        return a.secondPickNumber! - b.secondPickNumber!
+    });
+    // }
     return (
         <>
             <table className="league-table">
@@ -17,8 +24,8 @@ export default function PreDraftLeagueTable({currentLeague, rankedTeams}) {
                 </tr>
                 </thead>
                 <tbody>
-                {rankedTeams?.map((team: ITeam) => {
-                    if (rankedTeams.length != 0) {
+                {teamsInLeague?.map((team: ITeam) => {
+                    if (teamsInLeague.length != 0) {
                         return (
                             <tr key={team.id}>
                                 <td>{team.username}</td>

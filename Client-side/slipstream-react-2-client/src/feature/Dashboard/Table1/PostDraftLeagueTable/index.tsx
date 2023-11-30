@@ -3,38 +3,42 @@ import {useDriversInTeam} from "../../../../hooks/queries/driver-queries.ts";
 import IDriver from "../../../../types/driver.type.ts";
 
 
-export default function PostDraftLeagueTable({currentLeague, rankedTeams}) {
+export default function PostDraftLeagueTable({currentLeague,  teamsInLeague}) {
 
-    //  const rankedTeams: ITeam[] = leagueTeams;
-    // let rankedTeams: ITeam[] = [];
-    // getAllLeagueTeams(currentLeague?.leagueId)
-    //     .then(res =>
-    //         rankedTeams = res);
-    // const rankedTeams = teamsInLeague;
-    // console.log("rankedTeams")
-    // console.log(rankedTeams)
-    // const rankedTeams: Array<ITeam> | undefined = useAllTeamsInLeague(currentLeague?.leagueId).data;
-    //
-    //
-    // function formatLeagueTable() {
-    //     // rankedTeams?.map((team: ITeam) => {
-    //     // team.drivers = useDriversInTeam(team.id).data;
-    //     //     getDriversInTeam(team.id)
-    //     //         .then(res =>
-    //     //             team.drivers = res)
-    //     //     console.log(team.drivers)
-    //     // })
-    //     rankedTeams?.sort((a, b) => {
-    //         return a.ranking! - b.ranking!
-    //     });
-    // }
-    // formatLeagueTable();
+    teamsInLeague?.sort((a: ITeam, b: ITeam) => {
+        return a.ranking! - b.ranking!
+    });
 
-    // const driversInTeam = (teamId) => useDriversInTeam(teamId);
+//  const rankedTeams: ITeam[] = leagueTeams;
+// let rankedTeams: ITeam[] = [];
+// getAllLeagueTeams(currentLeague?.leagueId)
+//     .then(res =>
+//         rankedTeams = res);
+// const rankedTeams = teamsInLeague;
+// console.log("rankedTeams")
+// console.log(rankedTeams)
+// const rankedTeams: Array<ITeam> | undefined = useAllTeamsInLeague(currentLeague?.leagueId).data;
+//
+//
+// function formatLeagueTable() {
+//     // rankedTeams?.map((team: ITeam) => {
+//     // team.drivers = useDriversInTeam(team.id).data;
+//     //     getDriversInTeam(team.id)
+//     //         .then(res =>
+//     //             team.drivers = res)
+//     //     console.log(team.drivers)
+//     // })
+//     rankedTeams?.sort((a, b) => {
+//         return a.ranking! - b.ranking!
+//     });
+// }
+// formatLeagueTable();
+
+// const driversInTeam = (teamId) => useDriversInTeam(teamId);
     const driversInTeam = useDriversInTeam;
-    // function driversInTeam() {
-    //     useDriversInTeam2().data;
-    // }
+// function driversInTeam() {
+//     useDriversInTeam2().data;
+// }
 
 
     return (
@@ -61,7 +65,7 @@ export default function PostDraftLeagueTable({currentLeague, rankedTeams}) {
                 </tr>
                 </thead>
                 <tbody>
-                {rankedTeams?.map((team: ITeam) => {
+                {teamsInLeague?.map((team: ITeam) => {
                     team.drivers = driversInTeam(team.id).data
                     return (
                         <tr key={team.id}>

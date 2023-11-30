@@ -9,10 +9,13 @@ export const getUserBoard = () => {
     return axios.get(API_URL + "driver", {headers: authHeader()});
 };
 
-export const getDriverData = async (driverId: number | null | undefined) => {
-    const data = await axios.get(API_DATA_URL + "/" + driverId, {headers: authHeader()})
+export const getDriverData = async (data): Promise<IDriver> => {
+    console.log("getDriverData")
+    console.log(data)
+    console.log(data.driverId)
+    const responseData = await axios.get(API_DATA_URL + "/" + data.driverId, {headers: authHeader()})
         .then(response => response.data);
-    return data;
+    return responseData;
 };
 
 export const getAllDrivers = async () => {

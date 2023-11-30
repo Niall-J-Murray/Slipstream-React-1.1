@@ -21,7 +21,7 @@ export const useCreateTestTeam = (leagueId: number | null | undefined) =>
     useMutation({
         mutationKey: ["createTestTeam", leagueId],
         mutationFn: () => postCreateTestTeam(leagueId),
-        onSuccess: ()=> {useLeagueData(leagueId)},
+        // onSuccess: ()=> {useLeagueData(leagueId)},
         // onSuccess: () => {
         //     useQueryClient()
         //         .invalidateQueries("leagueData");

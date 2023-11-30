@@ -1,6 +1,5 @@
 import axios from "axios";
 import authHeader from "./auth-header.ts";
-import {useLeagueData} from "../hooks/queries/league-queries.ts";
 
 const API_DATA_URL = "http://localhost:8080/api/team/";
 
@@ -26,7 +25,8 @@ export const postCreateTestTeam = async (leagueId: number | null | undefined) =>
         .post(API_DATA_URL + leagueId + "/createTestTeam", {
             // headers: authHeader(),
             leagueId,
-        }).then(() => useLeagueData(leagueId));
+        })
+     
     if (response.data) {
         return response.data;
     }

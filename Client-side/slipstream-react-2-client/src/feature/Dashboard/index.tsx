@@ -189,8 +189,12 @@ export default function Dashboard({userData}: DashboardProps) {
     const driverData = useDriverData().data;
 
     const handleDriverSelection = (driverId: number | null | undefined) => {
-        if (driverData) {
-            driverData(driverId)
+        console.log("driverId")
+        console.log(driverId)
+        if (driverId) {
+            driverData({
+                driverId: driverId,
+            })
                 .then(res => setSelectedDriver(res));
         }
         // getDriverData(driverId)
