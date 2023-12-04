@@ -17,10 +17,12 @@ import {
 import {useCreateTestTeam} from "../../hooks/queries/team-queries.ts";
 import {useNavigate} from "react-router-dom";
 import {useQueryClient} from "react-query";
-import {useDriverData, usePickDriver} from "../../hooks/queries/driver-queries.ts";
+import {usePickDriver} from "../../hooks/queries/driver-queries.ts";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
+//  ---
+//  Finish driver picking UX
 //  ---
 //  Check draft add test team and draft picking functions after dashboard refactor.
 //  Fix draft instructions to display according to user status.
@@ -102,13 +104,8 @@ export default function Dashboard({userData}: DashboardProps) {
     // console.log(leagueData)
     // function useLeagueBooleans(league) {
     const redirect = useNavigate();
-    useEffect(() => {
-        if (!userData) {
-            redirect("/login");
-        }
-        // setNextToPick(nextUserToPick);
-        // setCurrentPickNumber(leagueData?.currentPickNumber);
-        setIsPracticeLeague(leagueData?.isPracticeLeague);
+
+    function checkLeagueStatus() {
         console.log("leagueData2")
         console.log(leagueData)
         console.log(leagueData?.teams?.length)
@@ -119,6 +116,22 @@ export default function Dashboard({userData}: DashboardProps) {
                 setIsDraftInProgress(true);
             }
         }
+        if (leagueData?.isActive) {
+            setIsDraftInProgress(false);
+            setIsLeagueActive(true);
+        }
+        return isLeagueFull;
+    }
+
+    useEffect(() => {
+        if (!userData) {
+            redirect("/login");
+        }
+        // setNextToPick(nextUserToPick);
+        // setCurrentPickNumber(leagueData?.currentPickNumber);
+        setIsPracticeLeague(leagueData?.isPracticeLeague);
+        setShowPracticeOptions(leagueData?.isPracticeLeague);
+
         // else {
         //     setIsLeagueFull(true);
         //     setIsDraftInProgress(true);
@@ -133,11 +146,9 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsUsersTurnToPick(true);
         }
 
-        if (leagueData?.isActive) {
-            setIsDraftInProgress(false);
-            setIsLeagueActive(true);
-        }
-    }, [isDraftInProgress, isLeagueActive, leagueData, leagueId, leagueData?.currentPickNumber, nextUserToPick, nextUserToPick?.isTestUser, userData?.team?.firstPickNumber, userData?.team?.secondPickNumber]);
+        checkLeagueStatus();
+    }, [userData, leagueData, nextUserToPick]);
+    // }, [isLeagueFull, isDraftInProgress, isLeagueActive, leagueData, leagueId, leagueData?.currentPickNumber, nextUserToPick, nextUserToPick?.isTestUser, userData?.team?.firstPickNumber, userData?.team?.secondPickNumber]);
 
     console.log("isLeagueFull")
     console.log(isLeagueFull)
@@ -167,12 +178,16 @@ export default function Dashboard({userData}: DashboardProps) {
     const queryClient = useQueryClient();
     const mutateTestTeam = useCreateTestTeam(leagueId);
 
-    const addTestTeam = (e: { preventDefault: () => void; }) => {
+    const addTestTeam = (e: {
+        preventDefault: () => void;
+    }) => {
         e.preventDefault();
         mutateTestTeam.mutateAsync()
             .then(() => {
                     if (mutateTestTeam.isSuccess) {
-                        queryClient.invalidateQueries();
+                        queryClient.invalidateQueries()
+                            .then(() => checkLeagueStatus());
+
                     }
                 }
             )
@@ -185,28 +200,41 @@ export default function Dashboard({userData}: DashboardProps) {
         //     // queryClient.invalidateQueries("nextPickNumber")
         //     // queryClient.invalidateQueries("nextUserToPick")
         // })
-    }
-    const driverData = useDriverData().data;
 
-    const handleDriverSelection = (driverId: number | null | undefined) => {
-        console.log("driverId")
-        console.log(driverId)
-        if (driverId) {
-            driverData({
-                driverId: driverId,
-            })
-                .then(res => setSelectedDriver(res));
-        }
+    }
+    // const driverData = useDriverData();
+    // const handleDriverSelection = (driverId: number | null | undefined) => {
+    const handleDriverSelection = (driver) => {
+        setSelectedDriver(driver)
+
+        // console.log("driverId")
+        // console.log(driverId)
+        // if (driverData) {
+        //     if (driverId) {
+        //         driverData({
+        //             driverId: driverId,
+        //         })
+        //             .then(res => setSelectedDriver(res));
+        //     }
+        // }
         // getDriverData(driverId)
         //     .then(function (response) {
         //         setSelectedDriver(response);
         //     })
-        return driverId;
+        return driver;
     }
+    // const {
+    //     data: driverData,
+    //     isLoading: driverDataLoading,
+    //     // status: statLeagueData,
+    //     error: driverDataErr,
+    // } = useDriverData(handleDriverSelection(selectedDriver?.driverId));
 
     const pickDriver = usePickDriver();
 
-    const handlePick = (e: { preventDefault: () => void; }, driverId: number | string | undefined) => {
+    const handlePick = (e: {
+        preventDefault: () => void;
+    }, driverId: number | string | undefined) => {
         e.preventDefault();
         pickDriver.mutateAsync({
             userId: userId,
@@ -258,9 +286,9 @@ export default function Dashboard({userData}: DashboardProps) {
                             userData={userData}
                             currentLeague={leagueData}
                             isPracticeLeague={isPracticeLeague}
-                            isDraftInProgress={isDraftInProgress}
                             isLeagueFull={isLeagueFull}
                             isLeagueActive={isLeagueActive}
+                            // isDraftInProgress={isDraftInProgress}
                         />
                     </div>
                     <div className="col-start-3 col-span-2">

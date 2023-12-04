@@ -1,6 +1,5 @@
 import IDriver from "../../../../types/driver.type.ts";
 import {useUndraftedDrivers} from "../../../../hooks/queries/driver-queries.ts";
-import {useEffect, useState} from "react";
 
 export default function DriverDraftTable({
                                              leagueId,
@@ -10,8 +9,8 @@ export default function DriverDraftTable({
                                              selectedDriver,
                                          }) {
     const undraftedDrivers = useUndraftedDrivers(leagueId).data;
-    const [rowSelected, setRowSelected]
-        = useState<HTMLTableElement | null>();
+    // const [rowSelected, setRowSelected]
+    //     = useState<HTMLTableElement | null>();
     // const [driverSelectedId, setDriverSelectedId]
     //     = useState<number | null | undefined>(null)
 
@@ -19,34 +18,34 @@ export default function DriverDraftTable({
     //
     // }, [driverSelectedId]);
 
-    let SelectedRow = "";
+    // let SelectedRow = "";
 
-    function highlight(rowId) {
-        // SelectedRow = row.cells[0].textContent;
-        // SelectedRow = document.getElementById('table-row-' + rowId);
-        // const row: HTMLElement | null = document.getElementById('table-row-' + rowId);
-        // SelectedRow = document.getElementById(rowId);
-        handleDriverSelection(rowId);
-        const row: HTMLTableElement | null = document.getElementById(rowId);
-        row.className = "selected-row";
-        console.log("row.className")
-        console.log(row.className)
-        setRowSelected(row);
-        const row2: HTMLCollectionOf<HTMLTableElement> = document
-            .getElementsByClassName("selected-row");
-        // deHighlight();
-        // row?.classList.toggle("selectedRow", false);
-        // row?.classList.toggle("selectedRow");
-        row2.item(0).style.backgroundColor = '#2ea44f';
-        // row2.style.backgroundColor = '#2ea44f';
-        // rowSelected.style.backgroundColor = '#2ea44f';
-        // rowSelected.style.textDecorationLine = 'underline';
-    }
+    // function highlight(rowId) {
+    //     // SelectedRow = row.cells[0].textContent;
+    //     // SelectedRow = document.getElementById('table-row-' + rowId);
+    //     // const row: HTMLElement | null = document.getElementById('table-row-' + rowId);
+    //     // SelectedRow = document.getElementById(rowId);
+    //     handleDriverSelection(rowId);
+    //     const row: HTMLTableElement | null = document.getElementById(rowId);
+    //     row.className = "selected-row";
+    //     console.log("row.className")
+    //     console.log(row.className)
+    //     setRowSelected(row);
+    //     const row2: HTMLCollectionOf<HTMLTableElement> = document
+    //         .getElementsByClassName("selected-row");
+    //     // deHighlight();
+    //     // row?.classList.toggle("selectedRow", false);
+    //     // row?.classList.toggle("selectedRow");
+    //     row2.item(0).style.backgroundColor = '#2ea44f';
+    //     // row2.style.backgroundColor = '#2ea44f';
+    //     // rowSelected.style.backgroundColor = '#2ea44f';
+    //     // rowSelected.style.textDecorationLine = 'underline';
+    // }
 
-    function selectDriver(rowId) {
-        handleDriverSelection(rowId);
-        // setDriverSelectedId(rowId)
-    }
+    // function selectDriver(rowId) {
+    //     handleDriverSelection(rowId);
+    //     // setDriverSelectedId(rowId)
+    // }
 
     // function highlight() {
     //     document.querySelector("#my-table")
@@ -77,10 +76,10 @@ export default function DriverDraftTable({
     //     }
     // }
 
-    function getSelectedRow() {
-        // alert(SelectedRow);
-        alert(rowSelected);
-    }
+    // function getSelectedRow() {
+    //     // alert(SelectedRow);
+    //     alert(rowSelected);
+    // }
 
     // const table = document.querySelector("#myTable")
     // if (table != null) {
@@ -114,20 +113,20 @@ export default function DriverDraftTable({
                 {/*    </tbody>*/}
                 {/*</table>*/}
 
-                <button onClick={() => getSelectedRow()}>Snatch Data</button>
+                {/*<button onClick={() => getSelectedRow()}>Snatch Data</button>*/}
                 <table className="drivers-table" id={"my-table"}>
                     <caption>
                         <h3>Undrafted Drivers -<small>({undraftedDrivers?.length}/20 remaining)</small></h3>
                     </caption>
                     <thead>
                     <tr>
-                        {/*    {(isUsersTurnToPick) ?*/}
-                        {/*        <th>Pick</th>*/}
-                        {/*        :*/}
-                        {/*        <th>*/}
-                        {/*            Car#*/}
-                        {/*        </th>*/}
-                        {/*    }*/}
+                        {(isUsersTurnToPick) ?
+                            <th>Pick</th>
+                            :
+                            <th>
+                                Car#
+                            </th>
+                        }
                         <th>Driver</th>
                         <th>Pos</th>
                         <th>Pts</th>
@@ -137,40 +136,90 @@ export default function DriverDraftTable({
                     </thead>
                     <tbody>
                     {undraftedDrivers?.map((driver: IDriver) => {
-                        const rowId = driver.driverId;
-                        if (rowId === selectedDriver?.driverId) {
-                            return (
-                                <tr key={rowId} id={rowId?.toString()}
-                                    onClick={() => {
-                                        selectDriver(rowId)
-                                    }
-                                    }
-                                    style={{backgroundColor: "blue"}}>
-                                    <td>{driver.surname}</td>
-                                    <td>{driver.standing}</td>
-                                    <td>{driver.points}</td>
-                                    <td>{driver.nationality}</td>
-                                    <td>{driver.constructor}</td>
-                                </tr>
-                            )
-                        } else {
-                            return (
-                                <tr key={rowId} id={rowId?.toString()}
-                                    onClick={() => {
-                                        selectDriver(rowId)
-                                    }
-                                    }
-                                >
-                                    <td>{driver.surname}</td>
-                                    <td>{driver.standing}</td>
-                                    <td>{driver.points}</td>
-                                    <td>{driver.nationality}</td>
-                                    <td>{driver.constructor}</td>
-                                </tr>
-                            )
-                        }
+                        return (
+                            <tr key={driver.driverId}>
+                                {selectedDriver?.driverId == driver.driverId ?
+                                    <>
+                                        <td className={"selected-cell"}>
+                                            <input
+                                                id="driver-radio"
+                                                // className={"driver-radio"}*/
+                                                type="radio"
+                                                name="driverId"
+                                                // value={driver?.driverId}
+                                                checked={true}
+                                                onChange={() => {
+                                                    handleDriverSelection(driver)
+                                                }}
+                                                // onClick={() => {
+                                                //     handleDriverSelection(driver)
+                                                // }}
+                                            />
+                                        </td>
+                                        <td className={"selected-cell"}>{driver.surname}</td>
+                                        <td className={"selected-cell"}>{driver.standing}</td>
+                                        <td className={"selected-cell"}>{driver.points}</td>
+                                        <td className={"selected-cell"}>{driver.nationality}</td>
+                                        <td className={"selected-cell"}>{driver.constructor}</td>
+                                    </>
+                                    :
+                                    <>
+                                        <td>
+                                            <input
+                                                id="driver-radio"
+                                                // className={"driver-radio"}*/
+                                                type="radio"
+                                                name="driverId"
+                                                // value={driver?.driverId}
+                                                onClick={() => {
+                                                    handleDriverSelection(driver)
+                                                }}
+                                            />
+                                        </td>
+                                        <td>{driver.surname}</td>
+                                        <td>{driver.standing}</td>
+                                        <td>{driver.points}</td>
+                                        <td>{driver.nationality}</td>
+                                        <td>{driver.constructor}</td>
+                                    </>
+                                }
+                            </tr>
+                        )
                     })}
-
+                    {/*{undraftedDrivers?.map((driver: IDriver) => {*/}
+                    {/*    const rowId = driver.driverId;*/}
+                    {/*    if (rowId === selectedDriver?.driverId) {*/}
+                    {/*        return (*/}
+                    {/*            <tr key={rowId} id={rowId?.toString()}*/}
+                    {/*                onClick={() => {*/}
+                    {/*                    selectDriver(rowId)*/}
+                    {/*                }*/}
+                    {/*                }*/}
+                    {/*                style={{backgroundColor: "blue"}}>*/}
+                    {/*                <td>{driver.surname}</td>*/}
+                    {/*                <td>{driver.standing}</td>*/}
+                    {/*                <td>{driver.points}</td>*/}
+                    {/*                <td>{driver.nationality}</td>*/}
+                    {/*                <td>{driver.constructor}</td>*/}
+                    {/*            </tr>*/}
+                    {/*        )*/}
+                    {/*    } else {*/}
+                    {/*        return (*/}
+                    {/*            <tr key={rowId} id={rowId?.toString()}*/}
+                    {/*                onClick={() => {*/}
+                    {/*                    selectDriver(rowId)*/}
+                    {/*                }*/}
+                    {/*                }*/}
+                    {/*            >*/}
+                    {/*                <td>{driver.surname}</td>*/}
+                    {/*                <td>{driver.standing}</td>*/}
+                    {/*                <td>{driver.points}</td>*/}
+                    {/*                <td>{driver.nationality}</td>*/}
+                    {/*                <td>{driver.constructor}</td>*/}
+                    {/*            </tr>*/}
+                    {/*        )*/}
+                    {/*    }*/}
+                    {/*})}*/}
                     </tbody>
                 </table>
                 {/*<tr key={rowId}>*/

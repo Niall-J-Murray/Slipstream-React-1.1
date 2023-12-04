@@ -17,9 +17,9 @@ export const useDriversInTeam = (teamId: number | null | undefined) =>
         enabled: !!teamId,
     });
 
-export const useDriverData = () => useQuery({
-    queryKey: ["driverData"],
-    queryFn: () => getDriverData,
+export const useDriverData = (driverId) => useQuery({
+    queryKey: ["driverData", driverId],
+    queryFn: (driverId) => getDriverData(driverId),
 });
 
 export const usePickDriver = () => useMutation({
