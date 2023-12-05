@@ -231,8 +231,11 @@ export default function Dashboard({userData}: DashboardProps) {
                             <div className="col-start-2 col-span-3 pl-40">
                                 <div className="box-shadow">
                                     <p>This league is now active, test teams can be removed now by clicking here:</p>
-                                    <button className="btn btn-proceed" type="submit"
-                                            onClick={() => deleteTestTeams}>Delete all test teams
+                                    <button className="btn btn-proceed"
+                                            type="submit"
+                                            // onClick={() => deleteTestTeams}
+                                    >
+                                        Delete all test teams
                                     </button>
                                 </div>
                             </div>
