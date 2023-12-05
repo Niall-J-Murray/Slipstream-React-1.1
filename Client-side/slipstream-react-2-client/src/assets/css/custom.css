@@ -230,8 +230,13 @@ a:hover,
     text-decoration-line: underline
 }
 
-.selected-cell{
+#driver-radio {
+    accent-color: #2ea44f;
+}
+
+.selected-cell {
     background-color: #2ea44f;
+    opacity: 100%;
 }
 
 /*#pick-radio {*/
@@ -449,26 +454,23 @@ tr:last-of-type td:last-of-type {
     opacity: 80%;
 }
 
-.drivers-table {
-    /*margin: 0 1%;*/
-    /*border-collapse: separate;*/
-    /*width: 100%;*/
-    /*text-align: center;*/
-    /*word-wrap: break-word;*/
-    /*table-layout: fixed;*/
-    /*caption-side: top;*/
-    table-layout: auto;
-    width: 100%;
-}
-
 .drivers-table thead th {
+    /*table-layout: auto;*/
     table-layout: auto;
     /*width: 100%;*/
-    margin: 0 1%;
+    padding: 11px 2px;
     border: 1px solid white;
     background-color: black;
     color: white;
     text-shadow: none;
+
+    /*table-layout: auto;*/
+    /*!*width: 100%;*!*/
+    /*margin: 0 1%;*/
+    /*border: 1px solid white;*/
+    /*background-color: black;*/
+    /*color: white;*/
+    /*text-shadow: none;*/
 }
 
 .drivers-table td {
@@ -505,5 +507,5 @@ thead caption {
 }
 
 .drivers-table tr:hover {
-    background-color: gray;
+    background-color: orangered;
 }

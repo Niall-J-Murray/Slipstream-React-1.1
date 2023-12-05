@@ -5,10 +5,11 @@ import Layout from "../../components/Layout/Layout.tsx";
 import IUser from "../../types/user.type.ts";
 
 interface HomeProps {
-    userData: undefined | IUser
+    userData: undefined | IUser,
+    error: boolean
 }
 
-export default function Home({userData}: HomeProps) {
+export default function Home({ userData, error }: HomeProps) {
 
     return (
         <>
@@ -19,7 +20,7 @@ export default function Home({userData}: HomeProps) {
                         {/*TS2786: HomeWelcome cannot be used as a JSX component.*/}
                         {/*Its type () => void | Element is not a valid JSX element type.*/}
                         {/*Caused by returning show/hideLoader() instead of html.*/}
-                        <HomeWelcome userData={userData}/>
+                        <HomeWelcome userData={userData} error={error}/>
                     </div>
                     <div className="col-start-3 col-span-2 box-shadow">
                         <AppDescription/>

@@ -1,3 +1,5 @@
+import {useEffect, useState} from "react";
+
 export default function PracticeDraft({
                                           currentLeague,
                                           isPracticeLeague,
@@ -5,6 +7,11 @@ export default function PracticeDraft({
                                           togglePracticeLeague,
                                           addTestTeam
                                       }) {
+    const [leagueSize, setLeagueSize] = useState()
+    useEffect(() => {
+        console.log(currentLeague.teams.length)
+        setLeagueSize(currentLeague.teams.length)
+    }, [leagueSize]);
 
     function PracticeDraftNotActive() {
         return <>
@@ -42,7 +49,7 @@ export default function PracticeDraft({
                 <ul className="text-block">
                     <li>To see how the game works, you can add dummy test teams to this league for a practice draft.
                     </li>
-                    <li>Teams can be deleted after the practice draft, or will be automatically deleted after 24
+                    <li>Test teams can be deleted after the practice draft, or will be automatically deleted after 24
                         hours.
                     </li>
                     <li>Any non-test teams can be left in this league, or deleted to join a new league.</li>
@@ -60,22 +67,11 @@ export default function PracticeDraft({
                             <button className="btn btn-proceed" id="test-team-button" type="submit"
                                     onClick={(e) => {
                                         addTestTeam(e)
-
                                     }}>
                                 Add Test Team
                             </button>
                         </div>
                     </div>
-                    {/*<form>*/}
-                    {/*    <div className="form-check form-switch">*/}
-                    {/*        <input className="form-check-input" id="practiceDraftToggle"*/}
-                    {/*               onChange={togglePracticeLeague}*/}
-                    {/*               role="switch" type="checkbox" checked={true} disabled={true}/>*/}
-                    {/*        <label className="form-check-label" htmlFor="practiceDraftToggle">*/}
-                    {/*            Toggle Practice Draft Mode*/}
-                    {/*        </label>*/}
-                    {/*    </div>*/}
-                    {/*</form>*/}
                 </div>
             }
         </>

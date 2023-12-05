@@ -108,6 +108,9 @@ export default function LoginForm() {
                         )}
                     </Form>
                 </Formik>
+                <div className={"col-start-1 col-span-3"}>
+                    <a onClick={() => navigate("/register")}><u>Or Sign Up...</u></a>
+                </div>
             </div>
         </>
     );

@@ -8,7 +8,6 @@ import me.niallmurray.slipstream.service.LeagueService;
 import me.niallmurray.slipstream.service.TeamService;
 import me.niallmurray.slipstream.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -80,15 +79,12 @@ public class TeamController {
     return ResponseEntity.of(Optional.empty());
   }
 
-  @PostMapping("/dashboard/{userId}/deleteTestTeams")
-  public String postDeleteAllTestTeams(@PathVariable Long userId) {
-    User user = userService.findById(userId);
-    Team team = user.getTeam();
-    League league = team.getLeague();
-
+  @PostMapping("/{leagueId}/deleteTestTeams")
+  public ResponseEntity<League> postDeleteAllTestTeams(@PathVariable Long leagueId) {
+    League league = leagueService.findById(leagueId);
     teamService.deleteAllTestTeams(league);
-    userService.save(user);
     leagueService.save(league);
-    return "redirect:/dashboard/" + userId;
+    return ResponseEntity.of(Optional.empty());
   }
+
 }

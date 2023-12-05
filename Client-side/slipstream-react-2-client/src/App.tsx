@@ -11,7 +11,7 @@ import {useEffect, useState} from "react";
 import EventBus from "./common/EventBus.ts";
 import {useUserAuth} from "./hooks/queries/auth-queries.ts";
 import {useUserData} from "./hooks/queries/user-queries.ts";
-import {hideLoader} from "./services/loading.service.ts";
+import {hideLoader, showLoader} from "./services/loading.service.ts";
 import IUser from "./types/user.type.ts";
 import TestPage from "./feature/TestPage";
 
@@ -54,13 +54,13 @@ export default function App() {
     const error = errUserAuth || errUserData;
 
     if (isLoading) {
-        return <>showLoader()</>
+        return <>{showLoader()}</>
     } else {
         hideLoader();
     }
 
     if (error) {
-        return <h1>"Error: Please try again...";</h1>
+        return (<Home userData={userData} error={error}/>);
     }
 
     // if (statUserAuth === "loading") return <>showLoader()</>;

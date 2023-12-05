@@ -161,7 +161,7 @@ export default function DashTop({userData, currentLeague, isPracticeLeague, isLe
                     <hr/>
                     {isLeagueActive ?
                         <h3>Your league is active, points will be scored from races after:
-                            <br/>{currentLeague.activeTimestamp.slice(0, 8)}</h3>
+                            <br/>{currentLeague?.activeTimestamp?.slice(0, 8)}</h3>
                         :
                         <h3>Draft in progress...</h3>
                     }

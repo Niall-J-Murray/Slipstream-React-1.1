@@ -1,20 +1,15 @@
-import {useEffect, useState} from "react";
 import IDriver from "../../../../types/driver.type.ts";
-import {getAllDrivers} from "../../../../services/driver.service.ts";
+import {useDriverStandings} from "../../../../hooks/queries/driver-queries.ts";
 
 export default function DriverStandingsTable() {
-    const [driverStandings, setDriverStandings]
-        = useState<Array<IDriver> | undefined>([]);
+    // const [driverStandings, setDriverStandings]
+    //     = useState<Array<IDriver> | undefined>();
 
+    const driverStandings = useDriverStandings().data;
 
-    useEffect(() => {
-        const getDriverStandings = async () => {
-            await getAllDrivers().then(function (response) {
-                setDriverStandings(response);
-            });
-        }
-        getDriverStandings().catch(console.error);
-    }, []);
+    // useEffect(() => {
+    //
+    // }, []);
 
     return (
         <>
@@ -30,7 +25,7 @@ export default function DriverStandingsTable() {
                 </tr>
                 </thead>
                 <tbody>
-                {driverStandings?.map(driver => {
+                {driverStandings?.map((driver: IDriver) => {
                     return (
                         <tr key={driver.driverId}>
                             <td>{driver.standing}</td>

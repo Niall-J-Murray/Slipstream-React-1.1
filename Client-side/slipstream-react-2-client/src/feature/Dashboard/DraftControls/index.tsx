@@ -13,6 +13,7 @@ export default function DraftControls({
                                           togglePracticeOptions,
                                           togglePracticeLeague,
                                           addTestTeam,
+                                          handlePick,
                                           isDraftInProgress,
                                           selectedDriver,
                                           lastDriverPicked,
@@ -41,6 +42,7 @@ export default function DraftControls({
                                 currentPickNumber={currentPickNumber}
                                 isUsersTurnToPick={isUsersTurnToPick}
                                 nextUserToPick={nextUserToPick}
+                                handlePick={handlePick}
                                 // currentPickNumber={currentPickNumber}
                                 // isUsersTurnToPick={isUsersTurnToPick}
                                 // nextUserToPick={nextUserToPick}

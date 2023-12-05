@@ -65,29 +65,3 @@ export const postToggleTestLeague = async (leagueId: number | null | undefined) 
         return response.data;
     }
 };
-
-// export const handlePick = (userId: number | null | undefined, driverId: string) => {
-//     // const {driverId} = formValue;
-//     console.log("handlePick");
-//     console.log(userId);
-//     console.log(driverId);
-//     // setMessage("");
-//     // setLoading(true);
-//
-//     postPickDriver(userId, driverId).then(
-//         () => {
-//             window.location.reload();
-//         },
-//         (error) => {
-//             const resMessage =
-//                 (error.response &&
-//                     error.response.data &&
-//                     error.response.data.message) ||
-//                 error.message ||
-//                 error.toString();
-//
-//             // setLoading(false);
-//             // setMessage(resMessage);
-//         }
-//     );
-// };

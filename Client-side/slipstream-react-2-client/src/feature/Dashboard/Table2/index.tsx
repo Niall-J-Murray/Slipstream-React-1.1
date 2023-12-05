@@ -8,6 +8,7 @@ export default function Table2({
                                    // nextUserToPick,
                                    isUsersTurnToPick,
                                    leagueId,
+                                   undraftedDrivers,
                                    isDraftInProgress,
                                    handleDriverSelection,
                                    handlePick,
@@ -25,8 +26,8 @@ export default function Table2({
                 handleDriverSelection={handleDriverSelection}
                 handlePick={handlePick}
                 selectedDriver={selectedDriver}
+                undraftedDrivers={undraftedDrivers}
                 // currentUser={currentUser}
-                // undraftedDrivers={undraftedDrivers}
 
                 // nextUserToPick={nextUserToPick}
             />;

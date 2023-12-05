@@ -1,10 +1,11 @@
 import IUser from "../../../types/user.type.ts";
 
 interface HomeWelcomeProps {
-    userData: IUser | undefined
+    userData: IUser | undefined,
+    error: boolean
 }
 
-export default function HomeWelcome({userData}: HomeWelcomeProps) {
+export default function HomeWelcome({userData, error}: HomeWelcomeProps) {
 
     function Greeting() {
         if (userData) {
@@ -36,11 +37,20 @@ export default function HomeWelcome({userData}: HomeWelcomeProps) {
     function GuestGreeting() {
         return (
             <>
-                <h4>
-                    <a href="/login">Please Login</a>
-                    <br/><br/>- or -<br/><br/>
-                    <a href="/register">Register to play!</a>
-                </h4>
+                {error ?
+                    <h4>
+                        <a href="/login">Please Login</a>
+                        <br/><br/>- or -<br/><br/>
+                        <a href="/register">Register to play!</a>
+                        <h3 className={"error-message"}>An error has occurred, please try to login again.</h3>
+                    </h4>
+                    :
+                    <h4>
+                        <a href="/login">Please Login</a>
+                        <br/><br/>- or -<br/><br/>
+                        <a href="/register">Register to play!</a>
+                    </h4>
+                }
             </>
         );
     }
