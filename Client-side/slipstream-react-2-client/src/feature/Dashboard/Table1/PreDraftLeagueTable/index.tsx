@@ -1,12 +1,15 @@
 import ITeam from "../../../../types/team.type.ts";
-import {Fragment, useEffect, useState} from "react";
+import {Fragment, useEffect} from "react";
 
-export default function PreDraftLeagueTable({currentLeague, teamsInLeague, isDraftInProgress}) {
-    const [rankedTeams, setRankedTeams]
-        = useState<Array<ITeam> | undefined | null>([]);
+export default function PreDraftLeagueTable({currentLeague, leagueSize, teamsInLeague, isDraftInProgress}) {
+    // const [rankedTeams, setRankedTeams]
+    //     = useState<Array<ITeam> | undefined | null>([]);
+    // useEffect(() => {
+    //     setRankedTeams(sortTeams(teamsInLeague));
+    // }, [leagueSize, rankedTeams, teamsInLeague]);
     useEffect(() => {
-        setRankedTeams(sortTeams(teamsInLeague));
-    }, [rankedTeams, teamsInLeague]);
+
+    }, [leagueSize]);
 
     function sortTeams(teams: ITeam[]) {
         if (isDraftInProgress) {
@@ -20,6 +23,8 @@ export default function PreDraftLeagueTable({currentLeague, teamsInLeague, isDra
         return teams;
     }
 
+    const rankedTeams = sortTeams(teamsInLeague);
+
     return (
         <>
             <table className="league-table">
@@ -27,7 +32,7 @@ export default function PreDraftLeagueTable({currentLeague, teamsInLeague, isDra
                     {isDraftInProgress ?
                         <h3>{currentLeague?.leagueName}</h3>
                         :
-                        <h3>{currentLeague?.leagueName} - {rankedTeams?.length}/10 full</h3>}
+                        <h3>{currentLeague?.leagueName} - {leagueSize}/10 full</h3>}
                 </caption>
                 <thead>
                 <tr>
@@ -38,7 +43,7 @@ export default function PreDraftLeagueTable({currentLeague, teamsInLeague, isDra
                 </tr>
                 </thead>
                 <tbody>
-                {rankedTeams?.length == 0 ?
+                {leagueSize == 0 ?
                     <tr>
                         <td colSpan={4}>Create a team to join this league</td>
                     </tr>

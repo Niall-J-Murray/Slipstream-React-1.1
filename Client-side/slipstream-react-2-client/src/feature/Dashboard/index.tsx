@@ -14,10 +14,11 @@ import {
     useNextUserToPick,
     useOpenLeague
 } from "../../hooks/queries/league-queries.ts";
-import {useCreateTestTeam, useDeleteTestTeams} from "../../hooks/queries/team-queries.ts";
+import {useCreateTestTeam} from "../../hooks/queries/team-queries.ts";
 import {useNavigate} from "react-router-dom";
 import {useQueryClient} from "react-query";
 import {usePickDriver, useUndraftedDrivers} from "../../hooks/queries/driver-queries.ts";
+import TeamDeleteControls from "./TeamDeleteControls";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -33,7 +34,6 @@ import {usePickDriver, useUndraftedDrivers} from "../../hooks/queries/driver-que
 //  Fix layouts for consistency.
 //  Change "Register" to "Sign Up", "Login" to "Sign In" and "Log Out"...
 
-// export default function Dashboard({loading, toggleLoading}) {
 interface DashboardProps {
     userData: undefined | IUser
 }
@@ -53,6 +53,8 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<boolean | undefined | null>();
     const [isUsersTurnToPick, setIsUsersTurnToPick]
         = useState<boolean | undefined | null>(false);
+    const [leagueSize, setLeagueSize]
+        = useState<number | undefined | null>(0);
     // const [currentPickNumber, setCurrentPickNumber]
     //     = useState<number | null | undefined>();
     // const [nextToPick, setNextToPick]
@@ -91,6 +93,7 @@ export default function Dashboard({userData}: DashboardProps) {
     const mutateTestTeam = useCreateTestTeam(leagueId);
 
     function checkLeagueStatus() {
+        setLeagueSize(leagueData?.teams?.length);
         if (leagueData?.teams?.length
             && leagueData?.teams?.length >= 10) {
             setIsLeagueFull(true);
@@ -126,7 +129,7 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsUsersTurnToPick(true);
         }
 
-    }, [userData, leagueData, nextUserToPick, isLeagueFull, undraftedDrivers]);
+    }, [userData, leagueData, leagueSize, nextUserToPick, isLeagueFull, undraftedDrivers]);
 
     function togglePracticeOptions() {
         if (showPracticeOptions) {
@@ -228,20 +231,11 @@ export default function Dashboard({userData}: DashboardProps) {
                     </div>
                     {isLeagueActive ?
                         <>
-                            <div className="col-start-2 col-span-3 pl-40">
-                                <div className="box-shadow">
-                                    <p>This league is now active, test teams can be removed now by clicking here:</p>
-                                    <button className="btn btn-proceed"
-                                            type="submit"
-                                            // onClick={() => deleteTestTeams}
-                                    >
-                                        Delete all test teams
-                                    </button>
-                                </div>
-                            </div>
+                            <TeamDeleteControls leagueId={leagueId}/>
                             <div className="col-start-2 col-span-3 pl-40">
                                 <Table1
                                     currentLeague={leagueData}
+                                    leagueSize={leagueSize}
                                     isDraftInProgress={isDraftInProgress}
                                     isLeagueActive={isLeagueActive}
                                 />
@@ -263,6 +257,7 @@ export default function Dashboard({userData}: DashboardProps) {
                             <div className="col-start-2 col-span-1">
                                 <Table1
                                     currentLeague={leagueData}
+                                    leagueSize={leagueSize}
                                     isDraftInProgress={isDraftInProgress}
                                     isLeagueActive={isLeagueActive}
                                 />

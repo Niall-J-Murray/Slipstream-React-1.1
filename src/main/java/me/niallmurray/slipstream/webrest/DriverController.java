@@ -48,7 +48,10 @@ public class DriverController {
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<List<Driver>> getDriversInTeam(@PathVariable Long teamId) {
     Team team = teamService.findById(teamId);
-    List<Driver> driversInTeam = team.getDrivers();
+    List<Driver> driversInTeam = new ArrayList<>(6);
+    if (team != null) {
+      driversInTeam = team.getDrivers();
+    }
 //    Long driverId1 = team.getDrivers().get(0).getDriverId();
 //    Long driverId2 = team.getDrivers().get(1).getDriverId();
 //    Driver driver1 = driverService.findById(driverId1);

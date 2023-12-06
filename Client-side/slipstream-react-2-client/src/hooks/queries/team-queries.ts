@@ -1,4 +1,4 @@
-import {useMutation, useQuery} from "react-query";
+﻿import {useMutation, useQuery} from "react-query";
 import {getTeam, postCreateTeam, postCreateTestTeam, postDeleteTestTeams} from "../../services/team.service.ts";
 
 export const useTeamData = (teamId: number | null | undefined) =>
