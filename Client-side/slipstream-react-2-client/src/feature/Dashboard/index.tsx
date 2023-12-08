@@ -9,6 +9,7 @@ import Layout from "../../components/Layout/Layout.tsx";
 import IDriver from "../../types/driver.type.ts";
 import IUser from "../../types/user.type.ts";
 import {
+    useAllTeamsInLeague,
     useLeagueData,
     useNextPickNumber,
     useNextUserToPick,
@@ -19,6 +20,7 @@ import {useNavigate} from "react-router-dom";
 import {useQueryClient} from "react-query";
 import {usePickDriver, useUndraftedDrivers} from "../../hooks/queries/driver-queries.ts";
 import TeamDeleteControls from "./TeamDeleteControls";
+import ITeam from "../../types/team.type.ts";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -55,6 +57,8 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<boolean | undefined | null>(false);
     const [leagueSize, setLeagueSize]
         = useState<number | undefined | null>(0);
+    const [teamsInLeague, setTeamsInLeague]
+        = useState<Array<ITeam> | undefined | null>([])
     // const [currentPickNumber, setCurrentPickNumber]
     //     = useState<number | null | undefined>();
     // const [nextToPick, setNextToPick]
@@ -77,6 +81,7 @@ export default function Dashboard({userData}: DashboardProps) {
 
     const userId = userData ? userData?.id : null;
     const leagueId = userData?.team ? userData?.team?.leagueId : openLeague?.leagueId;
+    const leagueTeams: Array<ITeam> | undefined | null = useAllTeamsInLeague(leagueId).data;
 
     const {
         data: leagueData,
@@ -93,6 +98,7 @@ export default function Dashboard({userData}: DashboardProps) {
     const mutateTestTeam = useCreateTestTeam(leagueId);
 
     function checkLeagueStatus() {
+        setTeamsInLeague(leagueTeams);
         setLeagueSize(leagueData?.teams?.length);
         if (leagueData?.teams?.length
             && leagueData?.teams?.length >= 10) {
@@ -113,6 +119,7 @@ export default function Dashboard({userData}: DashboardProps) {
         if (!userData) {
             redirect("/login");
         }
+
         checkLeagueStatus();
         setIsPracticeLeague(leagueData?.isPracticeLeague);
         setShowPracticeOptions(leagueData?.isPracticeLeague);
@@ -129,7 +136,7 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsUsersTurnToPick(true);
         }
 
-    }, [userData, leagueData, leagueSize, nextUserToPick, isLeagueFull, undraftedDrivers]);
+    }, [userData, leagueData, teamsInLeague, nextUserToPick, isLeagueFull, undraftedDrivers]);
 
     function togglePracticeOptions() {
         if (showPracticeOptions) {
@@ -157,12 +164,29 @@ export default function Dashboard({userData}: DashboardProps) {
         preventDefault: () => void;
     }) => {
         e.preventDefault();
-        mutateTestTeam.mutateAsync()
+        // mutateTestTeam.mutateAsync()
+        //     .then(() => {
+        //         // if (mutateTestTeam.isSuccess) {
+        //         setLeagueSize(leagueSize! + 1)
+        //         checkLeagueStatus()
+        //         // }
+        //     });
+
+        const newTeam = mutateTestTeam.mutate();
+        setLeagueSize(leagueSize! + 1);
+        queryClient.invalidateQueries("allTeamsInLeague")
+        setTeamsInLeague({...teamsInLeague});
         // .then(() => {
-        if (mutateTestTeam.isSuccess) {
-            queryClient.invalidateQueries()
-                .then(() => checkLeagueStatus());
-        }
+        //     // if (mutateTestTeam.isSuccess) {
+        //     setLeagueSize(leagueSize! + 1)
+        //     checkLeagueStatus()
+        //     // }
+        // });
+        // .then(() => {
+        // if (mutateTestTeam.isSuccess) {
+        //     queryClient.invalidateQueries()
+        //         .then(() => checkLeagueStatus());
+        // }
     }
 
     const handleDriverSelection = (driver: IDriver) => {
@@ -231,11 +255,12 @@ export default function Dashboard({userData}: DashboardProps) {
                     </div>
                     {isLeagueActive ?
                         <>
-                            <TeamDeleteControls leagueId={leagueId}/>
+                            {/*<TeamDeleteControls leagueId={leagueId}/>*/}
                             <div className="col-start-2 col-span-3 pl-40">
                                 <Table1
                                     currentLeague={leagueData}
                                     leagueSize={leagueSize}
+                                    teamsInLeague={teamsInLeague}
                                     isDraftInProgress={isDraftInProgress}
                                     isLeagueActive={isLeagueActive}
                                 />
@@ -258,6 +283,7 @@ export default function Dashboard({userData}: DashboardProps) {
                                 <Table1
                                     currentLeague={leagueData}
                                     leagueSize={leagueSize}
+                                    teamsInLeague={teamsInLeague}
                                     isDraftInProgress={isDraftInProgress}
                                     isLeagueActive={isLeagueActive}
                                 />

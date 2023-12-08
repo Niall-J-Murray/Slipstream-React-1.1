@@ -9,7 +9,7 @@ export default function PreDraftLeagueTable({currentLeague, leagueSize, teamsInL
     // }, [leagueSize, rankedTeams, teamsInLeague]);
     useEffect(() => {
 
-    }, [leagueSize]);
+    }, [leagueSize, teamsInLeague]);
 
     function sortTeams(teams: ITeam[]) {
         if (isDraftInProgress) {

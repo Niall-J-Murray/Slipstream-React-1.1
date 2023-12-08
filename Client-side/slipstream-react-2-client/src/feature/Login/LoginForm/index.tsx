@@ -5,9 +5,11 @@ import lights_on from "../../../assets/images/lights_on.png";
 import {login} from "../../../services/auth.service";
 import {useState} from "react";
 
-// type Props = {}
-// const Login: React.FC<Props> = () => {
-export default function LoginForm() {
+interface LoginFormProps {
+    error: unknown
+}
+
+export default function LoginForm({error}: LoginFormProps) {
     const navigate: NavigateFunction = useNavigate();
     const [loading, setLoading]
         = useState<boolean>(false);
@@ -111,6 +113,14 @@ export default function LoginForm() {
                 <div className={"col-start-1 col-span-3"}>
                     <a onClick={() => navigate("/register")}><u>Or Sign Up...</u></a>
                 </div>
+            </div>
+            <div>
+                {error ?
+                    <>
+                        <h3 className={"error-message"}>An error has occurred - <br/>
+                            Please try login again</h3>
+                    </>
+                    : <></>}
             </div>
         </>
     );

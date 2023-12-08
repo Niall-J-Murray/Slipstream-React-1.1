@@ -60,7 +60,7 @@ export default function App() {
     }
 
     if (error) {
-        return (<Home userData={userData} error={error}/>);
+        return (<Login userData={userData} error={error}/>);
     }
 
     // if (statUserAuth === "loading") return <>showLoader()</>;
@@ -78,7 +78,7 @@ export default function App() {
                     <Route path="/" element={<Home userData={userData}/>}/>
                     <Route path="/home" element={<Home userData={userData}/>}/>
                     <Route path="/register" element={<Register/>}/>
-                    <Route path="/login" element={<Login userData={userData}/>}/>
+                    <Route path="/login" element={<Login userData={userData} error={error}/>}/>
                     <Route path="/dashboard" element={<Dashboard userData={userData}/>}/>
                     <Route path="/admin" element={<Admin userData={userData}/>}/>
                     <Route path="/logout" element={<Logout userData={userData}/>}/>

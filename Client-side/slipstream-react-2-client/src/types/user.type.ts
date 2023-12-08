@@ -10,5 +10,5 @@ export default interface IUser {
     isTestUser?: boolean | null,
     emailsReceived?: number | null,
     lastLogout?: string | null,
-    team?: ITeam | null
+    team?: ITeam | null,
 }
