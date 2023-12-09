@@ -5,7 +5,6 @@ import TableBody from '@mui/joy/Table';
 import TableCell from '@mui/joy/Table';
 import TableContainer from '@mui/joy/Table';
 import TableHead from '@mui/joy/Table';
-import TablePagination from '@mui/joy/Table';
 import TableRow from '@mui/joy/Table';
 
 interface Column {

@@ -435,13 +435,20 @@ tr:last-of-type td:last-of-type {
     text-shadow: none;
 }
 
-.league-table tr:hover {
-    /*background-color: gray;*/
-    /*text-decoration-line: underline;*/
-    /*border: 5px solid black;*/
+.undrafted-drivers-table{
+    table-layout: auto;
+    /*padding: 11px 2px;*/
+    border: 1px solid white;
+    background-color: black;
+    color: white;
+    text-shadow: none;
 }
 
 .drivers-table {
+    table-layout: auto;
+    width: 100%;
+    opacity: 80%;
+
     /*margin: 0 1%;*/
     /*border-collapse: separate;*/
     /*width: 100%;*/
@@ -449,21 +456,18 @@ tr:last-of-type td:last-of-type {
     /*word-wrap: break-word;*/
     /*table-layout: fixed;*/
     /*caption-side: top;*/
-    table-layout: auto;
-    width: 100%;
-    opacity: 80%;
 }
 
-.drivers-table thead th {
-    /*table-layout: auto;*/
+.drivers-table thead th{
     table-layout: auto;
-    /*width: 100%;*/
     padding: 11px 2px;
     border: 1px solid white;
     background-color: black;
     color: white;
     text-shadow: none;
 
+    /*table-layout: auto;*/
+    /*width: 100%;*/
     /*table-layout: auto;*/
     /*!*width: 100%;*!*/
     /*margin: 0 1%;*/
@@ -473,7 +477,16 @@ tr:last-of-type td:last-of-type {
     /*text-shadow: none;*/
 }
 
-.drivers-table td {
+.undrafted-drivers-table thead th{
+    table-layout: auto;
+    border: 1px solid white;
+    background-color: black;
+    color: white;
+    text-shadow: none;
+}
+
+.drivers-table td,
+.undrafted-drivers-table td{
     border: 1px solid black;
     text-align: center;
 }
@@ -488,18 +501,24 @@ thead caption {
 
 .drivers-table td,
 .drivers-table th,
-.drivers-table caption {
+.drivers-table caption,
+.undrafted-drivers-table td,
+.undrafted-drivers-table th,
+.undrafted-drivers-table caption{
     border: 1px solid white;
 }
 
 .drivers-table tr:nth-child(even),
-.drivers-table caption {
+.drivers-table caption,
+.undrafted-drivers-table tr:nth-child(even),
+.undrafted-drivers-table caption{
     text-align: center;
     background-color: black;
     color: white;
 }
 
-.drivers-table tr:nth-child(odd) {
+.drivers-table tr:nth-child(odd),
+.undrafted-drivers-table tr:nth-child(odd) {
     border: 1px solid black;
     background-color: white;
     color: black;

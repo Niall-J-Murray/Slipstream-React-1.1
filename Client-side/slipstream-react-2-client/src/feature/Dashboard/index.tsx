@@ -1,6 +1,6 @@
 import DashTop from "./DashTop";
-import Table1 from "./Table1";
-import Table2 from "./Table2";
+import LeagueTable from "./LeagueTable";
+import DriverTable from "./DriverTable";
 import {useEffect, useState} from "react";
 import {postToggleTestLeague} from "../../services/league.service.ts";
 import DraftControls from "./DraftControls";
@@ -15,12 +15,12 @@ import {
     useNextUserToPick,
     useOpenLeague
 } from "../../hooks/queries/league-queries.ts";
-import {useCreateTestTeam} from "../../hooks/queries/team-queries.ts";
+import {useCreateTestTeam, useDeleteTestTeams} from "../../hooks/queries/team-queries.ts";
 import {useNavigate} from "react-router-dom";
 import {useQueryClient} from "react-query";
 import {usePickDriver, useUndraftedDrivers} from "../../hooks/queries/driver-queries.ts";
-import TeamDeleteControls from "./TeamDeleteControls";
 import ITeam from "../../types/team.type.ts";
+import ActiveLeagueInfo from "./ActiveLeagueInfo";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -41,8 +41,6 @@ interface DashboardProps {
 }
 
 export default function Dashboard({userData}: DashboardProps) {
-    // const [openLeague, setOpenLeague]
-    //     = useState<ILeague | undefined | null>();
     const [showPracticeOptions, setShowPracticeOptions]
         = useState<boolean | undefined | null>();
     const [isPracticeLeague, setIsPracticeLeague]
@@ -57,18 +55,18 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<boolean | undefined | null>(false);
     const [leagueSize, setLeagueSize]
         = useState<number | undefined | null>(0);
-    const [teamsInLeague, setTeamsInLeague]
+    const [leagueTeams, setLeagueTeams]
         = useState<Array<ITeam> | undefined | null>([])
-    // const [currentPickNumber, setCurrentPickNumber]
-    //     = useState<number | null | undefined>();
-    // const [nextToPick, setNextToPick]
-    //     = useState<IUser | undefined>();
     const [selectedDriver, setSelectedDriver]
         = useState<IDriver | undefined | null>();
     const [lastDriverPicked, setLastDriverPicked]
         = useState<IDriver | undefined | null>();
     const [lastPickTime, setLastPickTime]
         = useState<Date | undefined | null>();
+    // const [currentPickNumber, setCurrentPickNumber]
+    //     = useState<number | null | undefined>();
+    // const [nextToPick, setNextToPick]
+    //     = useState<IUser | undefined>();
 
     const redirect = useNavigate();
 
@@ -81,7 +79,7 @@ export default function Dashboard({userData}: DashboardProps) {
 
     const userId = userData ? userData?.id : null;
     const leagueId = userData?.team ? userData?.team?.leagueId : openLeague?.leagueId;
-    const leagueTeams: Array<ITeam> | undefined | null = useAllTeamsInLeague(leagueId).data;
+    const teamsInLeague: Array<ITeam> | undefined | null = useAllTeamsInLeague(leagueId).data;
 
     const {
         data: leagueData,
@@ -96,12 +94,35 @@ export default function Dashboard({userData}: DashboardProps) {
     const pickDriver = usePickDriver();
     const undraftedDrivers = useUndraftedDrivers(leagueId).data;
     const mutateTestTeam = useCreateTestTeam(leagueId);
+    const deleteTestTeams = useDeleteTestTeams(leagueId);
 
-    function checkLeagueStatus() {
-        setTeamsInLeague(leagueTeams);
-        setLeagueSize(leagueData?.teams?.length);
-        if (leagueData?.teams?.length
-            && leagueData?.teams?.length >= 10) {
+    // function checkLeagueStatus() {
+    //     setLeagueTeams(teamsInLeague);
+    //     setLeagueSize(leagueData?.teams?.length);
+    //     if (leagueData?.teams?.length
+    //         && leagueData?.teams?.length >= 10) {
+    //         setIsLeagueFull(true);
+    //         if (!leagueData?.isActive) {
+    //             setIsDraftInProgress(true);
+    //         }
+    //     }
+    //     if ((leagueData?.currentPickNumber && leagueData?.currentPickNumber > 20)
+    //         || leagueData?.isActive) {
+    //         setIsDraftInProgress(false);
+    //         setIsLeagueActive(true);
+    //     }
+    //     return isLeagueFull;
+    // }
+
+    useEffect(() => {
+        if (!userData) {
+            redirect("/login");
+        }
+        // checkLeagueStatus();
+        setLeagueTeams(teamsInLeague);
+        setLeagueSize(leagueTeams?.length);
+        if (leagueSize
+            && leagueSize >= 10) {
             setIsLeagueFull(true);
             if (!leagueData?.isActive) {
                 setIsDraftInProgress(true);
@@ -112,15 +133,7 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsDraftInProgress(false);
             setIsLeagueActive(true);
         }
-        return isLeagueFull;
-    }
 
-    useEffect(() => {
-        if (!userData) {
-            redirect("/login");
-        }
-
-        checkLeagueStatus();
         setIsPracticeLeague(leagueData?.isPracticeLeague);
         setShowPracticeOptions(leagueData?.isPracticeLeague);
 
@@ -136,7 +149,7 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsUsersTurnToPick(true);
         }
 
-    }, [userData, leagueData, teamsInLeague, nextUserToPick, isLeagueFull, undraftedDrivers]);
+    }, [userData, leagueData, leagueSize, teamsInLeague, leagueTeams, nextUserToPick, isLeagueFull, undraftedDrivers]);
 
     function togglePracticeOptions() {
         if (showPracticeOptions) {
@@ -160,33 +173,31 @@ export default function Dashboard({userData}: DashboardProps) {
         }
     }
 
-    const addTestTeam = (e: {
-        preventDefault: () => void;
-    }) => {
+    const addTestTeam = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        // mutateTestTeam.mutateAsync()
-        //     .then(() => {
-        //         // if (mutateTestTeam.isSuccess) {
-        //         setLeagueSize(leagueSize! + 1)
-        //         checkLeagueStatus()
-        //         // }
-        //     });
+        mutateTestTeam.mutateAsync()
+            .then(() => {
+                queryClient.invalidateQueries("allTeamsInLeague")
+                    .then(() => {
+                            setLeagueTeams(teamsInLeague);
+                            setLeagueSize(leagueTeams?.length);
+                        }
+                    )
+            })
+    }
 
-        const newTeam = mutateTestTeam.mutate();
-        setLeagueSize(leagueSize! + 1);
-        queryClient.invalidateQueries("allTeamsInLeague")
-        setTeamsInLeague({...teamsInLeague});
-        // .then(() => {
-        //     // if (mutateTestTeam.isSuccess) {
-        //     setLeagueSize(leagueSize! + 1)
-        //     checkLeagueStatus()
-        //     // }
-        // });
-        // .then(() => {
-        // if (mutateTestTeam.isSuccess) {
-        //     queryClient.invalidateQueries()
-        //         .then(() => checkLeagueStatus());
-        // }
+    const handleDeleteTestTeams = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        deleteTestTeams.mutateAsync()
+            .then(() => {
+                queryClient.invalidateQueries("allTeamsInLeague")
+                    .then(() => {
+                            setLeagueTeams(teamsInLeague);
+                            setLeagueSize(leagueTeams?.length);
+                            setIsPracticeLeague(false);
+                        }
+                    )
+            })
     }
 
     const handleDriverSelection = (driver: IDriver) => {
@@ -194,9 +205,8 @@ export default function Dashboard({userData}: DashboardProps) {
         return driver;
     }
 
-    const handlePick = (e: {
-        preventDefault: () => void;
-    }, driverId: number | string | undefined) => {
+    const handlePick = (e: { preventDefault: () => void; },
+                        driverId: number | string | undefined) => {
         e.preventDefault();
         pickDriver.mutateAsync({
             userId: userId,
@@ -212,8 +222,6 @@ export default function Dashboard({userData}: DashboardProps) {
             })
             .then(() => setSelectedDriver(null));
     }
-
-    // const deleteTestTeams = useDeleteTestTeams(leagueId);
 
     return (
         <>
@@ -256,48 +264,54 @@ export default function Dashboard({userData}: DashboardProps) {
                     {isLeagueActive ?
                         <>
                             {/*<TeamDeleteControls leagueId={leagueId}/>*/}
-                            <div className="col-start-2 col-span-3 pl-40">
-                                <Table1
+                            {/*<div className="col-start-2 col-span-3 pl-40">*/}
+                            <div className="col-start-2 col-span-2">
+                                <LeagueTable
                                     currentLeague={leagueData}
                                     leagueSize={leagueSize}
-                                    teamsInLeague={teamsInLeague}
+                                    leagueTeams={leagueTeams}
                                     isDraftInProgress={isDraftInProgress}
+                                    nextUserToPick={nextUserToPick}
                                     isLeagueActive={isLeagueActive}
                                 />
                             </div>
+                            <div className="col-start-4 col-span-1">
+                                <ActiveLeagueInfo
+                                    isPracticeLeague={isPracticeLeague}
+                                    undraftedDrivers={undraftedDrivers}
+                                    handleDeleteTestTeams={handleDeleteTestTeams}
+                                />
+                            </div>
                             <div className="col-start-2 col-span-3">
-                                <Table2
-                                    leagueId={leagueId}
+                                <DriverTable
                                     isDraftInProgress={isDraftInProgress}
                                     isUsersTurnToPick={isUsersTurnToPick}
                                     selectedDriver={selectedDriver}
                                     undraftedDrivers={undraftedDrivers}
                                     handleDriverSelection={handleDriverSelection}
-                                    handlePick={handlePick}
                                 />
                             </div>
                         </>
                         :
                         <>
                             <div className="col-start-2 col-span-1">
-                                <Table1
+                                <LeagueTable
                                     currentLeague={leagueData}
                                     leagueSize={leagueSize}
-                                    teamsInLeague={teamsInLeague}
+                                    leagueTeams={leagueTeams}
                                     isDraftInProgress={isDraftInProgress}
+                                    nextUserToPick={nextUserToPick}
                                     isLeagueActive={isLeagueActive}
                                 />
 
                             </div>
                             <div className="col-start-3 col-span-2">
-                                <Table2
-                                    leagueId={leagueId}
+                                <DriverTable
                                     isDraftInProgress={isDraftInProgress}
                                     isUsersTurnToPick={isUsersTurnToPick}
                                     selectedDriver={selectedDriver}
                                     undraftedDrivers={undraftedDrivers}
                                     handleDriverSelection={handleDriverSelection}
-                                    handlePick={handlePick}
                                 />
                             </div>
                         </>

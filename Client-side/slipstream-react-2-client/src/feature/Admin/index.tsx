@@ -7,7 +7,7 @@ import Navbar from "../../components/Navbar";
 import Body from "../../components/Body";
 import AdminControls from "./AdminControls";
 import UserTable from "./UserTable";
-import DriverStandingsTable from "../Dashboard/Table2/DriverStandingsTable";
+import DriverStandingsTable from "../Dashboard/DriverTable/DriverStandingsTable";
 import LeaguesTable from "./LeaguesTable";
 import {useNavigate} from "react-router-dom";
 

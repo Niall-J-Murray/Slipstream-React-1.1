@@ -4,12 +4,16 @@ import IDriver from "../../../../types/driver.type.ts";
 import {Fragment} from "react";
 
 
-export default function PostDraftLeagueTable({currentLeague, teamsInLeague, isDraftInProgress}) {
+export default function PostDraftLeagueTable({currentLeague, leagueTeams, isDraftInProgress}) {
 
-    teamsInLeague?.sort((a: ITeam, b: ITeam) => {
-        return a.ranking! - b.ranking!
-    });
+    function sortTeams(teams: ITeam[]) {
+        teams?.sort((a: ITeam, b: ITeam) => {
+            return a.ranking! - b.ranking!
+        });
+        return teams;
+    }
 
+    const rankedTeams = sortTeams(leagueTeams);
     const driversInTeam = useDriversInTeam;
 
     return (
@@ -36,7 +40,7 @@ export default function PostDraftLeagueTable({currentLeague, teamsInLeague, isDr
                 </tr>
                 </thead>
                 <tbody>
-                {teamsInLeague?.map((team: ITeam) => {
+                {rankedTeams?.map((team: ITeam) => {
                     team.drivers = driversInTeam(team.id).data
                     return (
                         <tr key={team.id}>

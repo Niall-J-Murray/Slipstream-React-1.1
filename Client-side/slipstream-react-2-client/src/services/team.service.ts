@@ -31,23 +31,24 @@ export const postCreateTestTeam = async (leagueId: number | null | undefined) =>
     }
 };
 
-// export const postDeleteTestTeams = async (leagueId: number | null | undefined) => {
-//     const response = await axios
-//         .post(API_DATA_URL + leagueId + "/deleteTestTeams", {
-//             // headers: authHeader(),
-//             leagueId,
-//         })
-//     if (response.data) {
-//         return response.data;
-//     }
-// };
-
-export const postDeleteTestTeams = async (data) => {
+export const postDeleteTestTeams = async (leagueId: number | null | undefined) => {
     const response = await axios
-        .post(API_DATA_URL + data.leagueId + "/deleteTestTeams", {
-            leagueId: data.leagueId,
+        .post(API_DATA_URL + leagueId + "/deleteTestTeams", {
+            // headers: authHeader(),
+            leagueId,
         })
     if (response.data) {
         return response.data;
     }
 };
+
+// export const postDeleteTestTeams = async (data: any) => {
+//     const leagueId: number = data.leagueId;
+//     const response = await axios
+//         .post(API_DATA_URL + leagueId + "/deleteTestTeams", {
+//             leagueId: leagueId,
+//         })
+//     if (response.data) {
+//         return response.data;
+//     }
+// };

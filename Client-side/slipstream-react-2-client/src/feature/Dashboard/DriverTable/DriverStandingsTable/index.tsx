@@ -20,6 +20,7 @@ export default function DriverStandingsTable() {
                     <th>#</th>
                     <th>Pts</th>
                     <th>Driver</th>
+                    <th>Code</th>
                     <th>Nationality</th>
                     <th>Constructor</th>
                 </tr>
@@ -31,6 +32,7 @@ export default function DriverStandingsTable() {
                             <td>{driver.standing}</td>
                             <td>{driver.points}</td>
                             <td>{driver.surname}</td>
+                            <td>{driver.shortName}</td>
                             <td>{driver.nationality}</td>
                             <td>{driver.constructor}</td>
                         </tr>

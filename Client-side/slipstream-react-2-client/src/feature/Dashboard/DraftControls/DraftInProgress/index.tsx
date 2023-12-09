@@ -24,21 +24,19 @@ export default function DraftInProgress({
                     </h4>
                     {nextUserToPick?.isTestUser ?
                         <h4 className={"pick-instructions-go"}>
-                            It's {nextUserToPick.username}'s turn to pick.
+                            {nextUserToPick.username}'s pick
                         </h4>
                         :
                         <h4 className={"pick-instructions-go"}>
-                            It's your turn to pick {nextUserToPick?.username}!
+                            Your next {nextUserToPick?.username}!
                         </h4>
                     }
                 </div>
                 {nextUserToPick?.isTestUser ?
                     <div className="col-start-3 col-span-1">
-                        <h4>------------------------------------</h4>
-                        <h4>
-                            Please select a driver<br/> for this test team.
+                        <h4 className={"pick-instructions-go pt-6"}>
+                            Please select a driver<br/> for this test team... ->
                         </h4>
-                        <h4>------------------------------------</h4>
                     </div>
                     :
                     <div></div>
