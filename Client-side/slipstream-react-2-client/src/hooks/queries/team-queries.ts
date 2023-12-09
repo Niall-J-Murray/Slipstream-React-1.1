@@ -1,5 +1,5 @@
 ﻿import {useMutation, useQuery} from "react-query";
-import {getTeam, postCreateTeam, postCreateTestTeam, postDeleteTestTeams} from "../../services/team.service.ts";
+import {getTeam, postCreateUserTeam, postCreateTestTeam, postDeleteTestTeams} from "../../services/team.service.ts";
 
 export const useTeamData = (teamId: number | null | undefined) =>
     useQuery({
@@ -11,7 +11,7 @@ export const useTeamData = (teamId: number | null | undefined) =>
 export const useCreateTeam = (userId: number | null | undefined, teamName: string) =>
     useMutation({
         mutationKey: ["createTeam", userId],
-        mutationFn: () => postCreateTeam(userId, teamName),
+        mutationFn: () => postCreateUserTeam(userId, teamName),
     });
 
 export const useCreateTestTeam = (leagueId: number | null | undefined) =>

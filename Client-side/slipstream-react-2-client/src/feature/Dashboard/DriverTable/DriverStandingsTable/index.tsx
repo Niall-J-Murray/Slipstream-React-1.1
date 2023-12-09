@@ -2,14 +2,7 @@ import IDriver from "../../../../types/driver.type.ts";
 import {useDriverStandings} from "../../../../hooks/queries/driver-queries.ts";
 
 export default function DriverStandingsTable() {
-    // const [driverStandings, setDriverStandings]
-    //     = useState<Array<IDriver> | undefined>();
-
     const driverStandings = useDriverStandings().data;
-
-    // useEffect(() => {
-    //
-    // }, []);
 
     return (
         <>

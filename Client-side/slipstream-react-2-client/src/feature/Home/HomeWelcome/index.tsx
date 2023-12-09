@@ -21,7 +21,14 @@ export default function HomeWelcome({userData}: HomeWelcomeProps) {
                     <h3>Welcome back {username}!</h3>
                     <h4><a href="/dashboard">Go to Dashboard</a></h4>
                     <h3>Team name: {team.teamName}</h3>
-                    <h3>Points: {team.teamPoints ? team.teamPoints : "0 (League not active)"}</h3>
+                    {team.teamPoints ?
+                        <h3>Points: {team.teamPoints}</h3>
+                        :
+                        <>
+                            <h3>Points: 0</h3>
+                            <h4>(Points will be scored after next race)</h4>
+                        </>
+                    }
                 </div>
             );
         }

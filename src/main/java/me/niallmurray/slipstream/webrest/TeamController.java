@@ -39,7 +39,7 @@ public class TeamController {
     return ResponseEntity.ok(allTeams);
   }
 
-  @GetMapping("/{teamId}")
+  @GetMapping("/getTeam/{teamId}")
   public ResponseEntity<Team> getTeamById(@PathVariable Long teamId, @AuthenticationPrincipal User userAuth) {
     Team team = teamService.findById(teamId);
 //    System.out.println("getTeam: " +team);
@@ -47,7 +47,7 @@ public class TeamController {
     return ResponseEntity.ok(team);
   }
 
-  @PostMapping("/{userId}")
+  @PostMapping("/createUserTeam/{userId}")
   public ResponseEntity<Team> postCreateTeam(@Valid @RequestBody String teamName, @PathVariable Long userId) {
     User user = userService.findById(userId);
     String teamNameFromJson = teamName.substring(13, (teamName.length() - 2));
@@ -58,7 +58,7 @@ public class TeamController {
     return ResponseEntity.ok(team);
   }
 
-  @PostMapping("/dashboard/{userId}/deleteTeam")
+  @PostMapping("/deleteUserTeam/{userId}")
   public String postDeleteTeam(@PathVariable Long userId) {
     User user = userService.findById(userId);
     Team team = user.getTeam();
@@ -70,7 +70,7 @@ public class TeamController {
     return "redirect:/dashboard/" + userId;
   }
 
-  @PostMapping("/{leagueId}/createTestTeam")
+  @PostMapping("/createTestTeam/{leagueId}")
   public ResponseEntity<Team> postCreateTestTeam(@PathVariable Long leagueId) {
     Team testTeam = teamService.createTestTeam(leagueId);
     if (testTeam != null) {
@@ -79,7 +79,7 @@ public class TeamController {
     return ResponseEntity.of(Optional.empty());
   }
 
-  @PostMapping("/{leagueId}/deleteTestTeams")
+  @PostMapping("/deleteTestTeams/{leagueId}")
   public ResponseEntity<League> postDeleteAllTestTeams(@PathVariable Long leagueId) {
     League league = leagueService.findById(leagueId);
     teamService.deleteAllTestTeams(league);

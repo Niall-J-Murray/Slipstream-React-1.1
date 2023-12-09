@@ -1,17 +1,17 @@
 import axios from "axios";
 import authHeader from "./auth-header.ts";
 
-const API_DATA_URL = "http://localhost:8080/api/team/";
+const API_DATA_URL = "http://localhost:8080/api/team";
 
 export const getTeam = async (teamId: number | null | undefined) => {
-    const data = await axios.get(API_DATA_URL + teamId, {headers: authHeader()})
+    const data = await axios.get(API_DATA_URL + "/getTeam/" + teamId, {headers: authHeader()})
         .then(response => response.data);
     return data;
 };
 
-export const postCreateTeam = async (userId: number | null | undefined, teamName: string) => {
+export const postCreateUserTeam = async (userId: number | null | undefined, teamName: string) => {
     const response = await axios
-        .post(API_DATA_URL + userId, {
+        .post(API_DATA_URL + "/createUserTeam/" + userId, {
             // headers: authHeader(),
             teamName,
         });
@@ -20,9 +20,19 @@ export const postCreateTeam = async (userId: number | null | undefined, teamName
     }
 };
 
+export const postDeleteUserTeam = async (userId: number | null | undefined) => {
+    const response = await axios
+        .post(API_DATA_URL + "/deleteUserTeam/" + userId, {
+            // headers: authHeader(),
+        });
+    if (response.data) {
+        return response.data;
+    }
+};
+
 export const postCreateTestTeam = async (leagueId: number | null | undefined) => {
     const response = await axios
-        .post(API_DATA_URL + leagueId + "/createTestTeam", {
+        .post(API_DATA_URL + "/createTestTeam/" + leagueId, {
             // headers: authHeader(),
             leagueId,
         })
@@ -33,7 +43,7 @@ export const postCreateTestTeam = async (leagueId: number | null | undefined) =>
 
 export const postDeleteTestTeams = async (leagueId: number | null | undefined) => {
     const response = await axios
-        .post(API_DATA_URL + leagueId + "/deleteTestTeams", {
+        .post(API_DATA_URL + "/deleteTestTeams/" + leagueId, {
             // headers: authHeader(),
             leagueId,
         })

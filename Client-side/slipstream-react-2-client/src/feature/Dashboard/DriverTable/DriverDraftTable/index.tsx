@@ -7,12 +7,16 @@ interface DriverDraftTableProps {
     undraftedDrivers: Array<IDriver> | undefined | null
 }
 
-export default function DriverDraftTable({isUsersTurnToPick, handleDriverSelection, selectedDriver, undraftedDrivers}: DriverDraftTableProps) {
-
+export default function DriverDraftTable({
+                                             isUsersTurnToPick,
+                                             handleDriverSelection,
+                                             selectedDriver,
+                                             undraftedDrivers
+                                         }: DriverDraftTableProps) {
     return (
         <>
             <div className="col-start-3 col-span-2">
-                <table className="drivers-table" id={"my-table"}>
+                <table className="drivers-table draft-table">
                     <caption>
                         <h3>Undrafted Drivers -<small>({undraftedDrivers?.length}/20 remaining)</small></h3>
                     </caption>

@@ -2,12 +2,31 @@ import * as Yup from "yup";
 import {NavigateFunction, useNavigate} from 'react-router-dom';
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {useState} from "react";
-import {postCreateTeam} from "../../../services/team.service.ts";
+import {postCreateUserTeam} from "../../../services/team.service.ts";
 import IDriver from "../../../types/driver.type.ts";
 import {useDriversInTeam} from "../../../hooks/queries/driver-queries.ts";
 import IUser from "../../../types/user.type.ts";
+import ILeague from "../../../types/league.type.ts";
 
-export default function DashTop({userData, currentLeague, isPracticeLeague, isLeagueFull, isLeagueActive}) {
+interface DashTopProps {
+    userData: IUser | undefined,
+    leagueData: ILeague | undefined,
+    leagueSize: number | undefined | null,
+    isPracticeLeague: boolean | undefined | null,
+    isLeagueFull: boolean | undefined | null,
+    isLeagueActive: boolean | undefined | null,
+    handleDeleteUserTeam: (e: { preventDefault: () => void }) => void,
+}
+
+export default function DashTop({
+                                    userData,
+                                    leagueData,
+                                    leagueSize,
+                                    isPracticeLeague,
+                                    isLeagueFull,
+                                    isLeagueActive,
+                                    handleDeleteUserTeam
+                                }: DashTopProps) {
     const driversInTeam = useDriversInTeam(userData?.team?.id).data;
 
     const navigate: NavigateFunction = useNavigate();
@@ -17,10 +36,8 @@ export default function DashTop({userData, currentLeague, isPracticeLeague, isLe
         = useState<string>("");
 
     const initialValues: {
-        // userId: number | null | undefined;
         teamName: string;
     } = {
-        // userId: currentUser?.id,
         teamName: "",
     };
 
@@ -34,7 +51,7 @@ export default function DashTop({userData, currentLeague, isPracticeLeague, isLe
         setMessage("");
         setLoading(true);
 
-        postCreateTeam(userData?.id, teamName).then(
+        postCreateUserTeam(userData?.id, teamName).then(
             () => {
                 navigate("/dashboard");
                 window.location.reload();
@@ -57,7 +74,7 @@ export default function DashTop({userData, currentLeague, isPracticeLeague, isLe
     const teamName = userData?.team?.teamName
     const firstPickNumber = userData?.team?.firstPickNumber
     const secondPickNumber = userData?.team?.secondPickNumber
-    const isAdmin = (user: IUser) => {
+    const isAdmin = (user: IUser | undefined) => {
         let isAdmin = false;
         user?.roles?.map(role => {
                 if (role.name === "ROLE_ADMIN") {
@@ -72,7 +89,7 @@ export default function DashTop({userData, currentLeague, isPracticeLeague, isLe
         return (
             <>
                 <div>
-                    <p>{currentLeague?.leagueName} is open to join.</p>
+                    <p>{leagueData?.leagueName} is open to join.</p>
                     <p>Once the league is full, the draft can begin.</p>
                     <p>You must create a team to try a practice draft.</p>
                     <p>Choose a team name to get started...</p>
@@ -139,54 +156,68 @@ export default function DashTop({userData, currentLeague, isPracticeLeague, isLe
 
     function UserGreeting() {
         if (userData?.team) {
-            if (isLeagueFull) {
-                return <div>
+            if (isLeagueFull || isLeagueActive) {
+                return (
+                    <div>
+                        <h2>{username}'s Dashboard </h2>
+                        <hr/>
+                        <p>Your team: "{teamName}"</p>
+                        <p>1st pick number: {firstPickNumber}</p>
+                        <p>2nd pick number: {secondPickNumber}</p>
+                        <p>Selected Drivers -</p>
+                        {driversInTeam?.map((driver: IDriver, i: number) => {
+                            return (
+                                <div key={driver.driverId}>
+                                    {driver ?
+                                        <p> {i + 1} - {driver.surname}</p>
+                                        :
+                                        <p> {i + 1} - </p>
+                                    }
+                                </div>
+                            )
+                        })}
+                        <hr/>
+                        <p>Want to join a different league?</p>
+                        <div>
+                            <button className="btn btn-proceed "
+                                    type="button"
+                                    onClick={(e) => handleDeleteUserTeam(e)}
+                            >
+                                Delete Team
+                            </button>
+                        </div>
+                        {isLeagueActive ?
+                            <h3>Your league is active, points will be scored from races after:
+                                <br/>{leagueData?.activeTimestamp?.slice(0, 8)}</h3>
+                            :
+                            <h3>Draft in progress...</h3>
+                        }
+                        <PracticeGreeting/>
+                    </div>
+                );
+            }
+            return (
+                <div>
                     <h2>{username}'s Dashboard </h2>
                     <hr/>
                     <p>Your team: "{teamName}"</p>
-                    <p>1st pick number: {firstPickNumber}</p>
-                    <p>2nd pick number: {secondPickNumber}</p>
-                    <p>Selected Drivers -</p>
-                    {driversInTeam?.map((driver: IDriver, i: number) => {
-                        return (
-                            <div key={driver.driverId}>
-                                {driver ?
-                                    <p> {i + 1} - {driver.surname}</p>
-                                    :
-                                    <p> {i + 1} - </p>
-                                }
-                            </div>
-                        )
-                    })}
+                    <p>Random 1st pick draft number: {firstPickNumber}</p>
+                    <p>Random 2nd pick draft number: {secondPickNumber}</p>
                     <hr/>
-                    {isLeagueActive ?
-                        <h3>Your league is active, points will be scored from races after:
-                            <br/>{currentLeague?.activeTimestamp?.slice(0, 8)}</h3>
-                        :
-                        <h3>Draft in progress...</h3>
-                    }
-
+                    <h3>League is {leagueSize} of 10 teams full.</h3>
+                    <h3> The draft picks will start when the league is full...</h3>
                     <PracticeGreeting/>
+                    <hr/>
                 </div>
-            }
-            return <div>
+            );
+        }
+        return (
+            <div>
                 <h2>{username}'s Dashboard </h2>
                 <hr/>
-                <p>Your team: "{teamName}"</p>
-                <p>Random 1st pick draft number: {firstPickNumber}</p>
-                <p>Random 2nd pick draft number: {secondPickNumber}</p>
-                <hr/>
-                <h3>League is {currentLeague?.teams?.length} of 10 teams full.</h3>
-                <h3> The draft picks will start when the league is full...</h3>
-                <PracticeGreeting/>
-                <hr/>
-            </div>;
-        }
-        return <div>
-            <h2>{username}'s Dashboard </h2>
-            <hr/>
-            <CreateTeam/>
-        </div>;
+                <CreateTeam/>
+            </div>
+        );
     }
 
     function Greeting() {

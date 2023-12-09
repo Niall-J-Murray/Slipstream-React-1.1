@@ -21,6 +21,7 @@ import {useQueryClient} from "react-query";
 import {usePickDriver, useUndraftedDrivers} from "../../hooks/queries/driver-queries.ts";
 import ITeam from "../../types/team.type.ts";
 import ActiveLeagueInfo from "./ActiveLeagueInfo";
+import {postDeleteUserTeam} from "../../services/team.service.ts";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -63,10 +64,6 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<IDriver | undefined | null>();
     const [lastPickTime, setLastPickTime]
         = useState<Date | undefined | null>();
-    // const [currentPickNumber, setCurrentPickNumber]
-    //     = useState<number | null | undefined>();
-    // const [nextToPick, setNextToPick]
-    //     = useState<IUser | undefined>();
 
     const redirect = useNavigate();
 
@@ -96,29 +93,10 @@ export default function Dashboard({userData}: DashboardProps) {
     const mutateTestTeam = useCreateTestTeam(leagueId);
     const deleteTestTeams = useDeleteTestTeams(leagueId);
 
-    // function checkLeagueStatus() {
-    //     setLeagueTeams(teamsInLeague);
-    //     setLeagueSize(leagueData?.teams?.length);
-    //     if (leagueData?.teams?.length
-    //         && leagueData?.teams?.length >= 10) {
-    //         setIsLeagueFull(true);
-    //         if (!leagueData?.isActive) {
-    //             setIsDraftInProgress(true);
-    //         }
-    //     }
-    //     if ((leagueData?.currentPickNumber && leagueData?.currentPickNumber > 20)
-    //         || leagueData?.isActive) {
-    //         setIsDraftInProgress(false);
-    //         setIsLeagueActive(true);
-    //     }
-    //     return isLeagueFull;
-    // }
-
     useEffect(() => {
         if (!userData) {
             redirect("/login");
         }
-        // checkLeagueStatus();
         setLeagueTeams(teamsInLeague);
         setLeagueSize(leagueTeams?.length);
         if (leagueSize
@@ -149,7 +127,7 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsUsersTurnToPick(true);
         }
 
-    }, [userData, leagueData, leagueSize, teamsInLeague, leagueTeams, nextUserToPick, isLeagueFull, undraftedDrivers]);
+    }, [userData, leagueData, leagueData?.activeTimestamp, leagueSize, teamsInLeague, leagueTeams, nextUserToPick, isLeagueFull, undraftedDrivers]);
 
     function togglePracticeOptions() {
         if (showPracticeOptions) {
@@ -223,6 +201,15 @@ export default function Dashboard({userData}: DashboardProps) {
             .then(() => setSelectedDriver(null));
     }
 
+    const handleDeleteUserTeam = () => {
+        postDeleteUserTeam(userData?.id)
+            .then(() => {
+                queryClient.invalidateQueries("leagueData")
+                queryClient.invalidateQueries("userData")
+            })
+            .then(() => redirect("/home"));
+    }
+
     return (
         <>
             <Layout>
@@ -230,11 +217,12 @@ export default function Dashboard({userData}: DashboardProps) {
                     <div className="col-start-2 col-span-1">
                         <DashTop
                             userData={userData}
-                            currentLeague={leagueData}
+                            leagueData={leagueData}
+                            leagueSize={leagueSize}
                             isPracticeLeague={isPracticeLeague}
                             isLeagueFull={isLeagueFull}
                             isLeagueActive={isLeagueActive}
-                            // isDraftInProgress={isDraftInProgress}
+                            handleDeleteUserTeam={handleDeleteUserTeam}
                         />
                     </div>
                     <div className="col-start-3 col-span-2">
@@ -263,8 +251,6 @@ export default function Dashboard({userData}: DashboardProps) {
                     </div>
                     {isLeagueActive ?
                         <>
-                            {/*<TeamDeleteControls leagueId={leagueId}/>*/}
-                            {/*<div className="col-start-2 col-span-3 pl-40">*/}
                             <div className="col-start-2 col-span-2">
                                 <LeagueTable
                                     currentLeague={leagueData}

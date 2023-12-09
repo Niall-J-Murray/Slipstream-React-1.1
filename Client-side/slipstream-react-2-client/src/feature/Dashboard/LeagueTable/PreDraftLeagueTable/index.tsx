@@ -10,7 +10,13 @@ interface PreDraftLeagueTableProps {
     isDraftInProgress: boolean | undefined | null
 }
 
-export default function PreDraftLeagueTable({currentLeague, leagueTeams, leagueSize, nextUserToPick, isDraftInProgress}: PreDraftLeagueTableProps) {
+export default function PreDraftLeagueTable({
+                                                currentLeague,
+                                                leagueTeams,
+                                                leagueSize,
+                                                nextUserToPick,
+                                                isDraftInProgress
+                                            }: PreDraftLeagueTableProps) {
     const rankedTeams = sortTeams(leagueTeams);
 
     function sortTeams(teams: Array<ITeam> | undefined | null) {
@@ -49,7 +55,7 @@ export default function PreDraftLeagueTable({currentLeague, leagueTeams, leagueS
                         {rankedTeams?.map((team: ITeam) => {
                             return (
                                 <tr key={team.id}>
-                                    {nextUserToPick?.team?.id == team.id ?
+                                    {(isDraftInProgress && nextUserToPick?.team?.id == team.id) ?
                                         <>
                                             <td className={"selected-cell"}>{team.username}</td>
                                             <td className={"selected-cell"}>{team.teamName}</td>
@@ -65,7 +71,7 @@ export default function PreDraftLeagueTable({currentLeague, leagueTeams, leagueS
                                         </>
                                     }
                                 </tr>
-                            )
+                            );
                         })}
                     </>
                 }

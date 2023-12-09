@@ -1,5 +1,6 @@
 import TeamDeleteControls from "./TeamDeleteControls";
 import IDriver from "../../../types/driver.type.ts";
+import {Fragment} from "react";
 
 interface ActiveLeagueInfoProps {
     undraftedDrivers: Array<IDriver> | undefined | null,
@@ -7,7 +8,11 @@ interface ActiveLeagueInfoProps {
     handleDeleteTestTeams: (e: { preventDefault: () => void }) => void,
 }
 
-export default function ActiveLeagueInfo({undraftedDrivers, isPracticeLeague, handleDeleteTestTeams}: ActiveLeagueInfoProps) {
+export default function ActiveLeagueInfo({
+                                             undraftedDrivers,
+                                             isPracticeLeague,
+                                             handleDeleteTestTeams
+                                         }: ActiveLeagueInfoProps) {
     return (
         <div>
             {isPracticeLeague ?
@@ -23,29 +28,26 @@ export default function ActiveLeagueInfo({undraftedDrivers, isPracticeLeague, ha
                         <thead>
                         <tr>
                             <th>Driver</th>
-                            <th>Pts</th>
-                            <th>-</th>
+                            <th>Points</th>
                             <th>Driver</th>
-                            <th>Pts</th>
-                            <th>-</th>
-                            <th>Driver</th>
-                            <th>Pts</th>
+                            <th>Points</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {undraftedDrivers?.map((driver: IDriver) => {
+                        {undraftedDrivers?.map((driver: IDriver, i: number) => {
                             return (
-                                <tr key={driver.driverId}>
-                                    <td>{driver.shortName}</td>
-                                    <td>{driver.points}</td>
-                                    <td></td>
-                                    <td>{driver.shortName}</td>
-                                    <td>{driver.points}</td>
-                                    <td></td>
-                                    <td>{driver.shortName}</td>
-                                    <td>{driver.points}</td>
-                                </tr>
-                            )
+                                <Fragment key={driver.driverId}>
+                                    {i % 2 == 0 ?
+                                        <tr>
+                                            <td  className={"pl-2"}>{undraftedDrivers[i]?.surname}</td>
+                                            <td>{undraftedDrivers[i]?.points}</td>
+                                            <td>{undraftedDrivers[i + 1]?.surname}</td>
+                                            <td className={"pl-2"}>{undraftedDrivers[i + 1]?.points}</td>
+                                        </tr>
+                                        :
+                                        <></>
+                                    }
+                                </Fragment>)
                         })}
                         </tbody>
                     </table>
