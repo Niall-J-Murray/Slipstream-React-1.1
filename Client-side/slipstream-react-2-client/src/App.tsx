@@ -90,18 +90,3 @@ export default function App() {
 }
 
 
-//     return (
-//             <div className="container mt-3">
-//                 <Routes>
-//                     <Route path="/" element={<Home loading={loading} toggleLoading={toggleLoading}/>}/>
-//                     <Route path="/home" element={<Home loading={loading} toggleLoading={toggleLoading}/>}/>
-//                     <Route path="/register" element={<Register/>}/>
-//                     <Route path="/login" element={<Login/>}/>
-//                     <Route path="/dashboard" element={<Dashboard loading={loading} toggleLoading={toggleLoading}/>}/>
-//                     <Route path="/admin" element={<Admin/>}/>
-//                     <Route path="/logout" element={<Logout/>}/>
-//                 </Routes>
-//             </div>
-//     );
-// }
-

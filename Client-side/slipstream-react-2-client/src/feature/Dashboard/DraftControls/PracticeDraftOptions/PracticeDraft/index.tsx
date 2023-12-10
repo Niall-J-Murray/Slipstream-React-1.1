@@ -1,45 +1,58 @@
-import {useEffect, useState} from "react";
+interface PracticeDraftProps {
+    isPracticeLeague: boolean | undefined | null,
+    isLeagueFull: boolean | undefined | null,
+    togglePracticeLeague: () => void,
+    addTestTeam: (e: { preventDefault: () => void }) => void,
+    showDraftPickTips: boolean | undefined,
+    togglePracticeOptions: () => void
+}
 
-export default function PracticeDraft({
-                                          currentLeague,
-                                          isPracticeLeague,
-                                          isLeagueFull,
-                                          togglePracticeLeague,
-                                          addTestTeam
-                                      }) {
-    const [leagueSize, setLeagueSize] = useState()
-    useEffect(() => {
-        console.log(currentLeague.teams.length)
-        setLeagueSize(currentLeague.teams.length)
-    }, [leagueSize]);
+export default function PracticeDraft({isPracticeLeague, isLeagueFull, togglePracticeLeague, addTestTeam, showDraftPickTips, togglePracticeOptions}: PracticeDraftProps) {
+    // const [leagueSize, setLeagueSize] = useState()
+    // useEffect(() => {
+    //     setLeagueSize(leagueData?.teams?.length)
+    // }, [leagueSize]);
 
     function PracticeDraftNotActive() {
-        return <>
-            <div>
-                <h4>Want to try a practice draft?</h4>
-                Caution:<br/>
-                <ul className="text-block">
-                    <li>This cannot be undone, you will have to delete your team from this league after the
-                        practice
-                        draft is finished if you would like to join another league.
-                    </li>
-                    <li>If you do not delete your team, the league will continue as normal, but all test teams
-                        will be
-                        removed.
-                    </li>
-                </ul>
-            </div>
-            <form>
-                <div className="form-check form-switch">
-                    <input className="form-check-input" id="practiceDraftToggle"
-                           onChange={togglePracticeLeague}
-                           role="switch" type="checkbox" checked={false}/>
-                    <label className="form-check-label" htmlFor="practiceDraftToggle">
-                        Toggle Practice Draft Mode
-                    </label>
+        return (
+            <>
+                <div>
+                    {/*<div className={"toggle-span"}>*/}
+                    {/*    Want to try a practice draft?*/}
+                    {/*<PracticeOptionsToggle*/}
+                    {/*    isPracticeLeague={isPracticeLeague}*/}
+                    {/*    showDraftPickTips={showDraftPickTips}*/}
+                    {/*    togglePracticeOptions={togglePracticeOptions}*/}
+                    {/*/>*/}
+                    {/*</div>*/}
+                    <hr/>
+                    <h4>Want to try a practice draft?</h4>
                 </div>
-            </form>
-        </>
+                <div>
+                    Caution:<br/>
+                    <ul className="text-block">
+                        <li>This cannot be undone, you will have to delete your team from this league after the
+                            practice
+                            draft is finished if you would like to join another league.
+                        </li>
+                        <li>If you do not delete your team, the league will continue as normal, but all test teams
+                            will be
+                            removed.
+                        </li>
+                    </ul>
+                </div>
+                <form>
+                    <div className="form-check form-switch">
+                        <input className="form-check-input" id="practiceDraftToggle"
+                               onChange={togglePracticeLeague}
+                               role="switch" type="checkbox" checked={false}/>
+                        <label className="form-check-label" htmlFor="practiceDraftToggle">
+                            Toggle Practice Draft Mode
+                        </label>
+                    </div>
+                </form>
+            </>
+        );
     }
 
     function PracticeDraftActive() {

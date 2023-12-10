@@ -4,7 +4,7 @@ import DriverTable from "./DriverTable";
 import {useEffect, useState} from "react";
 import {postToggleTestLeague} from "../../services/league.service.ts";
 import DraftControls from "./DraftControls";
-import Reminders from "./Reminders";
+import DraftPickTips from "./DraftPickTips";
 import Layout from "../../components/Layout/Layout.tsx";
 import IDriver from "../../types/driver.type.ts";
 import IUser from "../../types/user.type.ts";
@@ -15,14 +15,14 @@ import {
     useNextUserToPick,
     useOpenLeague
 } from "../../hooks/queries/league-queries.ts";
-import {useCreateTestTeam, useDeleteTestTeams} from "../../hooks/queries/team-queries.ts";
+import {useCreateTeam, useCreateTestTeam, useDeleteTeam, useDeleteTestTeams} from "../../hooks/queries/team-queries.ts";
 import {NavigateFunction, useNavigate} from "react-router-dom";
 import {useQueryClient} from "react-query";
 import {useDriversInTeam, usePickDriver, useUndraftedDrivers} from "../../hooks/queries/driver-queries.ts";
 import ITeam from "../../types/team.type.ts";
 import ActiveLeagueInfo from "./ActiveLeagueInfo";
-import {postCreateUserTeam, postDeleteUserTeam} from "../../services/team.service.ts";
 import * as Yup from "yup";
+import PracticeOptionsToggle from "./DraftControls/PracticeDraftOptions/PracticeOptionsToggle";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -43,8 +43,8 @@ interface DashboardProps {
 }
 
 export default function Dashboard({userData}: DashboardProps) {
-    const [showPracticeOptions, setShowPracticeOptions]
-        = useState<boolean | undefined | null>();
+    const [showDraftPickTips, setShowDraftPickTips]
+        = useState<boolean | undefined>(true);
     const [isPracticeLeague, setIsPracticeLeague]
         = useState<boolean | undefined | null>();
     const [isLeagueFull, setIsLeagueFull]
@@ -107,7 +107,9 @@ export default function Dashboard({userData}: DashboardProps) {
     const nextUserToPick = useNextUserToPick(leagueId).data;
     const pickDriver = usePickDriver();
     const undraftedDrivers = useUndraftedDrivers(leagueId).data;
-    const mutateTestTeam = useCreateTestTeam(leagueId);
+    const createTeam = useCreateTeam();
+    const deleteTeam = useDeleteTeam(userId);
+    const createTestTeam = useCreateTestTeam(leagueId);
     const deleteTestTeams = useDeleteTestTeams(leagueId);
 
     useEffect(() => {
@@ -116,11 +118,14 @@ export default function Dashboard({userData}: DashboardProps) {
         }
         setLeagueTeams(teamsInLeague);
         setLeagueSize(leagueTeams?.length);
+        setIsPracticeLeague(leagueData?.isPracticeLeague);
+        setShowDraftPickTips(!leagueData?.isPracticeLeague);
         if (leagueSize
             && leagueSize >= 10) {
             setIsLeagueFull(true);
             if (!leagueData?.isActive) {
                 setIsDraftInProgress(true);
+                setShowDraftPickTips(false);
             }
         }
         if ((leagueData?.currentPickNumber && leagueData?.currentPickNumber > 20)
@@ -128,9 +133,6 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsDraftInProgress(false);
             setIsLeagueActive(true);
         }
-
-        setIsPracticeLeague(leagueData?.isPracticeLeague);
-        setShowPracticeOptions(leagueData?.isPracticeLeague);
 
         setSelectedDriver(undraftedDrivers?.find((driver: IDriver) =>
             driver !== undefined));
@@ -152,27 +154,47 @@ export default function Dashboard({userData}: DashboardProps) {
         setMessage("");
         setLoading(true);
 
-        postCreateUserTeam(userData?.id, teamName).then(
-            () => {
-                navigate("/dashboard");
-                window.location.reload();
-            },
-            (error) => {
-                const resMessage =
-                    (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString();
+        createTeam.mutateAsync({userId, teamName})
+            .then(() => {
+                    navigate("/dashboard");
+                    window.location.reload();
+                },
+                (error) => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
 
-                setLoading(false);
-                setMessage(resMessage);
-            }
-        );
+                    setLoading(false);
+                    setMessage(resMessage);
+                }
+            );
+
+        // postCreateUserTeam(userData?.id, teamName)
+        //     .then(
+        //         () => {
+        //             navigate("/dashboard");
+        //             window.location.reload();
+        //         },
+        //         (error) => {
+        //             const resMessage =
+        //                 (error.response &&
+        //                     error.response.data &&
+        //                     error.response.data.message) ||
+        //                 error.message ||
+        //                 error.toString();
+        //
+        //             setLoading(false);
+        //             setMessage(resMessage);
+        //         }
+        //     );
     };
 
     const handleDeleteUserTeam = () => {
-        postDeleteUserTeam(userData?.id)
+        // postDeleteUserTeam(userData?.id)
+        deleteTeam.mutateAsync()
             .then(() => {
                 queryClient.invalidateQueries("leagueData")
                 queryClient.invalidateQueries("userData")
@@ -182,10 +204,10 @@ export default function Dashboard({userData}: DashboardProps) {
 
 
     function togglePracticeOptions() {
-        if (showPracticeOptions) {
-            setShowPracticeOptions(false);
+        if (showDraftPickTips) {
+            setShowDraftPickTips(false);
         } else {
-            setShowPracticeOptions(true);
+            setShowDraftPickTips(true);
         }
     }
 
@@ -206,7 +228,7 @@ export default function Dashboard({userData}: DashboardProps) {
 
     const addTestTeam = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        mutateTestTeam.mutateAsync()
+        createTestTeam.mutateAsync()
             .then(() => {
                 queryClient.invalidateQueries("allTeamsInLeague")
                     .then(() => {
@@ -275,30 +297,72 @@ export default function Dashboard({userData}: DashboardProps) {
                             handleDeleteUserTeam={handleDeleteUserTeam}
                         />
                     </div>
-                    <div className="col-start-3 col-span-2">
-                        <Reminders/>
+                    <div id="practice-draft-options" className="col-start-3 col-span-2">
+                        {!isLeagueActive ?
+                            <>
+                                {showDraftPickTips ?
+                                    <DraftPickTips
+                                        isPracticeLeague={isPracticeLeague}
+                                        showDraftPickTips={showDraftPickTips}
+                                        togglePracticeOptions={togglePracticeOptions}
+                                    />
+                                    :
+                                    <>
+                                        <div className={"box-shadow"}>
+                                            <div className={"toggle-span"}>
+                                                Draft Controls
+                                                <PracticeOptionsToggle
+                                                    isPracticeLeague={isPracticeLeague}
+                                                    showDraftPickTips={showDraftPickTips}
+                                                    togglePracticeOptions={togglePracticeOptions}
+                                                />
+                                            </div>
+                                        </div>
+                                        <DraftControls
+                                            userData={userData}
+                                            leagueData={leagueData}
+                                            isPracticeLeague={isPracticeLeague}
+                                            isLeagueFull={isLeagueFull}
+                                            showDraftPickTips={showDraftPickTips}
+                                            selectedDriver={selectedDriver}
+                                            lastPickTime={lastPickTime}
+                                            isLeagueActive={isLeagueActive}
+                                            currentPickNumber={currentPickNumber}
+                                            isUsersTurnToPick={isUsersTurnToPick}
+                                            nextUserToPick={nextUserToPick}
+                                            togglePracticeOptions={togglePracticeOptions}
+                                            togglePracticeLeague={togglePracticeLeague}
+                                            addTestTeam={addTestTeam}
+                                            handlePick={handlePick}
+                                        />
+                                    </>
+                                }
+                            </>
+                            :
+                            <></>
+                        }
                     </div>
-                    <div className="col-start-2 col-span-3">
-                        <DraftControls
-                            currentUser={userData}
-                            currentLeague={leagueData}
-                            isPracticeLeague={isPracticeLeague}
-                            isLeagueFull={isLeagueFull}
-                            showPracticeOptions={showPracticeOptions}
-                            isDraftInProgress={isDraftInProgress}
-                            selectedDriver={selectedDriver}
-                            lastDriverPicked={lastDriverPicked}
-                            lastPickTime={lastPickTime}
-                            isLeagueActive={isLeagueActive}
-                            currentPickNumber={currentPickNumber}
-                            isUsersTurnToPick={isUsersTurnToPick}
-                            nextUserToPick={nextUserToPick}
-                            togglePracticeOptions={togglePracticeOptions}
-                            togglePracticeLeague={togglePracticeLeague}
-                            addTestTeam={addTestTeam}
-                            handlePick={handlePick}
-                        />
-                    </div>
+                    {/*<div className="col-start-2 col-span-3">*/}
+                    {/*    <DraftControls*/}
+                    {/*        currentUser={userData}*/}
+                    {/*        leagueData={leagueData}*/}
+                    {/*        isPracticeLeague={isPracticeLeague}*/}
+                    {/*        isLeagueFull={isLeagueFull}*/}
+                    {/*        showDraftPickTips={showDraftPickTips}*/}
+                    {/*        isDraftInProgress={isDraftInProgress}*/}
+                    {/*        selectedDriver={selectedDriver}*/}
+                    {/*        lastDriverPicked={lastDriverPicked}*/}
+                    {/*        lastPickTime={lastPickTime}*/}
+                    {/*        isLeagueActive={isLeagueActive}*/}
+                    {/*        currentPickNumber={currentPickNumber}*/}
+                    {/*        isUsersTurnToPick={isUsersTurnToPick}*/}
+                    {/*        nextUserToPick={nextUserToPick}*/}
+                    {/*        togglePracticeOptions={togglePracticeOptions}*/}
+                    {/*        togglePracticeLeague={togglePracticeLeague}*/}
+                    {/*        addTestTeam={addTestTeam}*/}
+                    {/*        handlePick={handlePick}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
                     {isLeagueActive ?
                         <>
                             <div className="col-start-2 col-span-2">

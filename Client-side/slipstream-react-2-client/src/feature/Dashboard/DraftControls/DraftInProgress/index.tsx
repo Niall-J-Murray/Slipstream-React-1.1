@@ -1,18 +1,26 @@
+import IUser from "../../../../types/user.type.ts";
+import IDriver from "../../../../types/driver.type.ts";
+
+interface DraftInProgressProps {
+    currentPickNumber: number | undefined | null,
+    isUsersTurnToPick: boolean | undefined | null,
+    nextUserToPick: IUser | undefined,
+    selectedDriver: IDriver | undefined | null,
+    lastPickTime: Date | undefined | null,
+    handlePick: (e: { preventDefault: () => void }, driverId: (number | string | undefined)) => void
+}
+
 export default function DraftInProgress({
-                                            currentUser,
                                             currentPickNumber,
                                             isUsersTurnToPick,
                                             nextUserToPick,
-                                            isDraftInProgress,
                                             selectedDriver,
                                             lastPickTime,
-                                            lastDriverPicked,
-                                            handlePick,
-                                        }) {
+                                            handlePick
+                                        }: DraftInProgressProps) {
+    const selectedDriverId = selectedDriver?.driverId;
 
     function PickInstructions() {
-        // if (isDraftInProgress) {
-        // if (currentUser?.username == nextUserToPick?.username || nextUserToPick?.isTestUser) {
         if (isUsersTurnToPick) {
             return <>
                 <div className="col-start-2 col-span-1">
@@ -35,7 +43,7 @@ export default function DraftInProgress({
                 {nextUserToPick?.isTestUser ?
                     <div className="col-start-3 col-span-1">
                         <h4 className={"pick-instructions-go pt-6"}>
-                            Please select a driver<br/> for this test team... ->
+                            Please select a driver<br/> for this test team... {"->"}
                         </h4>
                     </div>
                     :
@@ -62,7 +70,7 @@ export default function DraftInProgress({
                             <>
                                 <p>Select a driver below...</p>
                                 <div>
-                                    <button onClick={(e) => handlePick(e, selectedDriver.driverId)}
+                                    <button onClick={(e) => handlePick(e, selectedDriverId)}
                                             className={"btn btn-disabled"}
                                             type="submit"
                                             disabled={true}>
@@ -92,7 +100,7 @@ export default function DraftInProgress({
                     Last pick was made at:
                 </h4>
                 <h4>
-                    {lastPickTime ? lastPickTime : "No picks made yet"}
+                    {lastPickTime ? lastPickTime.toString() : "No picks made yet"}
                 </h4>
                 <button disabled={true} className={"btn btn-disabled"} type="submit">
                     Confirm Pick
@@ -101,12 +109,9 @@ export default function DraftInProgress({
         </>
     }
 
-    // }
-
     return (
         <>
             <PickInstructions/>
         </>
     )
-
 }

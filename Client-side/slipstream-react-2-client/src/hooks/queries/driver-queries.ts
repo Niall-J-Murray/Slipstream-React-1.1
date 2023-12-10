@@ -16,7 +16,7 @@ export const useDriverStandings = () =>
         queryFn: () => getAllDrivers(),
     });
 
-export const useDriverData = (driverId) =>
+export const useDriverData = (driverId: number | null | undefined) =>
     useQuery({
         queryKey: ["driverData", driverId],
         queryFn: (driverId) => getDriverData(driverId),
@@ -39,9 +39,9 @@ export const useDriversInTeam = (teamId: number | null | undefined) =>
 
 export const usePickDriver = () =>
     useMutation({
-        mutationKey: ["createTeam"],
+        mutationKey: ["pickDriver"],
         mutationFn: postPickDriver,
-    })
+    });
 
 
 

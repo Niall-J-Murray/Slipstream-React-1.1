@@ -1,3 +1,5 @@
+import {HashLink} from "react-router-hash-link";
+
 export default function HowToPlay() {
     return (
         <>
@@ -13,7 +15,7 @@ export default function HowToPlay() {
                     Or, follow the steps below, or once you{" "}
                     <a href="register">register</a>, <a href="login">log-in</a> and
                     create a team, you can try a{" "}
-                    <a href="dashboard#practice-league-form">practice draft</a> to
+                    <HashLink smooth  to="/dashboard" elementId={"practice-draft-options"}>practice draft</HashLink> to
                     see how it works.
                     <br/>
                     Practice leagues can also be used to create real leagues with

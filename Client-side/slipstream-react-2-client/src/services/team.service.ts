@@ -9,11 +9,10 @@ export const getTeam = async (teamId: number | null | undefined) => {
     return data;
 };
 
-export const postCreateUserTeam = async (userId: number | null | undefined, teamName: string) => {
+export const postCreateUserTeam = async (data: { userId: number| null | undefined; teamName: string; } | null | undefined) => {
     const response = await axios
-        .post(API_DATA_URL + "/createUserTeam/" + userId, {
-            // headers: authHeader(),
-            teamName,
+        .post(API_DATA_URL + "/createUserTeam/" + data?.userId, {
+            teamName: data?.teamName,
         });
     if (response.data) {
         return response.data;
@@ -22,9 +21,7 @@ export const postCreateUserTeam = async (userId: number | null | undefined, team
 
 export const postDeleteUserTeam = async (userId: number | null | undefined) => {
     const response = await axios
-        .post(API_DATA_URL + "/deleteUserTeam/" + userId, {
-            // headers: authHeader(),
-        });
+        .post(API_DATA_URL + "/deleteUserTeam/" + userId, {});
     if (response.data) {
         return response.data;
     }
@@ -33,7 +30,6 @@ export const postDeleteUserTeam = async (userId: number | null | undefined) => {
 export const postCreateTestTeam = async (leagueId: number | null | undefined) => {
     const response = await axios
         .post(API_DATA_URL + "/createTestTeam/" + leagueId, {
-            // headers: authHeader(),
             leagueId,
         })
     if (response.data) {
@@ -44,21 +40,9 @@ export const postCreateTestTeam = async (leagueId: number | null | undefined) =>
 export const postDeleteTestTeams = async (leagueId: number | null | undefined) => {
     const response = await axios
         .post(API_DATA_URL + "/deleteTestTeams/" + leagueId, {
-            // headers: authHeader(),
             leagueId,
         })
     if (response.data) {
         return response.data;
     }
 };
-
-// export const postDeleteTestTeams = async (data: any) => {
-//     const leagueId: number = data.leagueId;
-//     const response = await axios
-//         .post(API_DATA_URL + leagueId + "/deleteTestTeams", {
-//             leagueId: leagueId,
-//         })
-//     if (response.data) {
-//         return response.data;
-//     }
-// };

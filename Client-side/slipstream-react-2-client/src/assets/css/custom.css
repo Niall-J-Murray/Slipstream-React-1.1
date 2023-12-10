@@ -58,9 +58,9 @@ body {
 }
 
 
-.text-block {
+.text-block,
+.text-block a {
     font-family: Arial, Helvetica, sans-serif;
-    /*font-weight: bold;*/
     font-size: large;
     color: white;
     text-shadow: 0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black;
@@ -84,7 +84,7 @@ body {
 }
 
 .box-shadow {
-    padding: 2%;
+    padding: 1% 2%;
     box-shadow: inset 0 0 25em 25em rgba(0, 0, 0, 0.5);
     border-radius: 10px;
 }
@@ -101,6 +101,11 @@ body {
 
 .form-group {
     padding: 1%;
+}
+
+.toggle-span {
+    display: flex;
+    justify-content: space-between;
 }
 
 /*.form-table,*/

@@ -1,27 +1,46 @@
 import PracticeDraftOptions from "./PracticeDraftOptions";
 import DraftInProgress from "./DraftInProgress";
+import IUser from "../../../types/user.type.ts";
+import ILeague from "../../../types/league.type.ts";
+import IDriver from "../../../types/driver.type.ts";
+
+interface DraftControlsProps {
+    userData: IUser | undefined
+    leagueData: ILeague | undefined,
+    isPracticeLeague: boolean | undefined | null,
+    isLeagueFull: boolean | undefined | null,
+    showDraftPickTips: boolean | undefined | null,
+    selectedDriver: IDriver | undefined | null,
+    lastPickTime: Date | undefined | null,
+    isLeagueActive: boolean | undefined | null,
+    currentPickNumber: number | undefined | null,
+    isUsersTurnToPick: boolean | undefined | null,
+    nextUserToPick: IUser | undefined,
+    togglePracticeOptions: () => void,
+    togglePracticeLeague: () => void,
+    addTestTeam: (e: { preventDefault: () => void }) => void,
+    handlePick: (e: { preventDefault: () => void }, driverId: (number | string | undefined)) => void,
+}
 
 export default function DraftControls({
-                                          currentUser,
+                                          userData,
+                                          leagueData,
+                                          isPracticeLeague,
+                                          isLeagueFull,
+                                          showDraftPickTips,
+                                          selectedDriver,
+                                          lastPickTime,
+                                          isLeagueActive,
                                           currentPickNumber,
                                           isUsersTurnToPick,
                                           nextUserToPick,
-                                          showPracticeOptions,
-                                          currentLeague,
-                                          isPracticeLeague,
-                                          isLeagueFull,
                                           togglePracticeOptions,
                                           togglePracticeLeague,
                                           addTestTeam,
                                           handlePick,
-                                          isDraftInProgress,
-                                          selectedDriver,
-                                          lastDriverPicked,
-                                          lastPickTime,
-                                          isLeagueActive,
-                                      }) {
+                                      }: DraftControlsProps) {
 
-    if (!currentUser?.team || isLeagueActive) {
+    if (!userData?.team || isLeagueActive) {
         return (
             <>
             </>
@@ -34,27 +53,21 @@ export default function DraftControls({
                     {isLeagueFull ?
                         <div className="grid grid-cols-5">
                             <DraftInProgress
-                                isDraftInProgress={isDraftInProgress}
-                                selectedDriver={selectedDriver}
-                                lastDriverPicked={lastDriverPicked}
-                                lastPickTime={lastPickTime}
-                                currentUser={currentUser}
                                 currentPickNumber={currentPickNumber}
                                 isUsersTurnToPick={isUsersTurnToPick}
                                 nextUserToPick={nextUserToPick}
+                                selectedDriver={selectedDriver}
+                                lastPickTime={lastPickTime}
                                 handlePick={handlePick}
-                                // currentPickNumber={currentPickNumber}
-                                // isUsersTurnToPick={isUsersTurnToPick}
-                                // nextUserToPick={nextUserToPick}
                             />
                         </div>
                         :
                         <div className="grid grid-cols-5">
                             <PracticeDraftOptions
-                                currentLeague={currentLeague}
+                                leagueData={leagueData}
                                 isPracticeLeague={isPracticeLeague}
                                 isLeagueFull={isLeagueFull}
-                                showPracticeOptions={showPracticeOptions}
+                                showDraftPickTips={showDraftPickTips}
                                 togglePracticeOptions={togglePracticeOptions}
                                 togglePracticeLeague={togglePracticeLeague}
                                 addTestTeam={addTestTeam}

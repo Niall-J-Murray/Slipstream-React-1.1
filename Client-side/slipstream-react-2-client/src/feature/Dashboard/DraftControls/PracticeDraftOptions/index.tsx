@@ -1,46 +1,39 @@
 import PracticeDraft from "./PracticeDraft";
-import PracticeOptionsToggle from "./PracticeOptionsToggle";
+import ILeague from "../../../../types/league.type.ts";
 
-export default function PracticeDraftOptions({
-                                                 showPracticeOptions,
-                                                 currentLeague,
-                                                 isPracticeLeague,
-                                                 isLeagueFull,
-                                                 togglePracticeOptions,
-                                                 togglePracticeLeague,
-                                                 addTestTeam
-                                             }) {
+interface PracticeDraftOptionsProps {
+    leagueData: ILeague | undefined,
+    isPracticeLeague: boolean | undefined | null,
+    isLeagueFull: boolean | undefined | null,
+    showDraftPickTips: boolean | undefined | null,
+    togglePracticeOptions: () => void,
+    togglePracticeLeague: () => void,
+    addTestTeam: (e: { preventDefault: () => void }) => void
+}
+
+export default function PracticeDraftOptions({isPracticeLeague, isLeagueFull, showDraftPickTips, togglePracticeOptions, togglePracticeLeague, addTestTeam}: PracticeDraftOptionsProps) {
     return (
         <>
-            {
-                showPracticeOptions ?
-                    <div className="col-start-1 col-span-5">
-                        <div>
-                            <PracticeOptionsToggle
-                                isPracticeLeague={isPracticeLeague}
-                                showPracticeOptions={showPracticeOptions}
-                                togglePracticeOptions={togglePracticeOptions}
-                            />
-                        </div>
-                        <div>
-                            <PracticeDraft
-                                currentLeague={currentLeague}
-                                isPracticeLeague={isPracticeLeague}
-                                isLeagueFull={isLeagueFull}
-                                togglePracticeLeague={togglePracticeLeague}
-                                addTestTeam={addTestTeam}
-                            />
-                        </div>
-                    </div>
-                    :
-                    <div className="col-start-1 col-span-5">
-                        <PracticeOptionsToggle
-                            isPracticeLeague={isPracticeLeague}
-                            showPracticeOptions={showPracticeOptions}
-                            togglePracticeOptions={togglePracticeOptions}
-                        />
-                    </div>
-            }
+            {/*{showPracticeOptions ?*/}
+            <div className="col-start-1 col-span-5">
+                <PracticeDraft
+                    isPracticeLeague={isPracticeLeague}
+                    isLeagueFull={isLeagueFull}
+                    togglePracticeLeague={togglePracticeLeague}
+                    addTestTeam={addTestTeam}
+                    showDraftPickTips={showDraftPickTips}
+                    togglePracticeOptions={togglePracticeOptions}
+                />
+            </div>
+            {/*        :*/}
+            {/*        <div className="col-start-1 col-span-5">*/}
+            {/*            <PracticeOptionsToggle*/}
+            {/*                isPracticeLeague={isPracticeLeague}*/}
+            {/*                showPracticeOptions={showPracticeOptions}*/}
+            {/*                togglePracticeOptions={togglePracticeOptions}*/}
+            {/*            />*/}
+            {/*        </div>*/}
+            {/*}*/}
         </>
     )
 }

@@ -15,7 +15,7 @@ interface DashTopProps {
     validationSchema: ObjectSchema<object>,
     loading: boolean,
     message: string,
-    driversInTeam: Array<IDriver>,
+    driversInTeam: Array<IDriver> | undefined,
     handleCreateTeam: (formValue: { teamName: string }) => void,
     handleDeleteUserTeam: (e: { preventDefault: () => void }) => void,
 }
@@ -162,7 +162,7 @@ export default function DashTop({
                             :
                             <h3>Draft in progress...</h3>
                         }
-                        <PracticeGreeting/>
+                        {/*<PracticeGreeting/>*/}
                     </div>
                 );
             }
@@ -176,7 +176,7 @@ export default function DashTop({
                     <hr/>
                     <h3>League is {leagueSize} of 10 teams full.</h3>
                     <h3> The draft picks will start when the league is full...</h3>
-                    <PracticeGreeting/>
+                    {/*<PracticeGreeting/>*/}
                     <hr/>
                 </div>
             );

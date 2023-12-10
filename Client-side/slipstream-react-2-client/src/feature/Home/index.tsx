@@ -20,7 +20,7 @@ export default function Home({userData}: HomeProps) {
                     <div className="col-start-3 col-span-2 box-shadow">
                         <AppDescription/>
                     </div>
-                    <div className="col-start-2 col-span-3 box-shadow">
+                    <div id="how-to-play" className="col-start-2 col-span-3 box-shadow">
                         <HowToPlay/>
                     </div>
                 </div>
