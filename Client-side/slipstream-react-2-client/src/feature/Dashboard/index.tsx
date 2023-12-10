@@ -16,12 +16,13 @@ import {
     useOpenLeague
 } from "../../hooks/queries/league-queries.ts";
 import {useCreateTestTeam, useDeleteTestTeams} from "../../hooks/queries/team-queries.ts";
-import {useNavigate} from "react-router-dom";
+import {NavigateFunction, useNavigate} from "react-router-dom";
 import {useQueryClient} from "react-query";
-import {usePickDriver, useUndraftedDrivers} from "../../hooks/queries/driver-queries.ts";
+import {useDriversInTeam, usePickDriver, useUndraftedDrivers} from "../../hooks/queries/driver-queries.ts";
 import ITeam from "../../types/team.type.ts";
 import ActiveLeagueInfo from "./ActiveLeagueInfo";
-import {postDeleteUserTeam} from "../../services/team.service.ts";
+import {postCreateUserTeam, postDeleteUserTeam} from "../../services/team.service.ts";
+import * as Yup from "yup";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -65,7 +66,22 @@ export default function Dashboard({userData}: DashboardProps) {
     const [lastPickTime, setLastPickTime]
         = useState<Date | undefined | null>();
 
-    const redirect = useNavigate();
+    const [loading, setLoading]
+        = useState<boolean>(false);
+    const [message, setMessage]
+        = useState<string>("");
+
+    const initialValues: {
+        teamName: string;
+    } = {
+        teamName: "",
+    };
+
+    const validationSchema: Yup.ObjectSchema<object> = Yup.object().shape({
+        teamName: Yup.string().required("Please enter a valid team name"),
+    });
+
+    const navigate: NavigateFunction = useNavigate();
 
     const {
         data: openLeague,
@@ -77,6 +93,7 @@ export default function Dashboard({userData}: DashboardProps) {
     const userId = userData ? userData?.id : null;
     const leagueId = userData?.team ? userData?.team?.leagueId : openLeague?.leagueId;
     const teamsInLeague: Array<ITeam> | undefined | null = useAllTeamsInLeague(leagueId).data;
+    const driversInTeam = useDriversInTeam(userData?.team?.id).data;
 
     const {
         data: leagueData,
@@ -95,7 +112,7 @@ export default function Dashboard({userData}: DashboardProps) {
 
     useEffect(() => {
         if (!userData) {
-            redirect("/login");
+            navigate("/login");
         }
         setLeagueTeams(teamsInLeague);
         setLeagueSize(leagueTeams?.length);
@@ -129,6 +146,41 @@ export default function Dashboard({userData}: DashboardProps) {
 
     }, [userData, leagueData, leagueData?.activeTimestamp, leagueSize, teamsInLeague, leagueTeams, nextUserToPick, isLeagueFull, undraftedDrivers]);
 
+    const handleCreateTeam = (formValue: { teamName: string }) => {
+        const {teamName} = formValue;
+
+        setMessage("");
+        setLoading(true);
+
+        postCreateUserTeam(userData?.id, teamName).then(
+            () => {
+                navigate("/dashboard");
+                window.location.reload();
+            },
+            (error) => {
+                const resMessage =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+
+                setLoading(false);
+                setMessage(resMessage);
+            }
+        );
+    };
+
+    const handleDeleteUserTeam = () => {
+        postDeleteUserTeam(userData?.id)
+            .then(() => {
+                queryClient.invalidateQueries("leagueData")
+                queryClient.invalidateQueries("userData")
+            })
+            .then(() => navigate("/home"));
+    }
+
+
     function togglePracticeOptions() {
         if (showPracticeOptions) {
             setShowPracticeOptions(false);
@@ -149,6 +201,7 @@ export default function Dashboard({userData}: DashboardProps) {
                     setIsPracticeLeague(res);
                 })
         }
+        navigate("/dashboard")
     }
 
     const addTestTeam = (e: { preventDefault: () => void; }) => {
@@ -201,15 +254,6 @@ export default function Dashboard({userData}: DashboardProps) {
             .then(() => setSelectedDriver(null));
     }
 
-    const handleDeleteUserTeam = () => {
-        postDeleteUserTeam(userData?.id)
-            .then(() => {
-                queryClient.invalidateQueries("leagueData")
-                queryClient.invalidateQueries("userData")
-            })
-            .then(() => redirect("/home"));
-    }
-
     return (
         <>
             <Layout>
@@ -222,6 +266,12 @@ export default function Dashboard({userData}: DashboardProps) {
                             isPracticeLeague={isPracticeLeague}
                             isLeagueFull={isLeagueFull}
                             isLeagueActive={isLeagueActive}
+                            initialValues={initialValues}
+                            validationSchema={validationSchema}
+                            loading={loading}
+                            message={message}
+                            driversInTeam={driversInTeam}
+                            handleCreateTeam={handleCreateTeam}
                             handleDeleteUserTeam={handleDeleteUserTeam}
                         />
                     </div>

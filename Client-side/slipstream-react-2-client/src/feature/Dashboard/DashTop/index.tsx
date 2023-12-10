@@ -1,10 +1,6 @@
-import * as Yup from "yup";
-import {NavigateFunction, useNavigate} from 'react-router-dom';
+import {ObjectSchema} from "yup";
 import {ErrorMessage, Field, Form, Formik} from "formik";
-import {useState} from "react";
-import {postCreateUserTeam} from "../../../services/team.service.ts";
 import IDriver from "../../../types/driver.type.ts";
-import {useDriversInTeam} from "../../../hooks/queries/driver-queries.ts";
 import IUser from "../../../types/user.type.ts";
 import ILeague from "../../../types/league.type.ts";
 
@@ -15,6 +11,12 @@ interface DashTopProps {
     isPracticeLeague: boolean | undefined | null,
     isLeagueFull: boolean | undefined | null,
     isLeagueActive: boolean | undefined | null,
+    initialValues: { teamName: string },
+    validationSchema: ObjectSchema<object>,
+    loading: boolean,
+    message: string,
+    driversInTeam: Array<IDriver>,
+    handleCreateTeam: (formValue: { teamName: string }) => void,
     handleDeleteUserTeam: (e: { preventDefault: () => void }) => void,
 }
 
@@ -25,50 +27,15 @@ export default function DashTop({
                                     isPracticeLeague,
                                     isLeagueFull,
                                     isLeagueActive,
-                                    handleDeleteUserTeam
+                                    initialValues,
+                                    validationSchema,
+                                    loading,
+                                    message,
+                                    driversInTeam,
+                                    handleCreateTeam,
+                                    handleDeleteUserTeam,
                                 }: DashTopProps) {
-    const driversInTeam = useDriversInTeam(userData?.team?.id).data;
 
-    const navigate: NavigateFunction = useNavigate();
-    const [loading, setLoading]
-        = useState<boolean>(false);
-    const [message, setMessage]
-        = useState<string>("");
-
-    const initialValues: {
-        teamName: string;
-    } = {
-        teamName: "",
-    };
-
-    const validationSchema = Yup.object().shape({
-        teamName: Yup.string().required("Please enter a valid team name"),
-    });
-
-    const handleCreateTeam = (formValue: { teamName: string }) => {
-        const {teamName} = formValue;
-
-        setMessage("");
-        setLoading(true);
-
-        postCreateUserTeam(userData?.id, teamName).then(
-            () => {
-                navigate("/dashboard");
-                window.location.reload();
-            },
-            (error) => {
-                const resMessage =
-                    (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString();
-
-                setLoading(false);
-                setMessage(resMessage);
-            }
-        );
-    };
 
     const username = userData?.username;
     const teamName = userData?.team?.teamName
@@ -177,18 +144,21 @@ export default function DashTop({
                             )
                         })}
                         <hr/>
-                        <p>Want to join a different league?</p>
-                        <div>
-                            <button className="btn btn-proceed "
-                                    type="button"
-                                    onClick={(e) => handleDeleteUserTeam(e)}
-                            >
-                                Delete Team
-                            </button>
-                        </div>
                         {isLeagueActive ?
-                            <h3>Your league is active, points will be scored from races after:
-                                <br/>{leagueData?.activeTimestamp?.slice(0, 8)}</h3>
+                            <>
+                                <div>
+                                    <p>Want to join a different league?</p>
+                                    <button className="btn btn-proceed "
+                                            type="button"
+                                            onClick={(e) => handleDeleteUserTeam(e)}
+                                    >
+                                        Delete This Team
+                                    </button>
+                                </div>
+                                <hr/>
+                                <h3>Your league is active, points will be scored from races after:
+                                    <br/>{leagueData?.activeTimestamp?.slice(0, 8)}</h3>
+                            </>
                             :
                             <h3>Draft in progress...</h3>
                         }
