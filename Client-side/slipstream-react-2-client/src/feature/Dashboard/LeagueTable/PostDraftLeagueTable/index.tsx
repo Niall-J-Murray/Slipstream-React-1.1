@@ -18,7 +18,7 @@ export default function PostDraftLeagueTable({currentLeague, leagueTeams, isDraf
 
     return (
         <>
-            <table className="league-table">
+            <table className="league-table pb-3">
                 <caption>
                     <h3>{currentLeague?.leagueName}</h3>
                     {/*<h3>{currentLeague?.isActive ? "League is active" : "League not active"}</h3>*/}

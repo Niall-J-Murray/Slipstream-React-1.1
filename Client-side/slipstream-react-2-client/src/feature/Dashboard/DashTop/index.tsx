@@ -126,19 +126,20 @@ export default function DashTop({
             if (isLeagueFull || isLeagueActive) {
                 return (
                     <div>
-                        <h2>{username}'s Dashboard </h2>
+                        <h3>{username}'s Dashboard </h3>
                         <hr/>
                         <p>Your team: "{teamName}"</p>
-                        <p>1st pick number: {firstPickNumber}</p>
-                        <p>2nd pick number: {secondPickNumber}</p>
-                        <p>Selected Drivers -</p>
+                        <p>1st pick number: {firstPickNumber}
+                            <br/>
+                       2nd pick number: {secondPickNumber}</p>
+                        Selected Drivers:
                         {driversInTeam?.map((driver: IDriver, i: number) => {
                             return (
                                 <div key={driver.driverId}>
                                     {driver ?
-                                        <p> {i + 1} - {driver.surname}</p>
+                                        <>{i + 1} - {driver.surname}</>
                                         :
-                                        <p> {i + 1} - </p>
+                                        <> {i + 1} - </>
                                     }
                                 </div>
                             )

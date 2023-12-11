@@ -27,10 +27,15 @@ export default function ActiveLeagueInfo({
                         </caption>
                         <thead>
                         <tr>
-                            <th>Driver</th>
-                            <th>Points</th>
-                            <th>Driver</th>
-                            <th>Points</th>
+                            <th className={"p-4"}>Driver</th>
+                            <th className={"p-4"}>Constructor</th>
+                            <th className={"p-4"}>Points</th>
+                            <th className={"p-4"}>Driver</th>
+                            <th className={"p-4"}>Constructor</th>
+                            <th className={"p-4"}>Points</th>
+                            {/*<th>Driver</th>*/}
+                            {/*<th className={"pr-4"}>Constructor</th>*/}
+                            {/*<th>Points</th>*/}
                         </tr>
                         </thead>
                         <tbody>
@@ -39,10 +44,15 @@ export default function ActiveLeagueInfo({
                                 <Fragment key={driver.driverId}>
                                     {i % 2 == 0 ?
                                         <tr>
-                                            <td  className={"pl-2"}>{undraftedDrivers[i]?.surname}</td>
+                                            <td>{undraftedDrivers[i]?.surname}</td>
+                                            <td>{undraftedDrivers[i]?.constructor}</td>
                                             <td>{undraftedDrivers[i]?.points}</td>
                                             <td>{undraftedDrivers[i + 1]?.surname}</td>
-                                            <td className={"pl-2"}>{undraftedDrivers[i + 1]?.points}</td>
+                                            <td>{undraftedDrivers[i + 1]?.constructor}</td>
+                                            <td>{undraftedDrivers[i + 1]?.points}</td>
+                                            {/*<td>{undraftedDrivers[i + 2]?.surname}</td>*/}
+                                            {/*<td>{undraftedDrivers[i + 2]?.constructor}</td>*/}
+                                            {/*<td>{undraftedDrivers[i + 2]?.points}</td>*/}
                                         </tr>
                                         :
                                         <></>
