@@ -1,12 +1,19 @@
 import ITeam from "../../../../types/team.type.ts";
-import {useDriversInTeam} from "../../../../hooks/queries/driver-queries.ts";
 import IDriver from "../../../../types/driver.type.ts";
 import {Fragment} from "react";
+import {UseQueryResult} from "react-query";
+import ILeague from "../../../../types/league.type.ts";
 
 
-export default function PostDraftLeagueTable({currentLeague, leagueTeams, isDraftInProgress}) {
+interface PostDraftLeagueTableProps {
+    currentLeague: ILeague | undefined,
+    leagueTeams: Array<ITeam> | undefined | null,
+    driversInTeam: (teamId: (number | null | undefined)) => UseQueryResult<IDriver[], unknown>,
+}
 
-    function sortTeams(teams: ITeam[]) {
+export default function PostDraftLeagueTable({ currentLeague, leagueTeams, driversInTeam}: PostDraftLeagueTableProps) {
+
+    function sortTeams(teams: Array<ITeam> | undefined | null) {
         teams?.sort((a: ITeam, b: ITeam) => {
             return a.ranking! - b.ranking!
         });
@@ -14,7 +21,7 @@ export default function PostDraftLeagueTable({currentLeague, leagueTeams, isDraf
     }
 
     const rankedTeams = sortTeams(leagueTeams);
-    const driversInTeam = useDriversInTeam;
+    // const driversInTeam = useDriversInTeam;
 
     return (
         <>
@@ -30,10 +37,10 @@ export default function PostDraftLeagueTable({currentLeague, leagueTeams, isDraf
                     {/*<th className={"teamname"}>Teamname</th>*/}
                     {/*<th className={"points"}>Points</th>*/}
                     {/*<th className={"drivers"} colSpan={2}>Drivers</th>*/}
-                    <th>Rank</th>
-                    <th className={"username"}>User Name</th>
-                    <th>Team Name</th>
-                    <th>Team Points</th>
+                    <th>Pos</th>
+                    <th className={"user-info-col"}>User Name</th>
+                    <th className={"user-info-col"}>Team Name</th>
+                    <th>Points</th>
                     <th>Driver 1</th>
                     <th colSpan={2}>Driver Points</th>
                     <th>Driver 2</th>

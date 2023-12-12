@@ -3,6 +3,7 @@ import {ErrorMessage, Field, Form, Formik} from "formik";
 import IDriver from "../../../types/driver.type.ts";
 import IUser from "../../../types/user.type.ts";
 import ILeague from "../../../types/league.type.ts";
+import {UseQueryResult} from "react-query";
 
 interface DashTopProps {
     userData: IUser | undefined,
@@ -15,25 +16,25 @@ interface DashTopProps {
     validationSchema: ObjectSchema<object>,
     loading: boolean,
     message: string,
-    driversInTeam: Array<IDriver> | undefined,
     handleCreateTeam: (formValue: { teamName: string }) => void,
     handleDeleteUserTeam: (e: { preventDefault: () => void }) => void,
+    driversInTeam: (teamId: (number | null | undefined)) => UseQueryResult<IDriver[], unknown>
+    // driversInTeam: (teamId: (number | null | undefined)) => QueryObserverIdleResult<Array<IDriver>, unknown> | QueryObserverLoadingErrorResult<Array<IDriver>, unknown> | QueryObserverLoadingResult<Array<IDriver>, unknown> | QueryObserverRefetchErrorResult<Array<IDriver>, unknown> | QueryObserverSuccessResult<Array<IDriver>, unknown>
 }
 
 export default function DashTop({
                                     userData,
                                     leagueData,
                                     leagueSize,
-                                    // isPracticeLeague,
                                     isLeagueFull,
                                     isLeagueActive,
                                     initialValues,
                                     validationSchema,
                                     loading,
                                     message,
-                                    driversInTeam,
                                     handleCreateTeam,
                                     handleDeleteUserTeam,
+                                    driversInTeam,
                                 }: DashTopProps) {
 
 
@@ -41,6 +42,8 @@ export default function DashTop({
     const teamName = userData?.team?.teamName
     const firstPickNumber = userData?.team?.firstPickNumber
     const secondPickNumber = userData?.team?.secondPickNumber
+    const driversInUserTeam = driversInTeam(userData?.team?.id).data;
+    // team.drivers = driversInTeam(team.id).data
     const isAdmin = (user: IUser | undefined) => {
         let isAdmin = false;
         user?.roles?.map(role => {
@@ -133,17 +136,25 @@ export default function DashTop({
                             <br/>
                             2nd pick number: {secondPickNumber}</p>
                         Selected Drivers:
-                        {driversInTeam?.map((driver: IDriver, i: number) => {
-                            return (
-                                <div key={driver.driverId}>
-                                    {driver ?
-                                        <>{i + 1} - {driver.surname}</>
-                                        :
-                                        <> {i + 1} - </>
-                                    }
-                                </div>
-                            )
-                        })}
+                        {driversInUserTeam && driversInUserTeam?.length < 1 ?
+                            <div>
+                                1 -
+                            </div>
+                            :
+                            <div>
+                                {driversInUserTeam?.map((driver: IDriver, i: number) => {
+                                    return (
+                                        <div key={driver.driverId}>
+                                            {driver ?
+                                                <>{i + 1} - {driver.surname}</>
+                                                :
+                                                <> {i + 1} - </>
+                                            }
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        }
                         <hr/>
                         {isLeagueActive ?
                             <>
@@ -163,9 +174,11 @@ export default function DashTop({
                             :
                             <h3>Draft in progress...</h3>
                         }
-                        {/*<PracticeGreeting/>*/}
+                        {/*<PracticeGreeting/>*/
+                        }
                     </div>
-                );
+                )
+                    ;
             }
             return (
                 <div>
@@ -201,7 +214,7 @@ export default function DashTop({
     return (
         <>
             {/*<div>*/}
-                <Greeting/>
+            <Greeting/>
             {/*</div>*/}
         </>
     );

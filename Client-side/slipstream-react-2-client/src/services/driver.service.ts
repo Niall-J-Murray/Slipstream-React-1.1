@@ -37,7 +37,10 @@ export const getUndraftedDrivers = async (leagueId: number | null | undefined): 
 };
 
 // export const postPickDriver = async (userId: number | null | undefined, driverId: string | number | null | undefined): Promise<IDriver> => {
-export const postPickDriver = async (data: { userId: string; driverId: number; }): Promise<IDriver> => {
+export const postPickDriver = async (data: {
+    userId: number | null | undefined;
+    driverId: number | null | undefined;
+}): Promise<IDriver> => {
     const response = await axios
         .post(API_DATA_URL + "/pick/" + data.userId,
             {

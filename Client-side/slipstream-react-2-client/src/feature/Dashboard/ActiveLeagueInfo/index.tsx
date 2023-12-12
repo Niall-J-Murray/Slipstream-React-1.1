@@ -16,7 +16,7 @@ export default function ActiveLeagueInfo({
     return (
         <div>
             {isPracticeLeague ?
-                <div className="col-start-3 col-span-2 box-shadow">
+                <div className="col-start-3 col-span-2">
                     <TeamDeleteControls handleDeleteTestTeams={handleDeleteTestTeams}/>
                 </div>
                 :

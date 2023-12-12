@@ -92,7 +92,7 @@ export default function Dashboard({userData}: DashboardProps) {
     const userId = userData ? userData?.id : null;
     const leagueId = userData?.team ? userData?.team?.leagueId : openLeague?.leagueId;
     const teamsInLeague: Array<ITeam> | undefined | null = useAllTeamsInLeague(leagueId).data;
-    const driversInTeam = useDriversInTeam(userData?.team?.id).data;
+
 
     const {
         data: leagueData,
@@ -102,6 +102,7 @@ export default function Dashboard({userData}: DashboardProps) {
     } = useLeagueData(leagueId);
 
     const queryClient = useQueryClient();
+    const driversInTeam = useDriversInTeam;
     const currentPickNumber = useNextPickNumber(leagueId).data;
     const nextUserToPick = useNextUserToPick(leagueId).data;
     const pickDriver = usePickDriver();
@@ -216,13 +217,14 @@ export default function Dashboard({userData}: DashboardProps) {
                 .then(res => {
                     setIsPracticeLeague(res);
                 })
+                .then(() => navigate("/dashboard"))
         } else {
             postToggleTestLeague(leagueId)
                 .then(res => {
                     setIsPracticeLeague(res);
                 })
+                .then(() => window.location.reload())
         }
-        navigate("/dashboard")
     }
 
     const addTestTeam = (e: { preventDefault: () => void; }) => {
@@ -235,7 +237,17 @@ export default function Dashboard({userData}: DashboardProps) {
                             setLeagueSize(leagueTeams?.length);
                         }
                     )
+                    .then(() => {
+                        if (isLeagueFull) {
+                            window.location.reload();
+                        }
+                    })
             })
+        // window.location.reload();
+        console.log(leagueTeams?.length)
+        if (leagueTeams && leagueTeams.length >= 9) {
+            window.location.reload();
+        }
     }
 
     const handleDeleteTestTeams = (e: { preventDefault: () => void; }) => {
@@ -250,6 +262,8 @@ export default function Dashboard({userData}: DashboardProps) {
                         }
                     )
             })
+            .then(() => window.location.reload());
+        window.location.reload();
     }
 
     const handleDriverSelection = (driver: IDriver) => {
@@ -258,11 +272,12 @@ export default function Dashboard({userData}: DashboardProps) {
     }
 
     const handlePick = (e: { preventDefault: () => void; },
-                        driverId: number | string | undefined) => {
+                        driver: IDriver | undefined | null) => {
+        // driverId: number | string | undefined) => {
         e.preventDefault();
         pickDriver.mutateAsync({
             userId: userId,
-            driverId: driverId,
+            driverId: driver?.driverId,
         })
             .then(() => {
                 queryClient.invalidateQueries("leagueData")
@@ -272,13 +287,14 @@ export default function Dashboard({userData}: DashboardProps) {
                 queryClient.invalidateQueries("nextUserToPick")
                 // queryClient.invalidateQueries("allTeamsInLeague")
             })
-            .then(() => setSelectedDriver(null));
+            .then(() => setLastDriverPicked(driver))
+            .then(() => setLastPickTime(new Date()));
     }
 
-    function PreDraftLeague() {
+    function PreDraftDashboard() {
         return (
             <>
-                <div className="col-start-2 col-span-1 h-125 box-shadow">
+                <div className="col-start-2 col-span-1 h-95 box-shadow">
                     <DashTop
                         userData={userData}
                         leagueData={leagueData}
@@ -296,7 +312,7 @@ export default function Dashboard({userData}: DashboardProps) {
                     />
                 </div>
                 {/*<div id="practice-draft-options" className="col-start-3 col-span-2 h-125 box-shadow">*/}
-                <div className="col-start-3 col-span-2 h-125 box-shadow">
+                <div className="col-start-3 col-span-2 95 box-shadow">
                     {showDraftPickTips ?
                         <DraftPickTips
                             isPracticeLeague={isPracticeLeague}
@@ -312,6 +328,7 @@ export default function Dashboard({userData}: DashboardProps) {
                             showDraftPickTips={showDraftPickTips}
                             selectedDriver={selectedDriver}
                             lastPickTime={lastPickTime}
+                            lastDriverPicked={lastDriverPicked}
                             isLeagueActive={isLeagueActive}
                             currentPickNumber={currentPickNumber}
                             isUsersTurnToPick={isUsersTurnToPick}
@@ -331,6 +348,7 @@ export default function Dashboard({userData}: DashboardProps) {
                         isDraftInProgress={isDraftInProgress}
                         nextUserToPick={nextUserToPick}
                         isLeagueActive={isLeagueActive}
+                        driversInTeam={driversInTeam}
                     />
                 </div>
                 <div className="col-start-3 col-span-2">
@@ -346,7 +364,10 @@ export default function Dashboard({userData}: DashboardProps) {
         );
     }
 
-    function PostDraftLeague() {
+    function PostDraftDashboard() {
+        if (!leagueData?.activeTimestamp) {
+            window.location.reload();
+        }
         return (
             <>
                 <div className="col-start-2 col-span-1 h-125 box-shadow">
@@ -372,6 +393,7 @@ export default function Dashboard({userData}: DashboardProps) {
                         currentLeague={leagueData}
                         leagueSize={leagueSize}
                         leagueTeams={leagueTeams}
+                        driversInTeam={driversInTeam}
                         isDraftInProgress={isDraftInProgress}
                         nextUserToPick={nextUserToPick}
                         isLeagueActive={isLeagueActive}
@@ -400,9 +422,9 @@ export default function Dashboard({userData}: DashboardProps) {
             <Layout>
                 <div className="grid grid-cols-5 gap-2">
                     {isLeagueActive ?
-                        <PostDraftLeague/>
+                        <PostDraftDashboard/>
                         :
-                        <PreDraftLeague/>}
+                        <PreDraftDashboard/>}
                 </div>
             </Layout>
         </>

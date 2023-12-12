@@ -7,7 +7,8 @@ interface DraftInProgressProps {
     nextUserToPick: IUser | undefined,
     selectedDriver: IDriver | undefined | null,
     lastPickTime: Date | undefined | null,
-    handlePick: (e: { preventDefault: () => void }, driverId: (number | string | undefined)) => void
+    lastDriverPicked: IDriver | undefined | null,
+    handlePick: (e: { preventDefault: () => void }, driver: (IDriver | undefined | null)) => void
 }
 
 export default function DraftInProgress({
@@ -16,107 +17,180 @@ export default function DraftInProgress({
                                             nextUserToPick,
                                             selectedDriver,
                                             lastPickTime,
+                                            lastDriverPicked,
                                             handlePick
                                         }: DraftInProgressProps) {
-    const selectedDriverId = selectedDriver?.driverId;
-
-    function PickInstructions() {
-        if (isUsersTurnToPick) {
-            return <>
-                {/*<div className="col-start-2 col-span-1">*/}
-                <div>
-                    <h4>
-                        Draft in progress:
-                    </h4>
-                    <h4 className={"pick-instructions-go"}>
-                        Current pick number: {currentPickNumber}
-                    </h4>
-                    {nextUserToPick?.isTestUser ?
-                        <h4 className={"pick-instructions-go"}>
-                            {nextUserToPick.username}'s pick
-                        </h4>
-                        :
-                        <h4 className={"pick-instructions-go"}>
-                            Your next {nextUserToPick?.username}!
-                        </h4>
-                    }
-                </div>
-                {nextUserToPick?.isTestUser ?
-                    // <div className="col-start-3 col-span-1">
-                    <div>
-                        <h4 className={"pick-instructions-go pt-6"}>
-                            Please select a driver<br/> for this test team... {"->"}
-                        </h4>
-                    </div>
-                    :
-                    <div></div>
-                }
-                {/*<div className="col-start-4 col-span-1">*/}
-                <div>
-                    <h4>
-                        You have selected:
-                    </h4>
-                    <h4>
-                        {selectedDriver
-                            ?
-                            <>
-                                <p>{selectedDriver?.firstName + " " + selectedDriver?.surname}</p>
-                                <div>
-                                    <button onClick={(e) => handlePick(e, selectedDriver.driverId)}
-                                            className={"btn btn-proceed"}
-                                            type="submit">
-                                        Confirm Pick
-                                    </button>
-                                </div>
-                            </>
-                            :
-                            <>
-                                <p>Select a driver below...</p>
-                                <div>
-                                    <button onClick={(e) => handlePick(e, selectedDriverId)}
-                                            className={"btn btn-disabled"}
-                                            type="submit"
-                                            disabled={true}>
-                                        Confirm Pick
-                                    </button>
-                                </div>
-                            </>
-                        }
-                    </h4>
-                </div>
-            </>
-        }
-        return <>
-            {/*<div className="col-start-2 col-span-1">*/}
-            <div>
-                <h4>
-                    Draft in progress:
-                </h4>
-                <h4 className={"pick-instructions-wait"}>
-                    Current pick number: {currentPickNumber}
-                </h4>
-                <h4 className="pick-instructions-wait">
-                    It's {nextUserToPick?.username}'s turn to pick.
-                </h4>
-            </div>
-            {/*<div className="col-start-4 col-span-1">*/}
-            <div>
-                <h4>
-                    Last pick was made at:
-                </h4>
-                <h4>
-                    {lastPickTime ? lastPickTime.toString() : "No picks made yet"}
-                </h4>
-                <button disabled={true} className={"btn btn-disabled"} type="submit">
-                    Confirm Pick
-                </button>
-            </div>
-        </>
-    }
 
     return (
-        <>
-            <PickInstructions/>
-        </>
-    )
+        <div className="grid grid-cols-2">
+            <div className="col-start-1 col-span-2 draft-span">
+                <div>
+                    Draft in progress:
+                </div>
+                <div className={"pick-instructions-go"}>
+                    Current pick number: {currentPickNumber && currentPickNumber < 10
+                    ? "0" + currentPickNumber : currentPickNumber}
+                </div>
+            </div>
+            {isUsersTurnToPick ?
+                <>
+                    <div className="col-start-1 col-span-3 draft-span">
+                        <div className={"pick-instructions-go"}>
+                            It's {nextUserToPick?.username}'s pick
+                        </div>
+                        {nextUserToPick?.isTestUser ?
+                            <div className={"pick-instructions-go"}>
+                                Select driver for test team...
+                            </div>
+                            :
+                            <div className={"pick-instructions-go"}>
+                                Select driver for your team...
+                            </div>
+                        }
+                    </div>
+                    <div className="col-start-1 col-span-3 draft-span">
+                        <div>
+                            You have selected: {selectedDriver ?
+                            (selectedDriver?.firstName + " " + selectedDriver?.surname)
+                            :
+                            "Select a driver below..."
+                        }
+                        </div>
+                        <div>
+                            {/*<button onClick={(e) => handlePick(e, selectedDriver?.driverId)}*/}
+                            <button onClick={(e) => handlePick(e, selectedDriver)}
+                                    className={"btn btn-proceed"}
+                                    type="submit"
+                                    disabled={!selectedDriver}
+                            >
+                                Confirm Pick
+                            </button>
+                        </div>
+                    </div>
+                </>
+                :
+                <>
+                    <div className="col-start-1 col-span-3 draft-span">
+                        Last pick was made at: {lastPickTime ? lastPickTime.toString() : "No picks made yet"}
+                    </div>
+                    <div className="col-start-1 col-span-3 draft-span">
+                        <div>
+                            Last driver picked was:
+                        </div>
+                        <div>
+                            {lastDriverPicked ?
+                                (lastDriverPicked?.firstName + " " + lastDriverPicked?.surname)
+                                :
+                                "No picks made yet"
+                            }
+                        </div>
+                        {/*<div>*/}
+                        {/*    <button onClick={(e) => handlePick(e, selectedDriver?.driverId)}*/}
+                        {/*            className={"btn btn-proceed"}*/}
+                        {/*            type="submit"*/}
+                        {/*            disabled={!selectedDriver}*/}
+                        {/*    >*/}
+                        {/*        Confirm Pick*/}
+                        {/*    </button>*/}
+                        {/*</div>*/}
+                    </div>
+                </>
+            }
+        </div>
+    );
+}
+
+
+{/*                {selectedDriver*/
+}
+{/*                    ?*/
+}
+{/*                    <div className="col-start-1 col-span-3 draft-span">*/
+}
+{/*                        <div>*/
+}
+{/*                            You have selected:*/
+}
+{/*                        </div>*/
+}
+{/*                        <div>*/
+}
+{/*                            {selectedDriver?.firstName + " " + selectedDriver?.surname}*/
+}
+{/*                        </div>*/
+}
+{/*                        <div>*/
+}
+{/*                            <button onClick={(e) => handlePick(e, selectedDriver.driverId)}*/
+}
+{/*                                    className={"btn btn-proceed"}*/
+}
+{/*                                    type="submit">*/
+}
+{/*                                Confirm Pick*/
+}
+{/*                            </button>*/
+}
+{/*                        </div>*/
+}
+{/*                    </div>*/
+}
+{/*                    :*/
+}
+{/*                    <div className="col-start-1 col-span-3 toggle-span">*/
+}
+{/*                        <h4>*/
+}
+{/*                            You have selected:*/
+}
+{/*                        </h4>*/
+}
+{/*                        <h4>*/
+}
+{/*                            <p>Select a driver below...</p>*/
+}
+{/*                        </h4>*/
+}
+{/*                        <h4>*/
+}
+{/*                            <div>*/
+}
+{/*                                <button onClick={(e) => handlePick(e, selectedDriverId)}*/
+}
+{/*                                        className={"btn btn-disabled"}*/
+}
+{/*                                        type="submit"*/
+}
+{/*                                        disabled={!selectedDriver}>*/
+}
+{/*                                    Confirm Pick*/
+}
+{/*                                </button>*/
+}
+{/*                            </div>*/
+}
+{/*                        </h4>*/
+}
+{/*                    </div>*/
+}
+{/*                }*/
+}
+{/*            </>*/
+}
+{/*        );*/
+}
+{/*    }*/
+}
+
+{/*    return (*/
+}
+{/*        <>*/
+}
+{/*            <PickInstructions/>*/
+}
+{/*        </>*/
+}
+{/*    )*/
+}
+{/*}*/
 }

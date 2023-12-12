@@ -111,6 +111,11 @@ body {
     justify-content: space-between;
 }
 
+.draft-span {
+    padding-top: 5%;
+    display: flex;
+    justify-content: space-around;
+}
 /*.form-table,*/
 /*.form-table caption {*/
 /*    color: white;*/

@@ -16,7 +16,6 @@ import IUser from "./types/user.type.ts";
 import TestPage from "./feature/TestPage";
 
 export default function App() {
-
     const [currentUser, setCurrentUser]
         = useState<IUser | undefined>();
 

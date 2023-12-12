@@ -7,18 +7,18 @@ import IUser from "../../types/user.type.ts";
 
 const navigation = [
     {name: "Home", href: "home", current: true},
-    {name: "Dashboard", href: "dashboard", current: false},
-    {name: "Admin", href: "admin", current: false},
     {name: "Register", href: "register", current: false},
     {name: "Login", href: "login", current: false},
+    {name: "Dashboard", href: "dashboard", current: false},
+    {name: "Admin", href: "admin", current: false},
     {name: "Log Out", href: "logout", current: false},
 ];
 
-function classNames(...classes: any) {
+function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ");
 }
 
-function dropdownName(user: any) {
+function dropdownName(user: IUser | null | undefined) {
     if (user != null) {
         return user.username;
     } else {

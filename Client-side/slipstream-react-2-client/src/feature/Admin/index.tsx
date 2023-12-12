@@ -34,7 +34,7 @@ export default function Admin({userData}: AdminProps) {
 
     useEffect(() => {
         if (!userData || !isAdmin(userData)) {
-            redirect("/home");
+            redirect("/dashboard");
         }
         getAllUsers().then(response => {
             setAllUsers(response);
