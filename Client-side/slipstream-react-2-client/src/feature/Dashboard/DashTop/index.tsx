@@ -24,7 +24,7 @@ export default function DashTop({
                                     userData,
                                     leagueData,
                                     leagueSize,
-                                    isPracticeLeague,
+                                    // isPracticeLeague,
                                     isLeagueFull,
                                     isLeagueActive,
                                     initialValues,
@@ -109,17 +109,17 @@ export default function DashTop({
         </div>;
     }
 
-    function PracticeGreeting() {
-        if (isPracticeLeague && !isLeagueActive) {
-            return <div>
-                <h4>This is a practice league -
-                    <br/> {">"} You may make picks for your team and test teams.
-                    <br/> {">"} Test teams will be removed automatically 24hrs after practice draft
-                    is finished.
-                </h4>
-            </div>;
-        }
-    }
+    // function PracticeGreeting() {
+    //     if (isPracticeLeague && !isLeagueActive) {
+    //         return <div>
+    //             <h4>This is a practice league -
+    //                 <br/> {">"} You may make picks for your team and test teams.
+    //                 <br/> {">"} Test teams will be removed automatically 24hrs after practice draft
+    //                 is finished.
+    //             </h4>
+    //         </div>;
+    //     }
+    // }
 
     function UserGreeting() {
         if (userData?.team) {
@@ -131,7 +131,7 @@ export default function DashTop({
                         <p>Your team: "{teamName}"</p>
                         <p>1st pick number: {firstPickNumber}
                             <br/>
-                       2nd pick number: {secondPickNumber}</p>
+                            2nd pick number: {secondPickNumber}</p>
                         Selected Drivers:
                         {driversInTeam?.map((driver: IDriver, i: number) => {
                             return (
@@ -200,9 +200,9 @@ export default function DashTop({
 
     return (
         <>
-            <div className="box-shadow">
+            {/*<div>*/}
                 <Greeting/>
-            </div>
+            {/*</div>*/}
         </>
     );
 }

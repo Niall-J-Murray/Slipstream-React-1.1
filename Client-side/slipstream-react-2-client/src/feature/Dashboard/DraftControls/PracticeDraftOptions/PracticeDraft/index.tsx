@@ -25,7 +25,6 @@ export default function PracticeDraft({isPracticeLeague, isLeagueFull, togglePra
                     {/*    togglePracticeOptions={togglePracticeOptions}*/}
                     {/*/>*/}
                     {/*</div>*/}
-                    <hr/>
                     <h4>Want to try a practice draft?</h4>
                 </div>
                 <div>

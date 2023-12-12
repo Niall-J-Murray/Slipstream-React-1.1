@@ -23,7 +23,8 @@ export default function DraftInProgress({
     function PickInstructions() {
         if (isUsersTurnToPick) {
             return <>
-                <div className="col-start-2 col-span-1">
+                {/*<div className="col-start-2 col-span-1">*/}
+                <div>
                     <h4>
                         Draft in progress:
                     </h4>
@@ -41,7 +42,8 @@ export default function DraftInProgress({
                     }
                 </div>
                 {nextUserToPick?.isTestUser ?
-                    <div className="col-start-3 col-span-1">
+                    // <div className="col-start-3 col-span-1">
+                    <div>
                         <h4 className={"pick-instructions-go pt-6"}>
                             Please select a driver<br/> for this test team... {"->"}
                         </h4>
@@ -49,7 +51,8 @@ export default function DraftInProgress({
                     :
                     <div></div>
                 }
-                <div className="col-start-4 col-span-1">
+                {/*<div className="col-start-4 col-span-1">*/}
+                <div>
                     <h4>
                         You have selected:
                     </h4>
@@ -84,7 +87,8 @@ export default function DraftInProgress({
             </>
         }
         return <>
-            <div className="col-start-2 col-span-1">
+            {/*<div className="col-start-2 col-span-1">*/}
+            <div>
                 <h4>
                     Draft in progress:
                 </h4>
@@ -95,7 +99,8 @@ export default function DraftInProgress({
                     It's {nextUserToPick?.username}'s turn to pick.
                 </h4>
             </div>
-            <div className="col-start-4 col-span-1">
+            {/*<div className="col-start-4 col-span-1">*/}
+            <div>
                 <h4>
                     Last pick was made at:
                 </h4>

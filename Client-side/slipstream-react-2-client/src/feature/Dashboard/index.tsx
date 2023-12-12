@@ -22,7 +22,6 @@ import {useDriversInTeam, usePickDriver, useUndraftedDrivers} from "../../hooks/
 import ITeam from "../../types/team.type.ts";
 import ActiveLeagueInfo from "./ActiveLeagueInfo";
 import * as Yup from "yup";
-import PracticeOptionsToggle from "./DraftControls/PracticeDraftOptions/PracticeOptionsToggle";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -279,7 +278,7 @@ export default function Dashboard({userData}: DashboardProps) {
     function PreDraftLeague() {
         return (
             <>
-                <div className="col-start-2 col-span-1 h-125">
+                <div className="col-start-2 col-span-1 h-125 box-shadow">
                     <DashTop
                         userData={userData}
                         leagueData={leagueData}
@@ -296,7 +295,8 @@ export default function Dashboard({userData}: DashboardProps) {
                         handleDeleteUserTeam={handleDeleteUserTeam}
                     />
                 </div>
-                <div id="practice-draft-options" className="col-start-3 col-span-2 h-100">
+                {/*<div id="practice-draft-options" className="col-start-3 col-span-2 h-125 box-shadow">*/}
+                <div className="col-start-3 col-span-2 h-125 box-shadow">
                     {showDraftPickTips ?
                         <DraftPickTips
                             isPracticeLeague={isPracticeLeague}
@@ -304,35 +304,23 @@ export default function Dashboard({userData}: DashboardProps) {
                             togglePracticeOptions={togglePracticeOptions}
                         />
                         :
-                        <>
-                            <div className={"box-shadow"}>
-                                <div className={"toggle-span"}>
-                                    Draft Controls
-                                    <PracticeOptionsToggle
-                                        isPracticeLeague={isPracticeLeague}
-                                        showDraftPickTips={showDraftPickTips}
-                                        togglePracticeOptions={togglePracticeOptions}
-                                    />
-                                </div>
-                            </div>
-                            <DraftControls
-                                userData={userData}
-                                leagueData={leagueData}
-                                isPracticeLeague={isPracticeLeague}
-                                isLeagueFull={isLeagueFull}
-                                showDraftPickTips={showDraftPickTips}
-                                selectedDriver={selectedDriver}
-                                lastPickTime={lastPickTime}
-                                isLeagueActive={isLeagueActive}
-                                currentPickNumber={currentPickNumber}
-                                isUsersTurnToPick={isUsersTurnToPick}
-                                nextUserToPick={nextUserToPick}
-                                togglePracticeOptions={togglePracticeOptions}
-                                togglePracticeLeague={togglePracticeLeague}
-                                addTestTeam={addTestTeam}
-                                handlePick={handlePick}
-                            />
-                        </>
+                        <DraftControls
+                            userData={userData}
+                            leagueData={leagueData}
+                            isPracticeLeague={isPracticeLeague}
+                            isLeagueFull={isLeagueFull}
+                            showDraftPickTips={showDraftPickTips}
+                            selectedDriver={selectedDriver}
+                            lastPickTime={lastPickTime}
+                            isLeagueActive={isLeagueActive}
+                            currentPickNumber={currentPickNumber}
+                            isUsersTurnToPick={isUsersTurnToPick}
+                            nextUserToPick={nextUserToPick}
+                            togglePracticeOptions={togglePracticeOptions}
+                            togglePracticeLeague={togglePracticeLeague}
+                            addTestTeam={addTestTeam}
+                            handlePick={handlePick}
+                        />
                     }
                 </div>
                 <div className="col-start-2 col-span-1">
@@ -361,7 +349,7 @@ export default function Dashboard({userData}: DashboardProps) {
     function PostDraftLeague() {
         return (
             <>
-                <div className="col-start-2 col-span-1 h-125">
+                <div className="col-start-2 col-span-1 h-125 box-shadow">
                     <DashTop
                         userData={userData}
                         leagueData={leagueData}
@@ -378,7 +366,8 @@ export default function Dashboard({userData}: DashboardProps) {
                         handleDeleteUserTeam={handleDeleteUserTeam}
                     />
                 </div>
-                <div id="practice-draft-options" className="col-start-3 col-span-2">
+                {/*<div id="practice-draft-options" className="col-start-3 col-span-2 h-125 box-shadow">*/}
+                <div className="col-start-3 col-span-2 h-125 box-shadow">
                     <LeagueTable
                         currentLeague={leagueData}
                         leagueSize={leagueSize}

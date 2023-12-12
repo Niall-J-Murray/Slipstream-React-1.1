@@ -5,7 +5,7 @@ interface PracticeDraftOptionsProps {
     leagueData: ILeague | undefined,
     isPracticeLeague: boolean | undefined | null,
     isLeagueFull: boolean | undefined | null,
-    showDraftPickTips: boolean | undefined | null,
+    showDraftPickTips: boolean | undefined,
     togglePracticeOptions: () => void,
     togglePracticeLeague: () => void,
     addTestTeam: (e: { preventDefault: () => void }) => void

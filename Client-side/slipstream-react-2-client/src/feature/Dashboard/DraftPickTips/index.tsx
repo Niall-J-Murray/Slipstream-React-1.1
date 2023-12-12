@@ -14,15 +14,12 @@ export default function DraftPickTips({
                                       }: RemindersProps) {
     return (
         <>
-            <div className="box-shadow">
-                <div className={"toggle-span"}>
-                    Draft Pick Tips
-                    <PracticeOptionsToggle
-                        isPracticeLeague={isPracticeLeague}
-                        showDraftPickTips={showDraftPickTips}
-                        togglePracticeOptions={togglePracticeOptions}
-                    />
-                </div>
+            <div>
+                <PracticeOptionsToggle
+                    isPracticeLeague={isPracticeLeague}
+                    showDraftPickTips={showDraftPickTips}
+                    togglePracticeOptions={togglePracticeOptions}
+                />
                 <ul className="text-block">
                     <li>When you create a team, it is automatically added to the open league shown below.</li>
                     <li>If you want to delete your team, you must wait until the league you joined is active.</li>

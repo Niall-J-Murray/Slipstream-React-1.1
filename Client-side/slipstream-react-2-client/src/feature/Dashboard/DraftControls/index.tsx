@@ -3,13 +3,14 @@ import DraftInProgress from "./DraftInProgress";
 import IUser from "../../../types/user.type.ts";
 import ILeague from "../../../types/league.type.ts";
 import IDriver from "../../../types/driver.type.ts";
+import PracticeOptionsToggle from "./PracticeDraftOptions/PracticeOptionsToggle";
 
 interface DraftControlsProps {
     userData: IUser | undefined
     leagueData: ILeague | undefined,
     isPracticeLeague: boolean | undefined | null,
     isLeagueFull: boolean | undefined | null,
-    showDraftPickTips: boolean | undefined | null,
+    showDraftPickTips: boolean | undefined,
     selectedDriver: IDriver | undefined | null,
     lastPickTime: Date | undefined | null,
     isLeagueActive: boolean | undefined | null,
@@ -42,40 +43,45 @@ export default function DraftControls({
 
     if (!userData?.team || isLeagueActive) {
         return (
-            <>
-            </>
+                <PracticeOptionsToggle
+                    isPracticeLeague={isPracticeLeague}
+                    showDraftPickTips={showDraftPickTips}
+                    togglePracticeOptions={togglePracticeOptions}
+                />
         )
     } else {
         return (
-            <>
-                {/*// <div className="col-start-2 col-span-3 box-shadow">*/}
-                <div className="box-shadow">
-                    {isLeagueFull ?
-                        <div className="grid grid-cols-5">
-                            <DraftInProgress
-                                currentPickNumber={currentPickNumber}
-                                isUsersTurnToPick={isUsersTurnToPick}
-                                nextUserToPick={nextUserToPick}
-                                selectedDriver={selectedDriver}
-                                lastPickTime={lastPickTime}
-                                handlePick={handlePick}
-                            />
-                        </div>
-                        :
-                        <div className="grid grid-cols-5">
-                            <PracticeDraftOptions
-                                leagueData={leagueData}
-                                isPracticeLeague={isPracticeLeague}
-                                isLeagueFull={isLeagueFull}
-                                showDraftPickTips={showDraftPickTips}
-                                togglePracticeOptions={togglePracticeOptions}
-                                togglePracticeLeague={togglePracticeLeague}
-                                addTestTeam={addTestTeam}
-                            />
-                        </div>
-                    }
-                </div>
-            </>
+            <div>
+                    <PracticeOptionsToggle
+                        isPracticeLeague={isPracticeLeague}
+                        showDraftPickTips={showDraftPickTips}
+                        togglePracticeOptions={togglePracticeOptions}
+                    />
+                {isLeagueFull ?
+                    <div className="grid grid-cols-5">
+                        <DraftInProgress
+                            currentPickNumber={currentPickNumber}
+                            isUsersTurnToPick={isUsersTurnToPick}
+                            nextUserToPick={nextUserToPick}
+                            selectedDriver={selectedDriver}
+                            lastPickTime={lastPickTime}
+                            handlePick={handlePick}
+                        />
+                    </div>
+                    :
+                    <div className="grid grid-cols-5">
+                        <PracticeDraftOptions
+                            leagueData={leagueData}
+                            isPracticeLeague={isPracticeLeague}
+                            isLeagueFull={isLeagueFull}
+                            showDraftPickTips={showDraftPickTips}
+                            togglePracticeOptions={togglePracticeOptions}
+                            togglePracticeLeague={togglePracticeLeague}
+                            addTestTeam={addTestTeam}
+                        />
+                    </div>
+                }
+            </div>
         )
     }
 }
