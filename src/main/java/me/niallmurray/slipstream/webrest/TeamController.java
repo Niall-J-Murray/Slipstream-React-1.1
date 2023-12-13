@@ -59,7 +59,7 @@ public class TeamController {
   }
 
   @PostMapping("/deleteUserTeam/{userId}")
-  public String postDeleteTeam(@PathVariable Long userId) {
+  public ResponseEntity<User> postDeleteTeam(@PathVariable Long userId) {
     User user = userService.findById(userId);
     Team team = user.getTeam();
     League league = team.getLeague();
@@ -67,7 +67,7 @@ public class TeamController {
     teamService.deleteTeam(team);
     userService.save(user);
     leagueService.save(league);
-    return "redirect:/dashboard/" + userId;
+    return ResponseEntity.ok(user);
   }
 
   @PostMapping("/createTestTeam/{leagueId}")

@@ -1,5 +1,4 @@
 import DashTop from "./DashTop";
-import LeagueTable from "./LeagueTable";
 import DriverTable from "./DriverTable";
 import {useEffect, useState} from "react";
 import {postToggleTestLeague} from "../../services/league.service.ts";
@@ -22,6 +21,10 @@ import {useDriversInTeam, usePickDriver, useUndraftedDrivers} from "../../hooks/
 import ITeam from "../../types/team.type.ts";
 import ActiveLeagueInfo from "./ActiveLeagueInfo";
 import * as Yup from "yup";
+import PostDraftLeagueTable from "./LeagueTable/PostDraftLeagueTable";
+import PreDraftLeagueTable from "./LeagueTable/PreDraftLeagueTable";
+import {hideLoader, showLoader} from "../../services/loading.service.ts";
+import Login from "../Login";
 
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
@@ -77,16 +80,25 @@ export default function Dashboard({userData}: DashboardProps) {
     };
 
     const validationSchema: Yup.ObjectSchema<object> = Yup.object().shape({
-        teamName: Yup.string().required("Please enter a valid team name"),
+        teamName: Yup.string()
+            .test(
+                "length",
+                "The team name must be between 3 and 20 characters.",
+                (val: any) =>
+                    val &&
+                    val.toString().length >= 3 &&
+                    val.toString().length <= 20
+            )
+            .required("Please enter a valid team name"),
     });
 
     const navigate: NavigateFunction = useNavigate();
 
     const {
         data: openLeague,
-        isLoading: openLeagueLoading,
+        isLoading: loadingOpenLeague,
         // status: openLeagueData,
-        error: erropenLeague,
+        error: errOpenLeague,
     } = useOpenLeague();
 
     const userId = userData ? userData?.id : null;
@@ -96,7 +108,7 @@ export default function Dashboard({userData}: DashboardProps) {
 
     const {
         data: leagueData,
-        isLoading: leagueDataLoading,
+        isLoading: loadingLeagueData,
         // status: statLeagueData,
         error: errLeagueData,
     } = useLeagueData(leagueId);
@@ -171,25 +183,6 @@ export default function Dashboard({userData}: DashboardProps) {
                     setMessage(resMessage);
                 }
             );
-
-        // postCreateUserTeam(userData?.id, teamName)
-        //     .then(
-        //         () => {
-        //             navigate("/dashboard");
-        //             window.location.reload();
-        //         },
-        //         (error) => {
-        //             const resMessage =
-        //                 (error.response &&
-        //                     error.response.data &&
-        //                     error.response.data.message) ||
-        //                 error.message ||
-        //                 error.toString();
-        //
-        //             setLoading(false);
-        //             setMessage(resMessage);
-        //         }
-        //     );
     };
 
     const handleDeleteUserTeam = () => {
@@ -285,10 +278,24 @@ export default function Dashboard({userData}: DashboardProps) {
                 queryClient.invalidateQueries("driversInTeam")
                 queryClient.invalidateQueries("nextPickNumber")
                 queryClient.invalidateQueries("nextUserToPick")
+                queryClient.invalidateQueries("isUsersTurnToPick")
                 // queryClient.invalidateQueries("allTeamsInLeague")
             })
             .then(() => setLastDriverPicked(driver))
             .then(() => setLastPickTime(new Date()));
+    }
+
+    const isLoading = loadingOpenLeague || loadingLeagueData;
+    const error = errOpenLeague || errLeagueData;
+
+    if (isLoading) {
+        return <>{() => showLoader()}</>
+    } else {
+        hideLoader();
+    }
+
+    if (error) {
+        return (<Login userData={userData} error={error}/>);
     }
 
     function PreDraftDashboard() {
@@ -341,14 +348,12 @@ export default function Dashboard({userData}: DashboardProps) {
                     }
                 </div>
                 <div className="col-start-2 col-span-1">
-                    <LeagueTable
-                        currentLeague={leagueData}
+                    <PreDraftLeagueTable
+                        leagueData={leagueData}
                         leagueSize={leagueSize}
                         leagueTeams={leagueTeams}
-                        isDraftInProgress={isDraftInProgress}
                         nextUserToPick={nextUserToPick}
-                        isLeagueActive={isLeagueActive}
-                        driversInTeam={driversInTeam}
+                        isDraftInProgress={isDraftInProgress}
                     />
                 </div>
                 <div className="col-start-3 col-span-2">
@@ -389,14 +394,10 @@ export default function Dashboard({userData}: DashboardProps) {
                 </div>
                 {/*<div id="practice-draft-options" className="col-start-3 col-span-2 h-125 box-shadow">*/}
                 <div className="col-start-3 col-span-2 h-125 box-shadow">
-                    <LeagueTable
-                        currentLeague={leagueData}
-                        leagueSize={leagueSize}
+                    <PostDraftLeagueTable
+                        leagueData={leagueData}
                         leagueTeams={leagueTeams}
                         driversInTeam={driversInTeam}
-                        isDraftInProgress={isDraftInProgress}
-                        nextUserToPick={nextUserToPick}
-                        isLeagueActive={isLeagueActive}
                     />
                     <ActiveLeagueInfo
                         isPracticeLeague={isPracticeLeague}

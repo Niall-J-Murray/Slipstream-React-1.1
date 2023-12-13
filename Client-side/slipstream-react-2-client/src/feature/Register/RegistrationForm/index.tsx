@@ -20,7 +20,7 @@ export default function RegistrationForm() {
     const validationSchema = Yup.object().shape({
         username: Yup.string()
             .test(
-                "len",
+                "length",
                 "The username must be between 3 and 20 characters.",
                 (val: any) =>
                     val &&

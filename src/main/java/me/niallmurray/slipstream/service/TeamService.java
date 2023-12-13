@@ -35,8 +35,8 @@ public class TeamService {
     return true;
   }
 
-  private static String formatUserDisplayName(User user) {
-    String userDisplayName = user.getUsername().strip();
+  private static String formatNameForDisplay(String name) {
+    String userDisplayName = name.strip();
     if (userDisplayName.length() > 16) {
       String firstInitial = userDisplayName.charAt(0) + ". ";
       String nameEnding = userDisplayName.substring(userDisplayName.length() - 13);
@@ -52,14 +52,15 @@ public class TeamService {
   public Team createTeam(User user, String teamName) {
     Team team = new Team();
     team.setUser(user);
-
-    if (isUniqueTeamName(teamName.strip())) {
-      team.setTeamName(teamName.strip());
+    //To handle longer team or usernames which may cause irregular table layout displays.
+    String teamDisplayName = formatNameForDisplay(teamName);
+    if (isUniqueTeamName(teamDisplayName)) {
+      team.setTeamName(teamDisplayName);
       user.setTeam(team);
       user.setEmail(user.getEmail());
     }
 
-    String userDisplayName = formatUserDisplayName(user); //To handle longer usernames which may cause irregular table layout displays.
+    String userDisplayName = formatNameForDisplay(user.getUsername());
     team.setUsername(userDisplayName);
     team.setFirstPickNumber(randomPickNumber());
     team.setSecondPickNumber(21 - team.getFirstPickNumber()); //So players get 1&20, 2&19 etc. up to 10&11.
@@ -244,6 +245,7 @@ public class TeamService {
     }
     league.getTeams().remove(team);
     user.setTeam(null);
+    updateLeagueTeamsRankings(team.getLeague());
     teamRepository.delete(team);
     userService.save(user);
     leagueService.save(league);
@@ -257,9 +259,12 @@ public class TeamService {
         userService.delete(team.getUser());
       }
     }
+    updateLeagueTeamsRankings(league);
+
     if (Boolean.TRUE.equals(league.getIsPracticeLeague())) {
       league.setIsPracticeLeague(false);
     }
+    leagueService.save(league);
   }
 
   public void deleteExpiredTestTeams() {

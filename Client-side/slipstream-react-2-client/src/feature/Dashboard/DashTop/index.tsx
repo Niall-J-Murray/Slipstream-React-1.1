@@ -59,10 +59,10 @@ export default function DashTop({
         return (
             <>
                 <div>
-                    <p>{leagueData?.leagueName} is open to join.</p>
-                    <p>Once the league is full, the draft can begin.</p>
-                    <p>You must create a team to try a practice draft.</p>
-                    <p>Choose a team name to get started...</p>
+                    <h5>{leagueData?.leagueName} is open to join.</h5>
+                    <h5>Once the league is full, the draft can begin.</h5>
+                    <h5>You must create a team to try a practice draft.</h5>
+                    <h5>Choose a team name to get started...</h5>
                     <hr/>
                 </div>
                 <Formik
@@ -103,7 +103,7 @@ export default function DashTop({
 
     function AdminGreeting() {
         return <div>
-            <h2>{username}'s Dashboard </h2>
+            <h3>{username}'s Dashboard </h3>
             <hr/>
             <h3>Sorry, admins cannot play!</h3>
             <h3><a href="/admin">Go to admin dashboard</a></h3>
@@ -182,7 +182,7 @@ export default function DashTop({
             }
             return (
                 <div>
-                    <h2>{username}'s Dashboard </h2>
+                    <h3>{username}'s Dashboard </h3>
                     <hr/>
                     <p>Your team: "{teamName}"</p>
                     <p>Random 1st pick draft number: {firstPickNumber}</p>
@@ -197,7 +197,7 @@ export default function DashTop({
         }
         return (
             <div>
-                <h2>{username}'s Dashboard </h2>
+                <h3>{username}'s Dashboard </h3>
                 <hr/>
                 <CreateTeam/>
             </div>

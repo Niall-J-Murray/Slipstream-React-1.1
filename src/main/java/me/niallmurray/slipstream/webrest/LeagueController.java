@@ -24,9 +24,12 @@ public class LeagueController {
   @GetMapping("/{leagueId}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<League> getLeagueData(@PathVariable Long leagueId) {
-    League league = leagueService.findById(leagueId);
+    for (League league : leagueService.findAll()) {
+      teamService.updateLeagueTeamsRankings(league);
+    }
+    League leagueById = leagueService.findById(leagueId);
 //    System.out.println("league entity: " + ResponseEntity.ok(leagueOpt.orElse(null)));
-    return ResponseEntity.ok(league);
+    return ResponseEntity.ok(leagueById);
   }
 
   @GetMapping("/openLeague")

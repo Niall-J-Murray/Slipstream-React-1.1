@@ -3,7 +3,7 @@ import ILeague from "../../../../types/league.type.ts";
 import IUser from "../../../../types/user.type.ts";
 
 interface PreDraftLeagueTableProps {
-    currentLeague: ILeague | undefined,
+    leagueData: ILeague | undefined,
     leagueTeams: Array<ITeam> | undefined | null,
     leagueSize: number | undefined | null,
     nextUserToPick: IUser | undefined | null,
@@ -11,7 +11,7 @@ interface PreDraftLeagueTableProps {
 }
 
 export default function PreDraftLeagueTable({
-                                                currentLeague,
+                                                leagueData,
                                                 leagueTeams,
                                                 leagueSize,
                                                 nextUserToPick,
@@ -33,9 +33,9 @@ export default function PreDraftLeagueTable({
             <table className="league-table">
                 <caption>
                     {isDraftInProgress ?
-                        <h3>{currentLeague?.leagueName}</h3>
+                        <h3>{leagueData?.leagueName}</h3>
                         :
-                        <h3>{currentLeague?.leagueName} - {leagueSize}/10 full</h3>}
+                        <h3>{leagueData?.leagueName} - {leagueSize}/10 full</h3>}
                 </caption>
                 <thead>
                 <tr>

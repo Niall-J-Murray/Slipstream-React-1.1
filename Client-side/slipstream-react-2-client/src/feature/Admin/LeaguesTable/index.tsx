@@ -25,9 +25,10 @@ export default function LeaguesTable() {
                 <tr>
                     <th>Id</th>
                     <th>League Name</th>
+                    <th>Size</th>
                     <th>Creation Time</th>
                     <th>Active Time</th>
-                    <th>Practice League?</th>
+                    <th>Practice League</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -36,9 +37,10 @@ export default function LeaguesTable() {
                         <tr key={league.leagueId}>
                             <td>{league.leagueId}</td>
                             <td>{league.leagueName}</td>
+                            <td>{league.teams?.length}</td>
                             <td>{league.creationTimestamp}</td>
                             <td>{league.activeTimestamp}</td>
-                            <td>{league.isPracticeLeague}</td>
+                            <td>{league.isPracticeLeague ? "Yes" : "No"}</td>
                         </tr>
                     )
                 })}

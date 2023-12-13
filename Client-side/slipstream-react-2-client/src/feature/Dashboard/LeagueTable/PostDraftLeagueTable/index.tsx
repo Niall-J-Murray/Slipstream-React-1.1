@@ -6,16 +6,19 @@ import ILeague from "../../../../types/league.type.ts";
 
 
 interface PostDraftLeagueTableProps {
-    currentLeague: ILeague | undefined,
+    leagueData: ILeague | undefined,
     leagueTeams: Array<ITeam> | undefined | null,
     driversInTeam: (teamId: (number | null | undefined)) => UseQueryResult<IDriver[], unknown>,
 }
 
-export default function PostDraftLeagueTable({ currentLeague, leagueTeams, driversInTeam}: PostDraftLeagueTableProps) {
+export default function PostDraftLeagueTable({leagueData, leagueTeams, driversInTeam}: PostDraftLeagueTableProps) {
 
     function sortTeams(teams: Array<ITeam> | undefined | null) {
         teams?.sort((a: ITeam, b: ITeam) => {
-            return a.ranking! - b.ranking!
+            // if (a.teamPoints == 0 && b.teamPoints == 0) {
+            //     return b.firstPickNumber! - a.firstPickNumber!;
+            // }
+            return a.ranking! - b.ranking!;
         });
         return teams;
     }
@@ -27,7 +30,7 @@ export default function PostDraftLeagueTable({ currentLeague, leagueTeams, drive
         <>
             <table className="league-table pb-3">
                 <caption>
-                    <h3>{currentLeague?.leagueName}</h3>
+                    <h3>{leagueData?.leagueName}</h3>
                     {/*<h3>{currentLeague?.isActive ? "League is active" : "League not active"}</h3>*/}
                 </caption>
                 <thead>
