@@ -23,30 +23,37 @@ export default function DraftInProgress({
 
     return (
         <div className="grid grid-cols-2">
-            <div className="col-start-1 col-span-2 draft-span">
-                <div>
-                    Draft in progress:
-                </div>
-                <div className={"pick-instructions-go"}>
-                    Current pick number: {currentPickNumber && currentPickNumber < 10
-                    ? "0" + currentPickNumber : currentPickNumber}
-                </div>
-            </div>
             {isUsersTurnToPick ?
                 <>
-                    <div className="col-start-1 col-span-3 draft-span">
-                        <div className={"pick-instructions-go"}>
-                            It's {nextUserToPick?.username}'s pick
+                    <div className="col-start-1 col-span-2 draft-span">
+                        <div>
+                            Draft in progress:
                         </div>
+                        <div className={"pick-instructions-go"}>
+                            Current pick number: {currentPickNumber && currentPickNumber < 10
+                            ? "0" + currentPickNumber : currentPickNumber}
+                        </div>
+                    </div>
+                    <div className="col-start-1 col-span-3 draft-span">
+                        {/*<div className={"pick-instructions-go"}>*/}
+                        {/*    It's {nextUserToPick?.username}'s pick*/}
+                        {/*</div>*/}
                         {nextUserToPick?.isTestUser ?
-                            <div className={"pick-instructions-go"}>
-                                Select driver for test team...
+                            <div>
+                                Select a driver
+                                <br/>for test team
                             </div>
                             :
-                            <div className={"pick-instructions-go"}>
-                                Select driver for your team...
+                            <div>
+                                Select a driver
+                                <br/>for your team
                             </div>
                         }
+                        <div className={"pick-instructions-go"}>
+                            It's your pick:
+                            <br/>
+                            {nextUserToPick?.username}
+                        </div>
                     </div>
                     <div className="col-start-1 col-span-3 draft-span">
                         <div>
@@ -71,11 +78,28 @@ export default function DraftInProgress({
                 :
                 <>
                     <div className="col-start-1 col-span-3 draft-span">
-                        Last pick was made at: {lastPickTime ? lastPickTime.toString() : "No picks made yet"}
+                        <div>
+                            Draft in progress:
+                        </div>
+                        <div className={"pick-instructions-wait"}>
+                            Current pick number: {currentPickNumber && currentPickNumber < 10
+                            ? "0" + currentPickNumber : currentPickNumber}
+                        </div>
                     </div>
                     <div className="col-start-1 col-span-3 draft-span">
                         <div>
-                            Last driver picked was:
+                            Last pick was made at:
+                            <br/>{lastPickTime ? lastPickTime.toString() : "No picks made yet"}
+                        </div>
+                        <div className={"pick-instructions-wait"}>
+                            Next to pick:
+                            <br/>
+                            {nextUserToPick?.username}
+                        </div>
+                    </div>
+                    <div className="col-start-1 col-span-3 draft-span">
+                        <div>
+                            Last driver picked:
                         </div>
                         <div>
                             {lastDriverPicked ?

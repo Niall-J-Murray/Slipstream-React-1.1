@@ -83,11 +83,11 @@ export default function Dashboard({userData}: DashboardProps) {
         teamName: Yup.string()
             .test(
                 "length",
-                "The team name must be between 3 and 20 characters.",
+                "Team name must be between 3 and 18 characters",
                 (val: any) =>
                     val &&
                     val.toString().length >= 3 &&
-                    val.toString().length <= 20
+                    val.toString().length <= 18
             )
             .required("Please enter a valid team name"),
     });
@@ -97,7 +97,6 @@ export default function Dashboard({userData}: DashboardProps) {
     const {
         data: openLeague,
         isLoading: loadingOpenLeague,
-        // status: openLeagueData,
         error: errOpenLeague,
     } = useOpenLeague();
 
@@ -109,7 +108,6 @@ export default function Dashboard({userData}: DashboardProps) {
     const {
         data: leagueData,
         isLoading: loadingLeagueData,
-        // status: statLeagueData,
         error: errLeagueData,
     } = useLeagueData(leagueId);
 
@@ -128,6 +126,9 @@ export default function Dashboard({userData}: DashboardProps) {
         if (!userData) {
             navigate("/login");
         }
+        // if (isUsersTurnToPick) {
+        //     window.location.reload();
+        // }
         setLeagueTeams(teamsInLeague);
         setLeagueSize(leagueTeams?.length);
         setIsPracticeLeague(leagueData?.isPracticeLeague);
@@ -158,7 +159,15 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsUsersTurnToPick(true);
         }
 
-    }, [userData, leagueData, leagueData?.activeTimestamp, leagueSize, teamsInLeague, leagueTeams, nextUserToPick, isLeagueFull, undraftedDrivers]);
+        // refreshIfTurnToPick();
+    }, [userData, leagueData, isUsersTurnToPick, leagueData?.activeTimestamp, leagueSize, teamsInLeague, leagueTeams, nextUserToPick, isLeagueFull, undraftedDrivers]);
+
+    const refreshIfTurnToPick = () => {
+        if (leagueData?.currentPickNumber + 1 == userData?.team?.firstPickNumber
+            || leagueData?.currentPickNumber + 1 == userData?.team?.secondPickNumber) {
+            window.location.reload();
+        }
+    }
 
     const handleCreateTeam = (formValue: { teamName: string }) => {
         const {teamName} = formValue;
@@ -282,7 +291,12 @@ export default function Dashboard({userData}: DashboardProps) {
                 // queryClient.invalidateQueries("allTeamsInLeague")
             })
             .then(() => setLastDriverPicked(driver))
-            .then(() => setLastPickTime(new Date()));
+            .then(() => setLastPickTime(new Date()))
+            .then(() => {
+                if (!nextUserToPick?.isTestUser) {
+                    window.location.reload();
+                }
+            });
     }
 
     const isLoading = loadingOpenLeague || loadingLeagueData;
@@ -301,7 +315,7 @@ export default function Dashboard({userData}: DashboardProps) {
     function PreDraftDashboard() {
         return (
             <>
-                <div className="col-start-2 col-span-1 h-95 box-shadow">
+                <div className="col-start-3 col-span-3 h-95 box-shadow">
                     <DashTop
                         userData={userData}
                         leagueData={leagueData}
@@ -319,7 +333,7 @@ export default function Dashboard({userData}: DashboardProps) {
                     />
                 </div>
                 {/*<div id="practice-draft-options" className="col-start-3 col-span-2 h-125 box-shadow">*/}
-                <div className="col-start-3 col-span-2 95 box-shadow">
+                <div className="col-start-6 col-span-5 95 box-shadow">
                     {showDraftPickTips ?
                         <DraftPickTips
                             isPracticeLeague={isPracticeLeague}
@@ -347,7 +361,7 @@ export default function Dashboard({userData}: DashboardProps) {
                         />
                     }
                 </div>
-                <div className="col-start-2 col-span-1">
+                <div className="col-start-3 col-span-3">
                     <PreDraftLeagueTable
                         leagueData={leagueData}
                         leagueSize={leagueSize}
@@ -356,7 +370,7 @@ export default function Dashboard({userData}: DashboardProps) {
                         isDraftInProgress={isDraftInProgress}
                     />
                 </div>
-                <div className="col-start-3 col-span-2">
+                <div className="col-start-6 col-span-5">
                     <DriverTable
                         isDraftInProgress={isDraftInProgress}
                         isUsersTurnToPick={isUsersTurnToPick}
@@ -375,7 +389,7 @@ export default function Dashboard({userData}: DashboardProps) {
         }
         return (
             <>
-                <div className="col-start-2 col-span-1 h-125 box-shadow">
+                <div className="col-start-3 col-span-3 h-125 box-shadow">
                     <DashTop
                         userData={userData}
                         leagueData={leagueData}
@@ -393,7 +407,7 @@ export default function Dashboard({userData}: DashboardProps) {
                     />
                 </div>
                 {/*<div id="practice-draft-options" className="col-start-3 col-span-2 h-125 box-shadow">*/}
-                <div className="col-start-3 col-span-2 h-125 box-shadow">
+                <div className="col-start-6 col-span-5 125 box-shadow">
                     <PostDraftLeagueTable
                         leagueData={leagueData}
                         leagueTeams={leagueTeams}
@@ -405,7 +419,7 @@ export default function Dashboard({userData}: DashboardProps) {
                         handleDeleteTestTeams={handleDeleteTestTeams}
                     />
                 </div>
-                <div className="col-start-2 col-span-3">
+                <div className="col-start-4 col-span-6">
                     <DriverTable
                         isDraftInProgress={isDraftInProgress}
                         isUsersTurnToPick={isUsersTurnToPick}
@@ -421,7 +435,7 @@ export default function Dashboard({userData}: DashboardProps) {
     return (
         <>
             <Layout>
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-12 gap-2">
                     {isLeagueActive ?
                         <PostDraftDashboard/>
                         :

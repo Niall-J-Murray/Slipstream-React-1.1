@@ -59,10 +59,10 @@ export default function DashTop({
         return (
             <>
                 <div>
-                    <h5>{leagueData?.leagueName} is open to join.</h5>
-                    <h5>Once the league is full, the draft can begin.</h5>
-                    <h5>You must create a team to try a practice draft.</h5>
-                    <h5>Choose a team name to get started...</h5>
+                    <h4>{leagueData?.leagueName} is open to join.</h4>
+                    <h4>Once the league is full, the draft can begin.</h4>
+                    <h4>You must create a team to try a practice draft.</h4>
+                    <h4>Choose a team name to get started...</h4>
                     <hr/>
                 </div>
                 <Formik
@@ -73,12 +73,8 @@ export default function DashTop({
                     <Form className={"col-start-1 col-span-3"}>
                         <div className="form-group">
                             <label htmlFor="teamName">Enter your team name:</label>
+                            <br/>
                             <Field name="teamName" type="text" className="form-control" required/>
-                            <ErrorMessage
-                                name="teamName"
-                                component="div"
-                                className="alert alert-danger"
-                            />
                         </div>
                         <div className="form-group">
                             <button type="submit" className="btn btn-proceed" disabled={loading}>
@@ -87,6 +83,11 @@ export default function DashTop({
                                 )}
                                 <span>Create Team</span>
                             </button>
+                            <ErrorMessage
+                                name="teamName"
+                                component="div"
+                                className="alert alert-danger"
+                            />
                         </div>
                         {message && (
                             <div className="form-group">

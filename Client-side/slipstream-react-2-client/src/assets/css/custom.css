@@ -116,6 +116,7 @@ body {
     display: flex;
     justify-content: space-around;
 }
+
 /*.form-table,*/
 /*.form-table caption {*/
 /*    color: white;*/
@@ -161,7 +162,7 @@ a {
     background-color: red;
     border: none;
     padding: 5px;
-    width: 200px;
+    width: 230px;
     transition: all 0.5s;
 }
 
@@ -187,6 +188,7 @@ a {
     position: absolute;
     opacity: 0;
     top: 0;
+    /*left: 20px;*/
     right: -20px;
     transition: 0.5s;
 }

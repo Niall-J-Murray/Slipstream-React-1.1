@@ -49,11 +49,12 @@ export default function App() {
         error: errUserData,
     } = useUserData(userAuth?.id);
 
+
     const isLoading = userAuthLoading || userDataLoading;
     const error = errUserAuth || errUserData;
 
     if (isLoading) {
-        return <>{showLoader()}</>
+        return <>{() => showLoader()}</>
     } else {
         hideLoader();
     }
@@ -72,11 +73,11 @@ export default function App() {
 
     return (
         <>
-            <div className="container mt-3">
+            <div className="container">
                 <Routes>
                     <Route path="/" element={<Home userData={userData}/>}/>
                     <Route path="/home" element={<Home userData={userData}/>}/>
-                    <Route path="/register" element={<Register/>}/>
+                    <Route path="/register" element={<Register userData={userData}/>}/>
                     <Route path="/login" element={<Login userData={userData} error={error}/>}/>
                     <Route path="/dashboard" element={<Dashboard userData={userData}/>}/>
                     <Route path="/admin" element={<Admin userData={userData}/>}/>

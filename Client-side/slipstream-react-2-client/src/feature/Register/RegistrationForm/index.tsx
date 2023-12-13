@@ -1,15 +1,25 @@
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {login, register} from "../../../services/auth.service";
 import IUser from "../../../types/user.type";
 import lights_on from "../../../assets/images/lights_on.png";
 import {NavigateFunction, useNavigate} from "react-router-dom";
 
-export default function RegistrationForm() {
+interface RegistrationFormProps {
+    userData: IUser | undefined
+}
+
+export default function RegistrationForm({userData}: RegistrationFormProps) {
     const navigate: NavigateFunction = useNavigate();
     const [successful, setSuccessful] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
+
+    useEffect(() => {
+        if (userData) {
+            navigate("/dashboard");
+        }
+    }, []);
 
     const initialValues: IUser = {
         username: "",
@@ -17,15 +27,16 @@ export default function RegistrationForm() {
         password: "",
     };
 
+
     const validationSchema = Yup.object().shape({
         username: Yup.string()
             .test(
                 "length",
-                "The username must be between 3 and 20 characters.",
+                "Username must be between 3 and 18 characters",
                 (val: any) =>
                     val &&
                     val.toString().length >= 3 &&
-                    val.toString().length <= 20
+                    val.toString().length <= 18
             )
             .required("This field is required!"),
         email: Yup.string()
@@ -34,11 +45,11 @@ export default function RegistrationForm() {
         password: Yup.string()
             .test(
                 "len",
-                "The password must be between 6 and 40 characters.",
+                "Password must be between 6 and 36 characters.",
                 (val: any) =>
                     val &&
                     val.toString().length >= 6 &&
-                    val.toString().length <= 40
+                    val.toString().length <= 36
             )
             .required("This field is required!"),
     });
@@ -69,7 +80,6 @@ export default function RegistrationForm() {
     };
 
     function handleLogin() {
-
 
         login(sessionStorage.getItem("usrnm"), sessionStorage.getItem("pwrd"))
             .then(

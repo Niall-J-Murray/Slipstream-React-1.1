@@ -39,7 +39,7 @@ public class TeamService {
     String userDisplayName = name.strip();
     if (userDisplayName.length() > 16) {
       String firstInitial = userDisplayName.charAt(0) + ". ";
-      String nameEnding = userDisplayName.substring(userDisplayName.length() - 13);
+      String nameEnding = userDisplayName.substring(userDisplayName.length() - 15);
       if (!nameEnding.contains(" ")) {
         int spacePos = nameEnding.indexOf(" ");
         nameEnding = nameEnding.substring(spacePos + 1, nameEnding.length());
