@@ -132,7 +132,7 @@ export default function DashTop({
                     <div>
                         <h3>{username}'s Dashboard </h3>
                         <hr/>
-                        <p>Your team: "{teamName}"</p>
+                        <p>Your team: {teamName}</p>
                         <p>1st pick number: {firstPickNumber}
                             <br/>
                             2nd pick number: {secondPickNumber}</p>
@@ -185,7 +185,7 @@ export default function DashTop({
                 <div>
                     <h3>{username}'s Dashboard </h3>
                     <hr/>
-                    <p>Your team: "{teamName}"</p>
+                    <p>Your team: {teamName}</p>
                     <p>Random 1st pick draft number: {firstPickNumber}</p>
                     <p>Random 2nd pick draft number: {secondPickNumber}</p>
                     <hr/>

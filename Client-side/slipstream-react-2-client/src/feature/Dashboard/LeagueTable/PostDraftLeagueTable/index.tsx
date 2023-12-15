@@ -55,7 +55,7 @@ export default function PostDraftLeagueTable({leagueData, leagueTeams, driversIn
                     return (
                         <tr key={team.id}>
                             <td>{team.ranking}</td>
-                            <td>{team.username}</td>
+                            <td>{team.displayedUsername}</td>
                             <td>{team.teamName}</td>
                             <td>{team.teamPoints}</td>
                             {/*<td>{driversInTeam(team.id) ? driversInTeam[0]?.shortName : "d1"}</td>*/}

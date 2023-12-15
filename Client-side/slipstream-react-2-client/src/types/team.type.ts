@@ -5,7 +5,7 @@ import ILeague from "./league.type.ts";
 export default interface ITeam {
     id?: any | null,
     user: IUser,
-    username: string | null,
+    displayedUsername: string | null,
     teamName: string,
     isTestTeam?: boolean | null,
     firstPickNumber: number | null,

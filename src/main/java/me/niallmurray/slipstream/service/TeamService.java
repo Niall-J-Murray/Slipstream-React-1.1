@@ -39,8 +39,8 @@ public class TeamService {
     String userDisplayName = name.strip();
     if (userDisplayName.length() > 16) {
       String firstInitial = userDisplayName.charAt(0) + ". ";
-      String nameEnding = userDisplayName.substring(userDisplayName.length() - 15);
-      if (!nameEnding.contains(" ")) {
+      String nameEnding = userDisplayName.substring(userDisplayName.length() - 14);
+      if (nameEnding.contains(" ")) {
         int spacePos = nameEnding.indexOf(" ");
         nameEnding = nameEnding.substring(spacePos + 1, nameEnding.length());
       }
@@ -61,7 +61,7 @@ public class TeamService {
     }
 
     String userDisplayName = formatNameForDisplay(user.getUsername());
-    team.setUsername(userDisplayName);
+    team.setDisplayedUsername(userDisplayName);
     team.setFirstPickNumber(randomPickNumber());
     team.setSecondPickNumber(21 - team.getFirstPickNumber()); //So players get 1&20, 2&19 etc. up to 10&11.
     team.setRanking(team.getFirstPickNumber());
@@ -87,7 +87,7 @@ public class TeamService {
       Team team = new Team();
 
       team.setUser(testUser);
-      team.setUsername(testUser.getUsername());
+      team.setDisplayedUsername(testUser.getUsername());
       team.setTeamName(teamName);
       team.setFirstPickNumber(randomPickNumber());
       team.setSecondPickNumber(21 - team.getFirstPickNumber());

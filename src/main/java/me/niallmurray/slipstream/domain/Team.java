@@ -31,7 +31,7 @@ public class Team implements Serializable {
   //1-1 for now, see comment in User.class
   private User user;
   @Column()
-  private String username;
+  private String displayedUsername;
   @Column()
   private String teamName;
   @Column()
@@ -65,7 +65,7 @@ public class Team implements Serializable {
     return "Team:" +
             " teamId= " + id +
 //            ", user= " + user.getUsername() +
-            ", username= " + username +
+            ", username= " + displayedUsername +
             ", teamName=' " + teamName + '\'' +
             ", firstPick= " + firstPickNumber +
             ", secondPick= " + secondPickNumber;

@@ -57,14 +57,14 @@ export default function PreDraftLeagueTable({
                                 <tr key={team.id}>
                                     {(isDraftInProgress && nextUserToPick?.team?.id == team.id) ?
                                         <>
-                                            <td className={"selected-cell"}>{team.username}</td>
+                                            <td className={"selected-cell"}>{team.displayedUsername}</td>
                                             <td className={"selected-cell"}>{team.teamName}</td>
                                             <td className={"selected-cell"}>{team.firstPickNumber}</td>
                                             <td className={"selected-cell"}>{team.secondPickNumber}</td>
                                         </>
                                         :
                                         <>
-                                            <td>{team.username}</td>
+                                            <td>{team.displayedUsername}</td>
                                             <td>{team.teamName}</td>
                                             <td>{team.firstPickNumber}</td>
                                             <td>{team.secondPickNumber}</td>

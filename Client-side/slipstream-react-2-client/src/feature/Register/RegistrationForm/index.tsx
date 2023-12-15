@@ -32,11 +32,11 @@ export default function RegistrationForm({userData}: RegistrationFormProps) {
         username: Yup.string()
             .test(
                 "length",
-                "Username must be between 3 and 18 characters",
+                "Username must be between 3 and 20 characters",
                 (val: any) =>
                     val &&
                     val.toString().length >= 3 &&
-                    val.toString().length <= 18
+                    val.toString().length <= 20
             )
             .required("This field is required!"),
         email: Yup.string()

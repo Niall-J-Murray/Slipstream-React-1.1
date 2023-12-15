@@ -18,8 +18,10 @@ export default function HomeWelcome({userData}: HomeWelcomeProps) {
         if (team) {
             return (
                 <div>
-                    <h3>Welcome back {username}!</h3>
-                    <h4><a href="/dashboard">Go to Dashboard</a></h4>
+                    <h3>Welcome back
+                        <br/>
+                        {username}!</h3>
+                    <h4>Go to your <a href="/dashboard">Dashboard</a></h4>
                     <h3>Team name: {team.teamName}</h3>
                     {team.teamPoints ?
                         <h3>Points: {team.teamPoints}</h3>
@@ -34,8 +36,9 @@ export default function HomeWelcome({userData}: HomeWelcomeProps) {
         }
         return (
             <div>
-                <h3>Welcome back {username}!</h3>
-                <h4><a href="/dashboard">Go to Dashboard</a> to create a team.</h4>
+                <h3>Hello {username}!</h3>
+                <h4>You do not have a team yet.</h4>
+                <h4>Go to your <a href="/dashboard">Dashboard</a> to create a one.</h4>
             </div>
         );
     }
