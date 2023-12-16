@@ -70,7 +70,7 @@ public class TeamService {
     team.setTeamPoints(0.0);
     team.setIsTestTeam(false);
     team.setLeague(leagueService.findAvailableLeague());
-    team.setLeagueId(team.getLeague().getLeagueId());
+    team.setLeagueNumber(team.getLeague().getId());
     addOneTeamToLeague(team);
     return team;
   }
@@ -160,7 +160,7 @@ public class TeamService {
 
   public void addDriverToTestTeam(Long userId, Long driverId) {
     User user = userService.findById(userId);
-    Long leagueId = user.getTeam().getLeague().getLeagueId();
+    Long leagueId = user.getTeam().getLeague().getId();
     User testUser = leagueService.getNextToPick(leagueId);
     addDriverToTeam(testUser.getId(), driverId);
   }

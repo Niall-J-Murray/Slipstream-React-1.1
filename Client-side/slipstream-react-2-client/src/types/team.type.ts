@@ -3,7 +3,7 @@ import IDriver from "./driver.type.ts";
 import ILeague from "./league.type.ts";
 
 export default interface ITeam {
-    id?: any | null,
+    id?: number | null,
     user: IUser,
     displayedUsername: string | null,
     teamName: string,
@@ -15,8 +15,8 @@ export default interface ITeam {
     secondPickStartingPoints?: number | null,
     teamPoints?: number | null,
     ranking?: number | null,
-    leagueId?: number | null,
     league?: ILeague | null,
+    leagueNumber?: number | null,
     drivers?: Array<IDriver> | null
 }
 

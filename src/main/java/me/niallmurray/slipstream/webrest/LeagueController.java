@@ -59,7 +59,7 @@ public class LeagueController {
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<League> getTeamLeague(@PathVariable Long teamId) {
     Team team = teamService.findById(teamId);
-    Long leagueId = team.getLeague().getLeagueId();
+    Long leagueId = team.getLeague().getId();
     League league = leagueService.findById(leagueId);
 //    System.out.println("league entity: " + ResponseEntity.ok(leagueOpt.orElse(null)));
     return ResponseEntity.ok(league);

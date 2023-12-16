@@ -53,12 +53,14 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<boolean | undefined | null>(false);
     const [isDraftInProgress, setIsDraftInProgress]
         = useState<boolean | undefined | null>(false);
+    const [currentPickNumber, setCurrentPickNumber]
+        = useState<number | undefined | null>();
     const [isLeagueActive, setIsLeagueActive]
         = useState<boolean | undefined | null>();
     const [isUsersTurnToPick, setIsUsersTurnToPick]
         = useState<boolean | undefined | null>(false);
-    const [isWaitingForPick, setIsWaitingForPick]
-        = useState<boolean | undefined | null>();
+    // const [isWaitingForPick, setIsWaitingForPick]
+    //     = useState<boolean | undefined | null>();
     const [leagueSize, setLeagueSize]
         = useState<number | undefined | null>(0);
     const [leagueTeams, setLeagueTeams]
@@ -103,7 +105,11 @@ export default function Dashboard({userData}: DashboardProps) {
     } = useOpenLeague();
 
     const userId = userData ? userData?.id : null;
-    const leagueId = userData?.team ? userData?.team?.leagueId : openLeague?.leagueId;
+    const leagueId = userData?.team ? (userData?.team?.leagueNumber) : openLeague?.id;
+    console.log("userData?.team?.league?.id")
+    console.log(userData?.team?.league?.id)
+    console.log("userData?.team?.leagueNumber")
+    console.log(userData?.team?.leagueNumber)
     const teamsInLeague: Array<ITeam> | undefined | null = useAllTeamsInLeague(leagueId).data;
 
 
@@ -115,7 +121,8 @@ export default function Dashboard({userData}: DashboardProps) {
 
     const queryClient = useQueryClient();
     const driversInTeam = useDriversInTeam;
-    const currentPickNumber = useNextPickNumber(leagueId).data;
+    const pickNumber = useNextPickNumber(leagueId).data;
+    // const pickNumberRef = useRef(0);
     const nextUserToPick = useNextUserToPick(leagueId).data;
     const pickDriver = usePickDriver();
     const undraftedDrivers = useUndraftedDrivers(leagueId).data;
@@ -131,11 +138,12 @@ export default function Dashboard({userData}: DashboardProps) {
         // if (isUsersTurnToPick) {
         //     window.location.reload();
         // }
-        setIsWaitingForPick(true);
+        // setIsWaitingForPick(true);
         setLeagueTeams(teamsInLeague);
         setLeagueSize(leagueTeams?.length);
         setIsPracticeLeague(leagueData?.isPracticeLeague);
         setShowDraftPickTips(!leagueData?.isPracticeLeague);
+        setCurrentPickNumber(pickNumber);
         if (leagueSize
             && leagueSize >= 10) {
             setIsLeagueFull(true);
@@ -162,15 +170,22 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsUsersTurnToPick(true);
         }
 
-        // refreshIfTurnToPick();
-    }, [isWaitingForPick, userData, leagueData, isUsersTurnToPick, leagueData?.activeTimestamp, leagueSize, teamsInLeague, leagueTeams, nextUserToPick, isLeagueFull, undraftedDrivers]);
 
-    const refreshIfTurnToPick = () => {
-        if (leagueData?.currentPickNumber + 1 == userData?.team?.firstPickNumber
-            || leagueData?.currentPickNumber + 1 == userData?.team?.secondPickNumber) {
-            window.location.reload();
-        }
-    }
+        // pickNumberRef.current!++;
+        // console.log("currentPickNumber");
+        // console.log(currentPickNumber);
+        // console.log("pickNumberRef");
+        // console.log(pickNumberRef.current);
+        // refreshIfTurnToPick();
+    }, [isUsersTurnToPick, pickNumber, currentPickNumber, leagueData?.currentPickNumber, leagueData?.isActive, leagueData?.isPracticeLeague, leagueSize, leagueTeams?.length, navigate, nextUserToPick?.isTestUser, teamsInLeague, undraftedDrivers, userData]);
+    // }, [userData, leagueData, isUsersTurnToPick, leagueData?.activeTimestamp, leagueSize, teamsInLeague, leagueTeams, nextUserToPick, isLeagueFull, undraftedDrivers]);
+
+    // const refreshIfTurnToPick = () => {
+    //     if (leagueData?.currentPickNumber + 1 == userData?.team?.firstPickNumber
+    //         || leagueData?.currentPickNumber + 1 == userData?.team?.secondPickNumber) {
+    //         window.location.reload();
+    //     }
+    // }
 
     const handleCreateTeam = (formValue: { teamName: string }) => {
         const {teamName} = formValue;
@@ -202,9 +217,11 @@ export default function Dashboard({userData}: DashboardProps) {
         deleteTeam.mutateAsync()
             .then(() => {
                 queryClient.invalidateQueries("leagueData")
-                queryClient.invalidateQueries("userData")
-            })
-            .then(() => navigate("/home"));
+                    .then(() => {
+                        queryClient.invalidateQueries("userData")
+                            .then(() => navigate("/home"))
+                    });
+            });
     }
 
 
@@ -282,31 +299,33 @@ export default function Dashboard({userData}: DashboardProps) {
         e.preventDefault();
         pickDriver.mutateAsync({
             userId: userId,
-            driverId: driver?.driverId,
+            driverId: driver?.id,
         })
-            .then(() => {
-                queryClient.invalidateQueries()
-                    .then(() => setLastDriverPicked(driver))
-                    .then(() => setLastPickTime(new Date()))
-                    .then(() => setIsWaitingForPick(false))
-                // .then(() => {
-                //     if (!nextUserToPick?.isTestUser) {
-                //         window.location.reload();
-                //     }
-                // });
-                // queryClient.invalidateQueries("leagueData")
-                // queryClient.invalidateQueries("undraftedDrivers")
-                // queryClient.invalidateQueries("driversInTeam")
-                // queryClient.invalidateQueries("nextPickNumber")
-                // queryClient.invalidateQueries("nextUserToPick")
-                // queryClient.invalidateQueries("isUsersTurnToPick")
-                // queryClient.invalidateQueries("allTeamsInLeague")
-            })
-            .then(() => {
-                if (!nextUserToPick?.isTestUser) {
-                    window.location.reload();
-                }
-            });
+            // .then(() => {
+            //     queryClient.invalidateQueries()
+            .then(() => setLastDriverPicked(driver))
+            .then(() => setLastPickTime(new Date()))
+        // .then(() => setIsWaitingForPick(false))
+        // .then(() => {
+        //     if (!nextUserToPick?.isTestUser) {
+        //         window.location.reload();
+        //     }
+        // });
+        queryClient.invalidateQueries("nextPickNumber")
+            .then(() => setCurrentPickNumber(pickNumber));
+        // queryClient.invalidateQueries("leagueData")
+        // queryClient.invalidateQueries("undraftedDrivers")
+        // queryClient.invalidateQueries("driversInTeam")
+        // queryClient.invalidateQueries("nextPickNumber")
+        // queryClient.invalidateQueries("nextUserToPick")
+        // queryClient.invalidateQueries("isUsersTurnToPick")
+        // queryClient.invalidateQueries("allTeamsInLeague")
+        // });
+        // .then(() => {
+        //     if (nextUserToPick !== userData) {
+        //         window.location.reload();
+        //     }
+        // });
         // .then(() => setLastDriverPicked(driver))
         // .then(() => setLastPickTime(new Date()))
         // .then(() => {
@@ -332,7 +351,7 @@ export default function Dashboard({userData}: DashboardProps) {
     function PreDraftDashboard() {
         return (
             <>
-                <div className="col-start-3 col-span-3 h-70 box-shadow">
+                <div className="col-start-3 col-span-3 h-75 box-shadow">
                     <DashTop
                         userData={userData}
                         leagueData={leagueData}
@@ -350,7 +369,7 @@ export default function Dashboard({userData}: DashboardProps) {
                     />
                 </div>
                 {/*<div id="practice-draft-options" className="col-start-3 col-span-2 h-125 box-shadow">*/}
-                <div className="col-start-6 col-span-5 h-70 box-shadow">
+                <div className="col-start-6 col-span-5 h-75 box-shadow">
                     {showDraftPickTips ?
                         <DraftPickTips
                             isPracticeLeague={isPracticeLeague}

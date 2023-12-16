@@ -41,7 +41,7 @@ export default function ActiveLeagueInfo({
                         <tbody>
                         {undraftedDrivers?.map((driver: IDriver, i: number) => {
                             return (
-                                <Fragment key={driver.driverId}>
+                                <Fragment key={driver.id}>
                                     {i % 2 == 0 ?
                                         <tr>
                                             <td>{undraftedDrivers[i]?.surname}</td>

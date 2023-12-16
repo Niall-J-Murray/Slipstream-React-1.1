@@ -29,7 +29,7 @@ public class LeagueService {
     league.setCreationTimestamp(
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm")));
     leagueRepository.save(league);
-    league.setLeagueName("League " + league.getLeagueId());
+    league.setLeagueName("League " + league.getId());
     return leagueRepository.save(league);
   }
 
@@ -38,7 +38,7 @@ public class LeagueService {
     if (allLeagues.isEmpty()) {
       return 1L;
     }
-    return allLeagues.get(allLeagues.size() - 1).getLeagueId() + 1;
+    return allLeagues.get(allLeagues.size() - 1).getId() + 1;
   }
 
   public League findAvailableLeague() {

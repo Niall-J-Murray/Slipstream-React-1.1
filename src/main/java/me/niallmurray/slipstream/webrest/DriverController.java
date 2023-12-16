@@ -74,7 +74,7 @@ public class DriverController {
   public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, @Valid @RequestBody Map<String, Long> requestData) {
     System.out.println("postPickDriver driverID: " + requestData.get("driverId"));
     Long driverId = requestData.get("driverId");
-    Long userLeagueId = userService.findById(userId).getTeam().getLeague().getLeagueId();
+    Long userLeagueId = userService.findById(userId).getTeam().getLeague().getId();
 
     if (Boolean.TRUE.equals(teamService.isTestPick(userLeagueId))) {
       teamService.addDriverToTestTeam(userId, driverId);

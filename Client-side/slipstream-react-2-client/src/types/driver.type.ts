@@ -1,7 +1,7 @@
 import ITeam from "./team.type.ts";
 
 export default interface IDriver {
-    driverId?: number,
+    id?: number,
     carNumber?: number | null,
     shortName?: string | null,
     firstName?: string | null,

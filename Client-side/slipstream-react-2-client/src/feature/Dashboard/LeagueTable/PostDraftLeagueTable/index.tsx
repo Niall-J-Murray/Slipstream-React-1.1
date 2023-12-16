@@ -67,7 +67,7 @@ export default function PostDraftLeagueTable({leagueData, leagueTeams, driversIn
 
                             {team.drivers?.map((driver: IDriver, i: number) => {
                                 return (
-                                    <Fragment key={driver.driverId}>
+                                    <Fragment key={driver.id}>
                                         {i == 0 && team.drivers ?
                                             <>
                                                 <td>

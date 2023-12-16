@@ -21,7 +21,7 @@ export default function DriverStandingsTable() {
                 <tbody>
                 {driverStandings?.map((driver: IDriver) => {
                     return (
-                        <tr key={driver.driverId}>
+                        <tr key={driver.id}>
                             <td>{driver.standing}</td>
                             <td>{driver.points}</td>
                             <td>{driver.surname}</td>

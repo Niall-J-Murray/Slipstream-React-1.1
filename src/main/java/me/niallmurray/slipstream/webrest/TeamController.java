@@ -65,8 +65,8 @@ public class TeamController {
     League league = team.getLeague();
 
     teamService.deleteTeam(team);
-    userService.save(user);
-    leagueService.save(league);
+//    userService.save(user);
+//    leagueService.save(league);
     return ResponseEntity.ok(user);
   }
 

@@ -18,7 +18,7 @@ import java.util.Objects;
 @Setter
 @Table(name = "team",
         uniqueConstraints =
-        @UniqueConstraint(columnNames = {"league_league_id", "firstPickNumber"}))
+        @UniqueConstraint(columnNames = {"league_id", "firstPickNumber"}))
 public class Team implements Serializable {
   @Serial
   private static final long serialVersionUID = 1L;
@@ -49,7 +49,8 @@ public class Team implements Serializable {
   @Column()
   private Integer ranking;
   @Column()
-  private Long leagueId;
+  private Long leagueNumber;
+  @JoinColumn(name = "league_id")
   @ManyToOne()
   @JsonIgnore
   private League league;

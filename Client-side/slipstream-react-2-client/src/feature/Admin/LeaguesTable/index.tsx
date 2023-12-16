@@ -34,8 +34,8 @@ export default function LeaguesTable() {
                 <tbody>
                 {allLeagues?.map((league: ILeague) => {
                     return (
-                        <tr key={league.leagueId}>
-                            <td>{league.leagueId}</td>
+                        <tr key={league.id}>
+                            <td>{league.id}</td>
                             <td>{league.leagueName}</td>
                             <td>{league.teams?.length}</td>
                             <td>{league.creationTimestamp}</td>

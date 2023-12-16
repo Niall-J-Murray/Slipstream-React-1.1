@@ -21,7 +21,7 @@ public class Driver implements Serializable {
   private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long driverId;
+  private Long id;
   @Column()
   private Integer carNumber;
   @Column()
@@ -55,11 +55,11 @@ public class Driver implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Driver driver = (Driver) o;
-    return Objects.equals(driverId, driver.driverId) && Objects.equals(shortName, driver.shortName);
+    return Objects.equals(id, driver.id) && Objects.equals(shortName, driver.shortName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(driverId, shortName);
+    return Objects.hash(id, shortName);
   }
 }

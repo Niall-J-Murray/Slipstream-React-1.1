@@ -37,7 +37,7 @@ export default function DriverDraftTable({
                     <tbody>
                     {undraftedDrivers?.map((driver: IDriver) => {
                         return (
-                            <tr key={driver.driverId}>
+                            <tr key={driver.id}>
                                 {(!isUsersTurnToPick) ?
                                     <>
                                         <td>{driver.carNumber}</td>
@@ -48,7 +48,7 @@ export default function DriverDraftTable({
                                         <td>{driver.constructor}</td>
                                     </> :
                                     <>
-                                        {selectedDriver?.driverId == driver.driverId ?
+                                        {selectedDriver?.id == driver.id ?
                                             <>
                                                 <td className={"selected-cell"}>
                                                     <input

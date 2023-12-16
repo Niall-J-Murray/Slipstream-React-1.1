@@ -131,7 +131,7 @@
           <th>Created</th>
           <th>Activated</th>
           <tr th:each="league : ${leagues}">
-            <td th:text="${league.leagueId}"></td>
+            <td th:text="${league.getId}"></td>
             <td th:text="${league.leagueName}"></td>
             <td th:text="${league.teams.size()}"></td>
             <td th:text="${league.creationTimestamp}"></td>

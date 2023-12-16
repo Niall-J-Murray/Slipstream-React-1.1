@@ -59,11 +59,10 @@ export default function DashTop({
         return (
             <>
                 <div>
-                    <h4>{leagueData?.leagueName} is open to join.</h4>
-                    <h4>Once the league is full, the draft can begin.</h4>
+                    <h4>{leagueData?.leagueName} is open to join.
+                        <br/>
+                        Once the league is full, the draft can begin.</h4>
                     <h4>You must create a team to try a practice draft.</h4>
-                    <h4>Choose a team name to get started...</h4>
-                    <hr/>
                 </div>
                 <Formik
                     initialValues={initialValues}
@@ -72,7 +71,7 @@ export default function DashTop({
                 >
                     <Form className={"col-start-1 col-span-3"}>
                         <div className="form-group">
-                            <label htmlFor="teamName">Enter your team name:</label>
+                            <label htmlFor="teamName">Choose a team name to get started:</label>
                             <br/>
                             <Field name="teamName" type="text" className="form-control" required/>
                         </div>
@@ -145,7 +144,7 @@ export default function DashTop({
                             <div>
                                 {driversInUserTeam?.map((driver: IDriver, i: number) => {
                                     return (
-                                        <div key={driver.driverId}>
+                                        <div key={driver.id}>
                                             {driver ?
                                                 <>{i + 1} - {driver.surname}</>
                                                 :
@@ -189,8 +188,9 @@ export default function DashTop({
                     <p>Random 1st pick draft number: {firstPickNumber}</p>
                     <p>Random 2nd pick draft number: {secondPickNumber}</p>
                     <hr/>
-                    <h3>League is {leagueSize} of 10 teams full.</h3>
-                    <h3> The draft picks will start when the league is full...</h3>
+                    <h3>{leagueData?.leagueName} is {leagueSize}/10 full.
+                        <br/>
+                        Draft picks will start when the league is full.</h3>
                     {/*<PracticeGreeting/>*/}
                     <hr/>
                 </div>

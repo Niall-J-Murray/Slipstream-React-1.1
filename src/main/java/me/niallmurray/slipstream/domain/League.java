@@ -22,7 +22,7 @@ public class League implements Serializable {
   private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long leagueId;
+  private Long id;
   @Column(nullable = false, unique = true)
   private String leagueName;
   @Column()
@@ -42,7 +42,7 @@ public class League implements Serializable {
 
   @Override
   public String toString() {
-    return "Id= " + leagueId +
+    return "Id= " + id +
             ", Name= " + leagueName +
             ", Creation Time=" + creationTimestamp +
             ", No. of Teams= " + teams.size();
@@ -53,11 +53,11 @@ public class League implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     League league = (League) o;
-    return Objects.equals(leagueId, league.leagueId) && Objects.equals(leagueName, league.leagueName);
+    return Objects.equals(id, league.id) && Objects.equals(leagueName, league.leagueName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(leagueId, leagueName);
+    return Objects.hash(id, leagueName);
   }
 }
