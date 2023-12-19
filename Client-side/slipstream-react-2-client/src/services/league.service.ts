@@ -44,9 +44,11 @@ export const getIsLeagueActive = async (leagueId: number | null | undefined): Pr
 };
 
 export const getPickNumber = async (leagueId: number | null | undefined): Promise<number | null | undefined> => {
-    const data = await axios.get(API_DATA_URL + leagueId + "/getPickNumber", {headers: authHeader()})
-        .then(response => response.data);
-    return data;
+    if (leagueId) {
+        const data = await axios.get(API_DATA_URL + leagueId + "/getPickNumber", {headers: authHeader()})
+            .then(response => response.data);
+        return data;
+    }
 };
 
 export const getNextUserToPick = async (leagueId: number | null | undefined): Promise<IUser> => {

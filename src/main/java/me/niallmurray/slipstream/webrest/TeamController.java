@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import me.niallmurray.slipstream.domain.League;
 import me.niallmurray.slipstream.domain.Team;
 import me.niallmurray.slipstream.domain.User;
+import me.niallmurray.slipstream.payload.response.MessageResponse;
 import me.niallmurray.slipstream.service.LeagueService;
 import me.niallmurray.slipstream.service.TeamService;
 import me.niallmurray.slipstream.service.UserService;
@@ -48,14 +49,19 @@ public class TeamController {
   }
 
   @PostMapping("/createUserTeam/{userId}")
-  public ResponseEntity<Team> postCreateTeam(@Valid @RequestBody String teamName, @PathVariable Long userId) {
+  public ResponseEntity<MessageResponse> postCreateTeam(@Valid @RequestBody String teamName, @PathVariable Long userId) {
     User user = userService.findById(userId);
     String teamNameFromJson = teamName.substring(13, (teamName.length() - 2));
-    Team team = teamService.createTeam(user, teamNameFromJson);
+    if (!teamService.isUniqueTeamName(teamNameFromJson)) {
+      return ResponseEntity
+              .badRequest()
+              .body(new MessageResponse("Sorry, this team name is already in use!"));
+    }
 //    team = teamService.findById(team.getId());
+    Team team = teamService.createTeam(user, teamNameFromJson);
     team = teamService.findByIdTeamName(teamNameFromJson);
 //    System.out.println("new team: " + team);
-    return ResponseEntity.ok(team);
+    return ResponseEntity.ok(new MessageResponse(teamNameFromJson + "added to "+ team.getLeague().getLeagueName()));
   }
 
   @PostMapping("/deleteUserTeam/{userId}")

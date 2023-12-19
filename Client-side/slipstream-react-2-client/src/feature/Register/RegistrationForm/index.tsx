@@ -57,25 +57,25 @@ export default function RegistrationForm({userData}: RegistrationFormProps) {
     const handleRegister = (formValue: IUser) => {
         const {username, email, password} = formValue;
 
-        register(username, email, password).then(
-            (response) => {
-                setMessage(response.data.message);
-                setSuccessful(true);
-                sessionStorage.setItem("usrnm", username);
-                sessionStorage.setItem("pwrd", password);
-            },
-            (error) => {
-                const resMessage =
-                    (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString();
+        register(username, email, password)
+            .then((res) => {
+                    setMessage(res.data.message);
+                    setSuccessful(true);
+                    sessionStorage.setItem("usrnm", username);
+                    sessionStorage.setItem("pwrd", password);
+                },
+                (error) => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
 
-                setMessage(resMessage);
-                setSuccessful(false);
-            }
-        );
+                    setMessage(resMessage);
+                    setSuccessful(false);
+                }
+            );
 
     };
 

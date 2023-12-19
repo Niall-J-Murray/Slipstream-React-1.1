@@ -16,7 +16,7 @@ interface DraftControlsProps {
     lastDriverPicked: IDriver | undefined | null,
     isLeagueActive: boolean | undefined | null,
     currentPickNumber: number | undefined | null,
-    isUsersTurnToPick: boolean | undefined | null,
+    isUsersTurnToPick: boolean,
     nextUserToPick: IUser | undefined,
     togglePracticeOptions: () => void,
     togglePracticeLeague: () => void,

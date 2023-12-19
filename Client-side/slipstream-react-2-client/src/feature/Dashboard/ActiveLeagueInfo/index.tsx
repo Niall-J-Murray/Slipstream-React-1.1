@@ -39,26 +39,36 @@ export default function ActiveLeagueInfo({
                         </tr>
                         </thead>
                         <tbody>
-                        {undraftedDrivers?.map((driver: IDriver, i: number) => {
-                            return (
-                                <Fragment key={driver.id}>
-                                    {i % 2 == 0 ?
-                                        <tr>
-                                            <td>{undraftedDrivers[i]?.surname}</td>
-                                            <td>{undraftedDrivers[i]?.constructor}</td>
-                                            <td>{undraftedDrivers[i]?.points}</td>
-                                            <td>{undraftedDrivers[i + 1]?.surname}</td>
-                                            <td>{undraftedDrivers[i + 1]?.constructor}</td>
-                                            <td>{undraftedDrivers[i + 1]?.points}</td>
-                                            {/*<td>{undraftedDrivers[i + 2]?.surname}</td>*/}
-                                            {/*<td>{undraftedDrivers[i + 2]?.constructor}</td>*/}
-                                            {/*<td>{undraftedDrivers[i + 2]?.points}</td>*/}
-                                        </tr>
-                                        :
-                                        <></>
-                                    }
-                                </Fragment>)
-                        })}
+
+                        {undraftedDrivers?.length == 0 ?
+                            <tr>
+                                <td colSpan={6}>No teams have been removed from this league.</td>
+                            </tr>
+                            :
+                            <>
+
+                                {undraftedDrivers?.map((driver: IDriver, i: number) => {
+                                    return (
+                                        <Fragment key={driver.id}>
+                                            {i % 2 == 0 ?
+                                                <tr>
+                                                    <td>{undraftedDrivers[i]?.surname}</td>
+                                                    <td>{undraftedDrivers[i]?.constructor}</td>
+                                                    <td>{undraftedDrivers[i]?.points}</td>
+                                                    <td>{undraftedDrivers[i + 1]?.surname}</td>
+                                                    <td>{undraftedDrivers[i + 1]?.constructor}</td>
+                                                    <td>{undraftedDrivers[i + 1]?.points}</td>
+                                                    {/*<td>{undraftedDrivers[i + 2]?.surname}</td>*/}
+                                                    {/*<td>{undraftedDrivers[i + 2]?.constructor}</td>*/}
+                                                    {/*<td>{undraftedDrivers[i + 2]?.points}</td>*/}
+                                                </tr>
+                                                :
+                                                <></>
+                                            }
+                                        </Fragment>)
+                                })}
+                            </>
+                        }
                         </tbody>
                     </table>
                 </div>

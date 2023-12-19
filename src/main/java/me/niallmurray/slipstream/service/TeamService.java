@@ -245,10 +245,11 @@ public class TeamService {
     }
     league.getTeams().remove(team);
     user.setTeam(null);
-    updateLeagueTeamsRankings(team.getLeague());
+
     teamRepository.delete(team);
     userService.save(user);
     leagueService.save(league);
+    updateLeagueTeamsRankings(team.getLeague());
   }
 
   public void deleteAllTestTeams(League league) {

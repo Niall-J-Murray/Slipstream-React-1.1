@@ -1,6 +1,6 @@
 import DashTop from "./DashTop";
 import DriverTable from "./DriverTable";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {postToggleTestLeague} from "../../services/league.service.ts";
 import DraftControls from "./DraftControls";
 import DraftPickTips from "./DraftPickTips";
@@ -53,12 +53,12 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<boolean | undefined | null>(false);
     const [isDraftInProgress, setIsDraftInProgress]
         = useState<boolean | undefined | null>(false);
-    const [currentPickNumber, setCurrentPickNumber]
-        = useState<number | undefined | null>();
+    // const [currentPickNumber, setCurrentPickNumber]
+    //     = useState<number | undefined | null>();
     const [isLeagueActive, setIsLeagueActive]
         = useState<boolean | undefined | null>();
     const [isUsersTurnToPick, setIsUsersTurnToPick]
-        = useState<boolean | undefined | null>(false);
+        = useState<boolean>(false);
     // const [isWaitingForPick, setIsWaitingForPick]
     //     = useState<boolean | undefined | null>();
     const [leagueSize, setLeagueSize]
@@ -76,6 +76,9 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<boolean>(false);
     const [message, setMessage]
         = useState<string>("");
+
+    const [toggle, setToggle] = useState(false);
+
 
     const initialValues: {
         teamName: string;
@@ -106,10 +109,10 @@ export default function Dashboard({userData}: DashboardProps) {
 
     const userId = userData ? userData?.id : null;
     const leagueId = userData?.team ? (userData?.team?.leagueNumber) : openLeague?.id;
-    console.log("userData?.team?.league?.id")
-    console.log(userData?.team?.league?.id)
-    console.log("userData?.team?.leagueNumber")
-    console.log(userData?.team?.leagueNumber)
+    // console.log("userData?.team?.league?.id")
+    // console.log(userData?.team?.league?.id)
+    // console.log("userData?.team?.leagueNumber")
+    // console.log(userData?.team?.leagueNumber)
     const teamsInLeague: Array<ITeam> | undefined | null = useAllTeamsInLeague(leagueId).data;
 
 
@@ -121,8 +124,9 @@ export default function Dashboard({userData}: DashboardProps) {
 
     const queryClient = useQueryClient();
     const driversInTeam = useDriversInTeam;
-    const pickNumber = useNextPickNumber(leagueId).data;
-    // const pickNumberRef = useRef(0);
+    // const pickNumber = useNextPickNumber(leagueId).data;
+    const currentPickNumber = useNextPickNumber(leagueId).data;
+    const pickNumberRef = useRef(currentPickNumber);
     const nextUserToPick = useNextUserToPick(leagueId).data;
     const pickDriver = usePickDriver();
     const undraftedDrivers = useUndraftedDrivers(leagueId).data;
@@ -139,11 +143,18 @@ export default function Dashboard({userData}: DashboardProps) {
         //     window.location.reload();
         // }
         // setIsWaitingForPick(true);
+
         setLeagueTeams(teamsInLeague);
         setLeagueSize(leagueTeams?.length);
         setIsPracticeLeague(leagueData?.isPracticeLeague);
         setShowDraftPickTips(!leagueData?.isPracticeLeague);
-        setCurrentPickNumber(pickNumber);
+
+        // async function updatePickNumber() {
+        //     setCurrentPickNumber(await getPickNumber(leagueId));
+        // }
+        // updatePickNumber()
+        //     .then(() => console.log(currentPickNumber));
+
         if (leagueSize
             && leagueSize >= 10) {
             setIsLeagueFull(true);
@@ -161,23 +172,35 @@ export default function Dashboard({userData}: DashboardProps) {
         setSelectedDriver(undraftedDrivers?.find((driver: IDriver) =>
             driver !== undefined));
 
-        if (nextUserToPick?.isTestUser) {
-            setIsUsersTurnToPick(true);
+        if (!isUsersTurnToPick) {
+            if (nextUserToPick?.isTestUser) {
+                setIsUsersTurnToPick(true);
+            }
+
+            if (currentPickNumber == userData?.team?.firstPickNumber
+                || currentPickNumber == userData?.team?.secondPickNumber) {
+                setIsUsersTurnToPick(true);
+            }
         }
 
-        if (leagueData?.currentPickNumber == userData?.team?.firstPickNumber
-            || leagueData?.currentPickNumber == userData?.team?.secondPickNumber) {
-            setIsUsersTurnToPick(true);
-        }
-
-
+        // if (pickNumberRef != currentPickNumber) {
+        //     queryClient.invalidateQueries()
+        // }
         // pickNumberRef.current!++;
         // console.log("currentPickNumber");
         // console.log(currentPickNumber);
         // console.log("pickNumberRef");
         // console.log(pickNumberRef.current);
         // refreshIfTurnToPick();
-    }, [isUsersTurnToPick, pickNumber, currentPickNumber, leagueData?.currentPickNumber, leagueData?.isActive, leagueData?.isPracticeLeague, leagueSize, leagueTeams?.length, navigate, nextUserToPick?.isTestUser, teamsInLeague, undraftedDrivers, userData]);
+    }, [loadingLeagueData, leagueData, isLeagueFull, isPracticeLeague, isDraftInProgress, isUsersTurnToPick, isLeagueActive, nextUserToPick, undraftedDrivers, currentPickNumber]);
+    // currentPickNumber,
+    //     isUsersTurnToPick,
+    //     nextUserToPick,
+    //     selectedDriver,
+    //     lastPickTime,
+    //     lastDriverPicked,
+    //     handlePick
+    // }, [toggle, isUsersTurnToPick, currentPickNumber, leagueData?.isActive, leagueData?.isPracticeLeague, leagueSize, leagueTeams?.length, navigate, nextUserToPick?.isTestUser, teamsInLeague, undraftedDrivers, userData]);
     // }, [userData, leagueData, isUsersTurnToPick, leagueData?.activeTimestamp, leagueSize, teamsInLeague, leagueTeams, nextUserToPick, isLeagueFull, undraftedDrivers]);
 
     // const refreshIfTurnToPick = () => {
@@ -195,8 +218,9 @@ export default function Dashboard({userData}: DashboardProps) {
 
         createTeam.mutateAsync({userId, teamName})
             .then(() => {
-                    navigate("/dashboard");
-                    window.location.reload();
+                    // navigate("/dashboard");
+                    // window.location.reload();
+
                 },
                 (error) => {
                     const resMessage =
@@ -210,6 +234,7 @@ export default function Dashboard({userData}: DashboardProps) {
                     setMessage(resMessage);
                 }
             );
+        // setToggle(prevState => !prevState);
     };
 
     const handleDeleteUserTeam = () => {
@@ -222,6 +247,8 @@ export default function Dashboard({userData}: DashboardProps) {
                             .then(() => navigate("/home"))
                     });
             });
+        setToggle(prevState => !prevState);
+
     }
 
 
@@ -305,14 +332,21 @@ export default function Dashboard({userData}: DashboardProps) {
             //     queryClient.invalidateQueries()
             .then(() => setLastDriverPicked(driver))
             .then(() => setLastPickTime(new Date()))
+            // .then(() => setIsUsersTurnToPick(false))
+            // .then(() => queryClient.invalidateQueries("nextUserToPick"));
+            .then(() => queryClient.invalidateQueries());
+
+        setToggle(prevState => !prevState);
+        setIsUsersTurnToPick(false);
+
         // .then(() => setIsWaitingForPick(false))
         // .then(() => {
         //     if (!nextUserToPick?.isTestUser) {
         //         window.location.reload();
         //     }
         // });
-        queryClient.invalidateQueries("nextPickNumber")
-            .then(() => setCurrentPickNumber(pickNumber));
+        // queryClient.invalidateQueries("nextPickNumber")
+        //     .then(() => setCurrentPickNumber(pickNumber));
         // queryClient.invalidateQueries("leagueData")
         // queryClient.invalidateQueries("undraftedDrivers")
         // queryClient.invalidateQueries("driversInTeam")

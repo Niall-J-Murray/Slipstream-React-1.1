@@ -188,11 +188,14 @@ export default function DashTop({
                     <p>Random 1st pick draft number: {firstPickNumber}</p>
                     <p>Random 2nd pick draft number: {secondPickNumber}</p>
                     <hr/>
-                    <h3>{leagueData?.leagueName} is {leagueSize}/10 full.
+                    <h4>{leagueData?.leagueName} is {leagueSize} of 10 teams full.
                         <br/>
-                        Draft picks will start when the league is full.</h3>
+                        Draft picks will start when the league is full.
+                        <br/>
+                        To start a draft with less than 10 players, you can add test teams using the practice draft
+                        options.
+                    </h4>
                     {/*<PracticeGreeting/>*/}
-                    <hr/>
                 </div>
             );
         }
