@@ -58,7 +58,8 @@ public class TeamController {
               .body(new MessageResponse("Sorry, this team name is already in use!"));
     }
 //    team = teamService.findById(team.getId());
-    Team team = teamService.createTeam(user, teamNameFromJson);
+    teamService.createTeam(user, teamNameFromJson);
+    Team team;
     team = teamService.findByIdTeamName(teamNameFromJson);
 //    System.out.println("new team: " + team);
     return ResponseEntity.ok(new MessageResponse(teamNameFromJson + "added to "+ team.getLeague().getLeagueName()));

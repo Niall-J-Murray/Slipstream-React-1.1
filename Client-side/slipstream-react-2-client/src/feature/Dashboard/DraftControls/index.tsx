@@ -59,19 +59,6 @@ export default function DraftControls({
             </>
         );
     } else {
-        // if (isLeagueActive) {
-        //     return (
-        //         <>
-        //             <PracticeOptionsToggle
-        //                 isPracticeLeague={isPracticeLeague}
-        //                 showDraftPickTips={showDraftPickTips}
-        //                 togglePracticeOptions={togglePracticeOptions}
-        //             />
-        //             <h3>Please create a team to join an open league or try a practice draft.</h3>
-        //             <h4>Controls and instructions will be available here once you have created a team...</h4>
-        //         </>
-        //     );
-        // }
         return (
             <div>
                 <PracticeOptionsToggle
