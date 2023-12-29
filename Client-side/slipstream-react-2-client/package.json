@@ -32,7 +32,10 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^6.15.0",
     "react-router-hash-link": "^2.4.3",
+    "react-stomp": "^5.1.0",
+    "react-stomp-hooks": "^2.2.1",
     "react-view": "^1.0.0",
+    "sockjs": "^0.3.24",
     "typescript": "^5.1.6",
     "web-vitals": "^3.4.0",
     "yup": "^1.2.0"

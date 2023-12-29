@@ -26,10 +26,14 @@ import PreDraftLeagueTable from "./LeagueTable/PreDraftLeagueTable";
 import {hideLoader, showLoader} from "../../services/loading.service.ts";
 import Login from "../Login";
 
+interface DashboardProps {
+    userData: undefined | IUser
+}
 
 // Todo Display correct info and options in dash-top depending on users team/league status.
 //  ---
 //  Finish driver picking UX
+//  Tweak query refetch logic & finish websocket integration
 //  ---
 //  Check draft add test team and draft picking functions after dashboard refactor.
 //  Fix draft instructions to display according to user status.
@@ -40,9 +44,6 @@ import Login from "../Login";
 //  Fix layouts for consistency.
 //  Change "Register" to "Sign Up", "Login" to "Sign In" and "Log Out"...
 
-interface DashboardProps {
-    userData: undefined | IUser
-}
 
 export default function Dashboard({userData}: DashboardProps) {
     const [showDraftPickTips, setShowDraftPickTips]
@@ -77,7 +78,8 @@ export default function Dashboard({userData}: DashboardProps) {
     const [message, setMessage]
         = useState<string>("");
 
-    const [toggle, setToggle] = useState(false);
+    const [toggle, setToggle]
+        = useState(false);
 
 
     const initialValues: {
@@ -175,8 +177,8 @@ export default function Dashboard({userData}: DashboardProps) {
             }
         }
 
-        setLastDriverPicked(lastDriverPicked)
-        setLastPickTime(lastPickTime);
+        // setLastDriverPicked(lastDriverPicked)
+        // setLastPickTime(lastPickTime);
 
         setSelectedDriver(undraftedDrivers?.find((driver: IDriver) =>
             driver !== undefined));
@@ -186,44 +188,11 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsDraftInProgress(false);
             setIsLeagueActive(true);
         }
-
         // if (!isUsersTurnToPick) {
-        //     if (nextUserToPick?.isTestUser) {
-        //         setIsUsersTurnToPick(true);
-        //     }
         //
-        //     if (currentPickNumber == userData?.team?.firstPickNumber
-        //         || currentPickNumber == userData?.team?.secondPickNumber) {
-        //         setIsUsersTurnToPick(true);
-        //     }
         // }
 
-        // if (pickNumberRef != currentPickNumber) {
-        //     queryClient.invalidateQueries()
-        // }
-        // pickNumberRef.current!++;
-        // console.log("currentPickNumber");
-        // console.log(currentPickNumber);
-        // console.log("pickNumberRef");
-        // console.log(pickNumberRef.current);
-        // refreshIfTurnToPick();
-    }, [userData, loadingLeagueData, leagueData, isLeagueFull, isPracticeLeague, isDraftInProgress, isUsersTurnToPick, isLeagueActive, nextUserToPick, undraftedDrivers, currentPickNumber]);
-    // currentPickNumber,
-    //     isUsersTurnToPick,
-    //     nextUserToPick,
-    //     selectedDriver,
-    //     lastPickTime,
-    //     lastDriverPicked,
-    //     handlePick
-    // }, [toggle, isUsersTurnToPick, currentPickNumber, leagueData?.isActive, leagueData?.isPracticeLeague, leagueSize, leagueTeams?.length, navigate, nextUserToPick?.isTestUser, teamsInLeague, undraftedDrivers, userData]);
-    // }, [userData, leagueData, isUsersTurnToPick, leagueData?.activeTimestamp, leagueSize, teamsInLeague, leagueTeams, nextUserToPick, isLeagueFull, undraftedDrivers]);
-
-    // const refreshIfTurnToPick = () => {
-    //     if (leagueData?.currentPickNumber + 1 == userData?.team?.firstPickNumber
-    //         || leagueData?.currentPickNumber + 1 == userData?.team?.secondPickNumber) {
-    //         window.location.reload();
-    //     }
-    // }
+    }, [userData, loadingLeagueData, leagueData, isLeagueFull, isPracticeLeague, isDraftInProgress, isUsersTurnToPick, isLeagueActive, nextUserToPick, undraftedDrivers, currentPickNumber, lastDriverPicked]);
 
     const handleCreateTeam = (formValue: { teamName: string }) => {
         const {teamName} = formValue;
@@ -248,7 +217,8 @@ export default function Dashboard({userData}: DashboardProps) {
                     setLoading(false);
                     setMessage(resMessage);
                 }
-            );
+            )
+            .then(() => queryClient.invalidateQueries());
         // setToggle(prevState => !prevState);
     };
 
@@ -256,13 +226,13 @@ export default function Dashboard({userData}: DashboardProps) {
         // postDeleteUserTeam(userData?.id)
         deleteTeam.mutateAsync()
             .then(() => {
-                queryClient.invalidateQueries("leagueData")
+                queryClient.invalidateQueries("userData")
+                    .then(() => navigate("/home"))
                     .then(() => {
-                        queryClient.invalidateQueries("userData")
-                            .then(() => navigate("/home"))
+                        queryClient.invalidateQueries("leagueData")
                     });
             });
-        setToggle(prevState => !prevState);
+        // setToggle(prevState => !prevState);
 
     }
 
@@ -343,46 +313,10 @@ export default function Dashboard({userData}: DashboardProps) {
             userId: userId,
             driverId: driver?.id,
         })
-            // .then(() => {
-            //     queryClient.invalidateQueries()
-            // .then(() => setIsUsersTurnToPick(false))
-            // .then(() => queryClient.invalidateQueries("nextUserToPick"));
             .then(() => queryClient.invalidateQueries())
             .then(() => setIsUsersTurnToPick(false))
             .then(() => setLastDriverPicked(driver))
             .then(() => setLastPickTime(new Date()));
-
-        setToggle(prevState => !prevState);
-
-
-        // .then(() => setIsWaitingForPick(false))
-        // .then(() => {
-        //     if (!nextUserToPick?.isTestUser) {
-        //         window.location.reload();
-        //     }
-        // });
-        // queryClient.invalidateQueries("nextPickNumber")
-        //     .then(() => setCurrentPickNumber(pickNumber));
-        // queryClient.invalidateQueries("leagueData")
-        // queryClient.invalidateQueries("undraftedDrivers")
-        // queryClient.invalidateQueries("driversInTeam")
-        // queryClient.invalidateQueries("nextPickNumber")
-        // queryClient.invalidateQueries("nextUserToPick")
-        // queryClient.invalidateQueries("isUsersTurnToPick")
-        // queryClient.invalidateQueries("allTeamsInLeague")
-        // });
-        // .then(() => {
-        //     if (nextUserToPick !== userData) {
-        //         window.location.reload();
-        //     }
-        // });
-        // .then(() => setLastDriverPicked(driver))
-        // .then(() => setLastPickTime(new Date()))
-        // .then(() => {
-        //     if (!nextUserToPick?.isTestUser) {
-        //         window.location.reload();
-        //     }
-        // });
     }
 
     const isLoading = loadingOpenLeague || loadingLeagueData;
@@ -390,6 +324,7 @@ export default function Dashboard({userData}: DashboardProps) {
 
     if (isLoading) {
         return <>{() => showLoader()}</>
+        // showLoader();
     } else {
         hideLoader();
     }
@@ -398,6 +333,7 @@ export default function Dashboard({userData}: DashboardProps) {
         return (<Login userData={userData} error={error}/>);
     }
 
+    // const PreDraftDashboard = () => {
     function PreDraftDashboard() {
         return (
             <>

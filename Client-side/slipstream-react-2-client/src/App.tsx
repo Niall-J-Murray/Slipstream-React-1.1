@@ -55,6 +55,7 @@ export default function App() {
 
     if (isLoading) {
         return <>{() => showLoader()}</>
+        // showLoader();
     } else {
         hideLoader();
     }

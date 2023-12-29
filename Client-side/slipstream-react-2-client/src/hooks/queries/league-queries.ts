@@ -39,4 +39,5 @@ export const useNextUserToPick = (leagueId: number | null | undefined) =>
         queryKey: ["nextUserToPick", leagueId],
         queryFn: () => getNextUserToPick(leagueId),
         enabled: !!leagueId,
+        refetchInterval: 5000,
     });

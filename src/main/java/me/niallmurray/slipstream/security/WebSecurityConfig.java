@@ -65,6 +65,7 @@ public class WebSecurityConfig {
                             .requestMatchers("/api/league/**").permitAll()
                             .requestMatchers("/api/team/**").permitAll()
                             .requestMatchers("/api/driver/**").permitAll()
+                            .requestMatchers("/ws-message/**").permitAll()
                             .anyRequest().authenticated()
             );
     http.authenticationProvider(authenticationProvider());

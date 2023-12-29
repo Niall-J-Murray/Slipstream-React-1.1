@@ -4,6 +4,9 @@ import react from '@vitejs/plugin-react-swc'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    define: {
+        global: {},
+    },
     plugins: [UnoCSS(), react()],
     server: {
         port: 8081,
