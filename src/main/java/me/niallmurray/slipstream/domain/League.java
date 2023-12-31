@@ -32,6 +32,10 @@ public class League implements Serializable {
   @Column()
   private Integer currentPickNumber;
   @Column()
+  private String lastDriverPickedName;
+  @Column()
+  private String lastPickTime;
+  @Column()
   private Boolean isActive;
   @Column()
   private String activeTimestamp;

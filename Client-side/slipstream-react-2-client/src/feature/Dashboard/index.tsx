@@ -1,6 +1,7 @@
 import DashTop from "./DashTop";
 import DriverTable from "./DriverTable";
 import {useEffect, useRef, useState} from "react";
+import {Toaster} from 'react-hot-toast';
 import {postToggleTestLeague} from "../../services/league.service.ts";
 import DraftControls from "./DraftControls";
 import DraftPickTips from "./DraftPickTips";
@@ -69,17 +70,19 @@ export default function Dashboard({userData}: DashboardProps) {
     const [selectedDriver, setSelectedDriver]
         = useState<IDriver | undefined | null>();
     const [lastDriverPicked, setLastDriverPicked]
-        = useState<IDriver | undefined | null>();
+        = useState<string | undefined | null>();
     const [lastPickTime, setLastPickTime]
-        = useState<Date | undefined | null>();
+        = useState<Date | string | undefined | null>();
+    const lastDriverPickedRef = useRef(lastDriverPicked);
+    const lastPickTimeRef = useRef(lastPickTime);
 
     const [loading, setLoading]
         = useState<boolean>(false);
     const [message, setMessage]
         = useState<string>("");
 
-    const [toggle, setToggle]
-        = useState(false);
+    const [toggleNextToPickQuery, setToggleNextToPickQuery]
+        = useState<boolean | undefined | null>(isDraftInProgress);
 
 
     const initialValues: {
@@ -111,10 +114,6 @@ export default function Dashboard({userData}: DashboardProps) {
 
     const userId = userData ? userData?.id : null;
     const leagueId = userData?.team ? (userData?.team?.leagueNumber) : openLeague?.id;
-    // console.log("userData?.team?.league?.id")
-    // console.log(userData?.team?.league?.id)
-    // console.log("userData?.team?.leagueNumber")
-    // console.log(userData?.team?.leagueNumber)
     const teamsInLeague: Array<ITeam> | undefined | null = useAllTeamsInLeague(leagueId).data;
 
 
@@ -128,8 +127,8 @@ export default function Dashboard({userData}: DashboardProps) {
     const driversInTeam = useDriversInTeam;
     // const pickNumber = useNextPickNumber(leagueId).data;
     const currentPickNumber = useNextPickNumber(leagueId).data;
-    const pickNumberRef = useRef(currentPickNumber);
-    const nextUserToPick = useNextUserToPick(leagueId).data;
+    // const pickNumberRef = useRef(currentPickNumber);
+    const nextUserToPick = useNextUserToPick(leagueId, toggleNextToPickQuery).data;
     const pickDriver = usePickDriver();
     const undraftedDrivers = useUndraftedDrivers(leagueId).data;
     const createTeam = useCreateTeam();
@@ -141,32 +140,15 @@ export default function Dashboard({userData}: DashboardProps) {
         if (!userData) {
             navigate("/login");
         }
-        console.log("userData")
-        console.log(userData)
-        console.log("nextUserToPick1")
-        console.log(nextUserToPick)
+
         if (userData?.id == nextUserToPick?.id || nextUserToPick?.isTestUser) {
-            console.log("isUsersTurnToPick1")
-            console.log(isUsersTurnToPick)
             setIsUsersTurnToPick(true);
-            console.log("isUsersTurnToPick2")
-            console.log(isUsersTurnToPick)
         }
-        // if (isUsersTurnToPick) {
-        //     window.location.reload();
-        // }
-        // setIsWaitingForPick(true);
 
         setLeagueTeams(teamsInLeague);
         setLeagueSize(leagueTeams?.length);
         setIsPracticeLeague(leagueData?.isPracticeLeague);
         setShowDraftPickTips(!leagueData?.isPracticeLeague);
-
-        // async function updatePickNumber() {
-        //     setCurrentPickNumber(await getPickNumber(leagueId));
-        // }
-        // updatePickNumber()
-        //     .then(() => console.log(currentPickNumber));
 
         if (leagueSize
             && leagueSize >= 10) {
@@ -174,11 +156,16 @@ export default function Dashboard({userData}: DashboardProps) {
             if (!leagueData?.isActive) {
                 setIsDraftInProgress(true);
                 setShowDraftPickTips(false);
+                // setToggleNextToPickQuery(true);
             }
         }
 
-        // setLastDriverPicked(lastDriverPicked)
-        // setLastPickTime(lastPickTime);
+        // if (isDraftInProgress) {
+        //     setToggle(prevState => !prevState);
+        // }
+
+        setLastDriverPicked(leagueData?.lastDriverPickedName)
+        setLastPickTime(leagueData?.lastPickTime);
 
         setSelectedDriver(undraftedDrivers?.find((driver: IDriver) =>
             driver !== undefined));
@@ -188,9 +175,6 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsDraftInProgress(false);
             setIsLeagueActive(true);
         }
-        // if (!isUsersTurnToPick) {
-        //
-        // }
 
     }, [userData, loadingLeagueData, leagueData, isLeagueFull, isPracticeLeague, isDraftInProgress, isUsersTurnToPick, isLeagueActive, nextUserToPick, undraftedDrivers, currentPickNumber, lastDriverPicked]);
 
@@ -204,7 +188,7 @@ export default function Dashboard({userData}: DashboardProps) {
             .then(() => {
                     // navigate("/dashboard");
                     // window.location.reload();
-
+                    queryClient.invalidateQueries()
                 },
                 (error) => {
                     const resMessage =
@@ -218,21 +202,26 @@ export default function Dashboard({userData}: DashboardProps) {
                     setMessage(resMessage);
                 }
             )
-            .then(() => queryClient.invalidateQueries());
+        // .then(() => queryClient.invalidateQueries());
         // setToggle(prevState => !prevState);
     };
 
     const handleDeleteUserTeam = () => {
         // postDeleteUserTeam(userData?.id)
-        deleteTeam.mutateAsync()
-            .then(() => {
-                queryClient.invalidateQueries("userData")
-                    .then(() => navigate("/home"))
-                    .then(() => {
-                        queryClient.invalidateQueries("leagueData")
-                    });
-            });
-        // setToggle(prevState => !prevState);
+        // postDeleteUserTeam(userData?.id)
+        // alert("Are you sure you want to delete your team?")
+        // toast("Are you sure you want to delete your team?")
+        if (confirm("Are you sure you want to delete your team?")) {
+            deleteTeam.mutateAsync()
+                .then(() => {
+                    queryClient.invalidateQueries("userData")
+                        .then(() => {
+                            navigate("/home")
+                            queryClient.invalidateQueries("leagueData")
+                        });
+                });
+            // setToggle(prevState => !prevState);
+        }
 
     }
 
@@ -306,17 +295,16 @@ export default function Dashboard({userData}: DashboardProps) {
     }
 
     const handlePick = (e: { preventDefault: () => void; },
-                        driver: IDriver | undefined | null) => {
+                        driverId: number | undefined | null) => {
         // driverId: number | string | undefined) => {
         e.preventDefault();
         pickDriver.mutateAsync({
             userId: userId,
-            driverId: driver?.id,
+            driverId: driverId,
         })
             .then(() => queryClient.invalidateQueries())
             .then(() => setIsUsersTurnToPick(false))
-            .then(() => setLastDriverPicked(driver))
-            .then(() => setLastPickTime(new Date()));
+            .then(() => setToggleNextToPickQuery(true));
     }
 
     const isLoading = loadingOpenLeague || loadingLeagueData;
@@ -333,7 +321,8 @@ export default function Dashboard({userData}: DashboardProps) {
         return (<Login userData={userData} error={error}/>);
     }
 
-    // const PreDraftDashboard = () => {
+
+// const PreDraftDashboard = () => {
     function PreDraftDashboard() {
         return (
             <>
@@ -427,6 +416,7 @@ export default function Dashboard({userData}: DashboardProps) {
                         handleCreateTeam={handleCreateTeam}
                         handleDeleteUserTeam={handleDeleteUserTeam}
                     />
+                    <Toaster/>
                 </div>
                 {/*<div id="practice-draft-options" className="col-start-3 col-span-2 h-125 box-shadow">*/}
                 <div className="col-start-6 col-span-5 125 box-shadow">

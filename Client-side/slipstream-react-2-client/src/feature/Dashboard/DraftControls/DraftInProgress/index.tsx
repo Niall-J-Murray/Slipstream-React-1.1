@@ -6,9 +6,9 @@ interface DraftInProgressProps {
     isUsersTurnToPick: boolean,
     nextUserToPick: IUser | undefined,
     selectedDriver: IDriver | undefined | null,
-    lastPickTime: Date | undefined | null,
-    lastDriverPicked: IDriver | undefined | null,
-    handlePick: (e: { preventDefault: () => void }, driver: (IDriver | undefined | null)) => void
+    lastPickTime: Date | string | undefined | null,
+    lastDriverPicked: IDriver | string | undefined | null,
+    handlePick: (e: { preventDefault: () => void }, driverId: (number | undefined | null)) => void
 }
 
 export default function DraftInProgress({
@@ -20,33 +20,8 @@ export default function DraftInProgress({
                                             lastDriverPicked,
                                             handlePick
                                         }: DraftInProgressProps) {
-    // const [userCanPick, setUserCanPick] = useState(false);
 
-    // useEffect(() => {
-    //     if (isUsersTurnToPick || nextUserToPick?.isTestUser) {
-    //         setUserCanPick(true);
-    //     }
-    // }, [currentPickNumber,
-    //     isUsersTurnToPick,
-    //     nextUserToPick,
-    //     selectedDriver,
-    //     lastPickTime,
-    //     lastDriverPicked,
-    //     handlePick]);
-    //
-    // console.log("isUsersTurnToPick")
-    // console.log(isUsersTurnToPick)
-    // console.log("nextUserToPick?.isTestUser")
-    // console.log(nextUserToPick?.isTestUser)
-    // console.log("userCanPick")
-    // console.log(userCanPick)
-
-    console.log("isUsersTurnToPick3")
-    console.log(isUsersTurnToPick)
-    console.log("nextUserToPick2")
-    console.log(nextUserToPick)
-
-    const formattedLastPickTime = (lastPickTime?.toLocaleTimeString() + " " + lastPickTime?.toLocaleDateString())
+    // const formattedLastPickTime = (lastPickTime?.toLocaleTimeString() + " " + lastPickTime?.toLocaleDateString())
 
     if (isUsersTurnToPick) {
         return (
@@ -91,7 +66,7 @@ export default function DraftInProgress({
                     </div>
                     <div>
                         {/*<button onClick={(e) => handlePick(e, selectedDriver?.driverId)}*/}
-                        <button onClick={(e) => handlePick(e, selectedDriver)}
+                        <button onClick={(e) => handlePick(e, selectedDriver?.id)}
                                 className={"btn btn-proceed"}
                                 type="submit"
                                 disabled={!selectedDriver}
@@ -117,7 +92,7 @@ export default function DraftInProgress({
                 <div className="col-start-1 col-span-3 draft-span">
                     <div>
                         Last pick was made at:
-                        <br/>{formattedLastPickTime ? formattedLastPickTime : "No picks made yet"}
+                        <br/>{lastPickTime ? lastPickTime : "No picks made yet"}
                     </div>
                     <div className={"pick-instructions-wait"}>
                         Next to pick:
@@ -130,11 +105,7 @@ export default function DraftInProgress({
                         Last driver picked:
                     </div>
                     <div>
-                        {lastDriverPicked ?
-                            (lastDriverPicked?.firstName + " " + lastDriverPicked?.surname)
-                            :
-                            "No picks made yet"
-                        }
+                        {lastDriverPicked ? lastDriverPicked : "No picks made yet"}
                     </div>
                     {/*<div>*/}
                     {/*    <button onClick={(e) => handlePick(e, selectedDriver?.driverId)}*/}

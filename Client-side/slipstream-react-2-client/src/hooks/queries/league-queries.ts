@@ -27,11 +27,12 @@ export const useAllTeamsInLeague = (leagueId: number | null | undefined) =>
         enabled: !!leagueId,
     });
 
-export const useNextPickNumber = (leagueId: number | null | undefined) =>
+export const useNextPickNumber = (leagueId: number | null | undefined, reFetchToggle: boolean | undefined | null) =>
     useQuery({
         queryKey: ["nextPickNumber", leagueId],
         queryFn: () => getPickNumber(leagueId),
-        enabled: !!leagueId,
+        enabled: !!reFetchToggle,
+        refetchInterval: 5000,
     });
 
 export const useNextUserToPick = (leagueId: number | null | undefined) =>
@@ -39,5 +40,4 @@ export const useNextUserToPick = (leagueId: number | null | undefined) =>
         queryKey: ["nextUserToPick", leagueId],
         queryFn: () => getNextUserToPick(leagueId),
         enabled: !!leagueId,
-        refetchInterval: 5000,
     });

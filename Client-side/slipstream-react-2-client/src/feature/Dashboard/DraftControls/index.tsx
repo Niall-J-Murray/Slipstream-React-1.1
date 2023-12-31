@@ -12,8 +12,8 @@ interface DraftControlsProps {
     isLeagueFull: boolean | undefined | null,
     showDraftPickTips: boolean | undefined,
     selectedDriver: IDriver | undefined | null,
-    lastPickTime: Date | undefined | null,
-    lastDriverPicked: IDriver | undefined | null,
+    lastPickTime: Date | string | undefined | null,
+    lastDriverPicked: IDriver | string | undefined | null,
     isLeagueActive: boolean | undefined | null,
     currentPickNumber: number | undefined | null,
     isUsersTurnToPick: boolean,
@@ -21,7 +21,7 @@ interface DraftControlsProps {
     togglePracticeOptions: () => void,
     togglePracticeLeague: () => void,
     addTestTeam: (e: { preventDefault: () => void }) => void,
-    handlePick: (e: { preventDefault: () => void }, driver: (IDriver | undefined | null)) => void
+    handlePick: (e: { preventDefault: () => void }, driverId: (number | undefined | null)) => void
 }
 
 export default function DraftControls({
