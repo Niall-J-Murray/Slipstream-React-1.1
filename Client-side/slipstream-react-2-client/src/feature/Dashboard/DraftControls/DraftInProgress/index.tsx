@@ -28,7 +28,7 @@ export default function DraftInProgress({
             <div className="grid grid-cols-2">
                 <div className="col-start-1 col-span-2 draft-span">
                     <div>
-                        Draft in progress:
+                        Draft in progress...
                     </div>
                     <div className={"pick-instructions-go"}>
                         Current pick number: {currentPickNumber && currentPickNumber < 10
@@ -82,7 +82,7 @@ export default function DraftInProgress({
             <div className="grid grid-cols-2">
                 <div className="col-start-1 col-span-3 draft-span">
                     <div>
-                        Draft in progress:
+                        Draft in progress...
                     </div>
                     <div className={"pick-instructions-wait"}>
                         Current pick number: {currentPickNumber && currentPickNumber < 10

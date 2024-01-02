@@ -42,7 +42,7 @@ public class League implements Serializable {
   @ManyToMany(
           fetch = FetchType.LAZY,
           cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-  private List<Team> teams = new ArrayList<>();
+  private List<Team> teams = new ArrayList<>(20);
 
   @Override
   public String toString() {

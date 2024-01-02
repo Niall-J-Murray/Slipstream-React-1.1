@@ -24,9 +24,9 @@ public class LeagueController {
   @GetMapping("/{leagueId}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public ResponseEntity<League> getLeagueData(@PathVariable Long leagueId) {
-    for (League league : leagueService.findAll()) {
-      teamService.updateLeagueTeamsRankings(league);
-    }
+//    for (League league : leagueService.findAll()) {
+//      teamService.updateLeagueTeamsRankings(league);
+//    }
     League leagueById = leagueService.findById(leagueId);
 //    System.out.println("league entity: " + ResponseEntity.ok(leagueOpt.orElse(null)));
     return ResponseEntity.ok(leagueById);

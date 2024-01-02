@@ -13,11 +13,12 @@ export const useOpenLeague = () =>
         queryFn: () => getOpenLeague(),
     });
 
-export const useLeagueData = (leagueId: number | null | undefined) =>
+export const useLeagueData = (leagueId: number | null | undefined, reFetchToggle: boolean | undefined) =>
     useQuery({
-        queryKey: ["leagueData", leagueId],
+        queryKey: ["leagueData", leagueId, reFetchToggle],
         queryFn: () => getLeagueData(leagueId),
         enabled: !!leagueId,
+        // refetchInterval: 5000,
     });
 
 export const useAllTeamsInLeague = (leagueId: number | null | undefined) =>
@@ -27,17 +28,33 @@ export const useAllTeamsInLeague = (leagueId: number | null | undefined) =>
         enabled: !!leagueId,
     });
 
-export const useNextPickNumber = (leagueId: number | null | undefined, reFetchToggle: boolean | undefined | null) =>
+export const useNextPickNumber = (leagueId: number | null | undefined, reFetchToggle: boolean | undefined) =>
     useQuery({
         queryKey: ["nextPickNumber", leagueId],
         queryFn: () => getPickNumber(leagueId),
-        enabled: !!reFetchToggle,
+        // enabled: !!reFetchToggle,
+        enabled: !!leagueId && reFetchToggle,
         refetchInterval: 5000,
     });
 
-export const useNextUserToPick = (leagueId: number | null | undefined) =>
+// export const useNextPickNumber = (leagueId: number | null | undefined) =>
+//     useQuery({
+//         queryKey: ["nextPickNumber", leagueId],
+//         queryFn: () => getPickNumber(leagueId),
+//         enabled: !!leagueId,
+//     });
+
+// export const useNextUserToPick = (leagueId: number | null | undefined) =>
+//     useQuery({
+//         queryKey: ["nextUserToPick", leagueId],
+//         queryFn: () => getNextUserToPick(leagueId),
+//         enabled: !!leagueId,
+//     });
+
+export const useNextUserToPick = (leagueId: number | null | undefined, reFetchToggle: boolean | undefined) =>
     useQuery({
         queryKey: ["nextUserToPick", leagueId],
         queryFn: () => getNextUserToPick(leagueId),
-        enabled: !!leagueId,
+        enabled: !!leagueId && reFetchToggle,
+        refetchInterval: 5000,
     });

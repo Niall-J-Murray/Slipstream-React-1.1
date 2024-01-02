@@ -22,11 +22,12 @@ export const useDriverData = (driverId: number | null | undefined) =>
         queryFn: (driverId) => getDriverData(driverId),
     });
 
-export const useUndraftedDrivers = (leagueId: number | null | undefined) =>
+export const useUndraftedDrivers = (leagueId: number | null | undefined, reFetchToggle: boolean | undefined) =>
     useQuery({
         queryKey: ["undraftedDrivers", leagueId],
         queryFn: () => getUndraftedDrivers(leagueId),
-        enabled: !!leagueId,
+        enabled: !!leagueId && reFetchToggle,
+        refetchInterval: 5000,
     });
 
 export const useDriversInTeam = (teamId: number | null | undefined) =>
@@ -47,6 +48,7 @@ export const usePickDriver = () =>
     useMutation({
         mutationKey: ["pickDriver"],
         mutationFn: postPickDriver,
+        onSuccess: () => window.location.reload(),
     });
 
 

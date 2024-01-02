@@ -1,6 +1,6 @@
 import DashTop from "./DashTop";
 import DriverTable from "./DriverTable";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {Toaster} from 'react-hot-toast';
 import {postToggleTestLeague} from "../../services/league.service.ts";
 import DraftControls from "./DraftControls";
@@ -54,7 +54,7 @@ export default function Dashboard({userData}: DashboardProps) {
     const [isLeagueFull, setIsLeagueFull]
         = useState<boolean | undefined | null>(false);
     const [isDraftInProgress, setIsDraftInProgress]
-        = useState<boolean | undefined | null>(false);
+        = useState<boolean | undefined>(false);
     // const [currentPickNumber, setCurrentPickNumber]
     //     = useState<number | undefined | null>();
     const [isLeagueActive, setIsLeagueActive]
@@ -73,8 +73,6 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<string | undefined | null>();
     const [lastPickTime, setLastPickTime]
         = useState<Date | string | undefined | null>();
-    const lastDriverPickedRef = useRef(lastDriverPicked);
-    const lastPickTimeRef = useRef(lastPickTime);
 
     const [loading, setLoading]
         = useState<boolean>(false);
@@ -82,7 +80,7 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<string>("");
 
     const [toggleNextToPickQuery, setToggleNextToPickQuery]
-        = useState<boolean | undefined | null>(isDraftInProgress);
+        = useState<boolean | undefined>(false);
 
 
     const initialValues: {
@@ -121,16 +119,24 @@ export default function Dashboard({userData}: DashboardProps) {
         data: leagueData,
         isLoading: loadingLeagueData,
         error: errLeagueData,
-    } = useLeagueData(leagueId);
+    } = useLeagueData(leagueId, toggleNextToPickQuery);
+
+    // let currentPickNumber: undefined | number | null;
+    // let nextUserToPick: undefined | IUser;
+    // if (!isUsersTurnToPick){
+    //   currentPickNumber = useNextPickNumber(leagueId).data;
+    //     nextUserToPick = useNextUserToPick(leagueId).data;
+    // }
 
     const queryClient = useQueryClient();
     const driversInTeam = useDriversInTeam;
-    // const pickNumber = useNextPickNumber(leagueId).data;
-    const currentPickNumber = useNextPickNumber(leagueId).data;
-    // const pickNumberRef = useRef(currentPickNumber);
+    const currentPickNumber = useNextPickNumber(leagueId, toggleNextToPickQuery).data;
     const nextUserToPick = useNextUserToPick(leagueId, toggleNextToPickQuery).data;
+    const undraftedDrivers = useUndraftedDrivers(leagueId, toggleNextToPickQuery).data;
+    // const pickNumber = useNextPickNumber(leagueId).data;
+    // const pickNumberRef = useRef(currentPickNumber);
     const pickDriver = usePickDriver();
-    const undraftedDrivers = useUndraftedDrivers(leagueId).data;
+
     const createTeam = useCreateTeam();
     const deleteTeam = useDeleteTeam(userId);
     const createTestTeam = useCreateTestTeam(leagueId);
@@ -139,6 +145,12 @@ export default function Dashboard({userData}: DashboardProps) {
     useEffect(() => {
         if (!userData) {
             navigate("/login");
+        }
+
+        console.log("isDraftInProgress")
+        console.log(isDraftInProgress)
+        if (isDraftInProgress && !isUsersTurnToPick) {
+            setToggleNextToPickQuery(true);
         }
 
         if (userData?.id == nextUserToPick?.id || nextUserToPick?.isTestUser) {
@@ -186,9 +198,24 @@ export default function Dashboard({userData}: DashboardProps) {
 
         createTeam.mutateAsync({userId, teamName})
             .then(() => {
+                    queryClient.invalidateQueries("allTeamsInLeague")
+                        .then(() => {
+                                setLeagueTeams(teamsInLeague);
+                                setLeagueSize(leagueTeams?.length);
+                            }
+                        )
+                        .then(() => {
+                            if (isLeagueFull) {
+                                window.location.reload();
+                            }
+                        })
+                    // .then(() => {
                     // navigate("/dashboard");
-                    // window.location.reload();
-                    queryClient.invalidateQueries()
+                    // queryClient.invalidateQueries()
+                    //     .then(() => {
+                    //         leagueSize++
+                    //         window.location.reload()
+                    //     });
                 },
                 (error) => {
                     const resMessage =
@@ -212,13 +239,17 @@ export default function Dashboard({userData}: DashboardProps) {
         // alert("Are you sure you want to delete your team?")
         // toast("Are you sure you want to delete your team?")
         if (confirm("Are you sure you want to delete your team?")) {
+
             deleteTeam.mutateAsync()
                 .then(() => {
-                    queryClient.invalidateQueries("userData")
+                    // if (deleteTeam.isSuccess) {
+                    queryClient.invalidateQueries()
                         .then(() => {
                             navigate("/home")
-                            queryClient.invalidateQueries("leagueData")
+                            // queryClient.invalidateQueries("leagueData")
+                            // queryClient.invalidateQueries("allTeamsInLeague")
                         });
+                    // }
                 });
             // setToggle(prevState => !prevState);
         }
@@ -302,9 +333,12 @@ export default function Dashboard({userData}: DashboardProps) {
             userId: userId,
             driverId: driverId,
         })
+            // .then(() => queryClient.invalidateQueries(["leagueData","nextPickNumber","nextUserToPick"]))
             .then(() => queryClient.invalidateQueries())
             .then(() => setIsUsersTurnToPick(false))
-            .then(() => setToggleNextToPickQuery(true));
+        // .then(() => setToggleNextToPickQuery(true));
+        // setIsUsersTurnToPick(false);
+        window.location.reload();
     }
 
     const isLoading = loadingOpenLeague || loadingLeagueData;
