@@ -103,6 +103,7 @@ export default function Dashboard({userData}: DashboardProps) {
     });
 
     const navigate: NavigateFunction = useNavigate();
+    // const eventSource = new EventSource("http://localhost:8080/api/sse/eventEmitter");
 
     const {
         data: openLeague,
@@ -119,7 +120,8 @@ export default function Dashboard({userData}: DashboardProps) {
         data: leagueData,
         isLoading: loadingLeagueData,
         error: errLeagueData,
-    } = useLeagueData(leagueId, toggleNextToPickQuery);
+    } = useLeagueData(leagueId);
+    // } = useLeagueData(leagueId, toggleNextToPickQuery);
 
     // let currentPickNumber: undefined | number | null;
     // let nextUserToPick: undefined | IUser;
@@ -130,9 +132,13 @@ export default function Dashboard({userData}: DashboardProps) {
 
     const queryClient = useQueryClient();
     const driversInTeam = useDriversInTeam;
-    const currentPickNumber = useNextPickNumber(leagueId, toggleNextToPickQuery).data;
-    const nextUserToPick = useNextUserToPick(leagueId, toggleNextToPickQuery).data;
-    const undraftedDrivers = useUndraftedDrivers(leagueId, toggleNextToPickQuery).data;
+    // const currentPickNumber = useNextPickNumber(leagueId, toggleNextToPickQuery).data;
+    // const nextUserToPick = useNextUserToPick(leagueId, toggleNextToPickQuery).data;
+    // const undraftedDrivers = useUndraftedDrivers(leagueId, toggleNextToPickQuery).data;
+
+    const currentPickNumber = useNextPickNumber(leagueId).data;
+    const nextUserToPick = useNextUserToPick(leagueId).data;
+    const undraftedDrivers = useUndraftedDrivers(leagueId).data;
     // const pickNumber = useNextPickNumber(leagueId).data;
     // const pickNumberRef = useRef(currentPickNumber);
     const pickDriver = usePickDriver();
@@ -142,6 +148,24 @@ export default function Dashboard({userData}: DashboardProps) {
     const createTestTeam = useCreateTestTeam(leagueId);
     const deleteTestTeams = useDeleteTestTeams(leagueId);
 
+    const handleServerEvents = () => {
+        // const data = null;
+        const data = new FormData();
+        const eventSource = new EventSource("http://localhost:8080/api/sse/eventEmitter");
+        let guidValue = null;
+
+        eventSource.addEventListener("GUI_ID", (event) => {
+            guidValue = JSON.parse(event.data);
+            console.log(`Guid from server: ${guidValue}`);
+            data.append("guid", guidValue);
+            eventSource.addEventListener(guidValue, (event) => {
+                const result = JSON.parse(event.data);
+                console.log("result")
+                console.log(result)
+            })
+        });
+    }
+
     useEffect(() => {
         if (!userData) {
             navigate("/login");
@@ -149,8 +173,11 @@ export default function Dashboard({userData}: DashboardProps) {
 
         console.log("isDraftInProgress")
         console.log(isDraftInProgress)
-        if (isDraftInProgress && !isUsersTurnToPick) {
-            setToggleNextToPickQuery(true);
+        // if (isDraftInProgress && !isUsersTurnToPick) {
+        //     setToggleNextToPickQuery(true);
+        // }
+        if (isDraftInProgress) {
+            handleServerEvents()
         }
 
         if (userData?.id == nextUserToPick?.id || nextUserToPick?.isTestUser) {

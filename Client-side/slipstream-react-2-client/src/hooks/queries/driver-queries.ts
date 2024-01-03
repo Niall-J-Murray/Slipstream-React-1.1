@@ -22,12 +22,19 @@ export const useDriverData = (driverId: number | null | undefined) =>
         queryFn: (driverId) => getDriverData(driverId),
     });
 
-export const useUndraftedDrivers = (leagueId: number | null | undefined, reFetchToggle: boolean | undefined) =>
+// export const useUndraftedDrivers = (leagueId: number | null | undefined, reFetchToggle: boolean | undefined) =>
+//     useQuery({
+//         queryKey: ["undraftedDrivers", leagueId],
+//         queryFn: () => getUndraftedDrivers(leagueId),
+//         enabled: !!leagueId && reFetchToggle,
+//         refetchInterval: 5000,
+//     });
+
+export const useUndraftedDrivers = (leagueId: number | null | undefined) =>
     useQuery({
         queryKey: ["undraftedDrivers", leagueId],
         queryFn: () => getUndraftedDrivers(leagueId),
-        enabled: !!leagueId && reFetchToggle,
-        refetchInterval: 5000,
+        enabled: !!leagueId,
     });
 
 export const useDriversInTeam = (teamId: number | null | undefined) =>
