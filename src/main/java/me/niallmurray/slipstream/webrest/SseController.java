@@ -28,4 +28,16 @@ public class SseController {
     sseEmitter.onTimeout(() -> sseEmitters.remove(guid.toString()));
     return sseEmitter;
   }
+
+  @GetMapping("/pick-made")
+  public SseEmitter pickMade() throws IOException {
+    SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
+    String key = "SSE Test " + Math.random();
+    sseEmitters.put(key, sseEmitter);
+    sseEmitter.send(SseEmitter.event().name("pick_made").data("test"));
+    sseEmitter.onCompletion(() -> sseEmitters.remove(key));
+    sseEmitter.onTimeout(() -> sseEmitters.remove(key));
+    System.out.println("sseEmitter sent");
+    return sseEmitter;
+  }
 }

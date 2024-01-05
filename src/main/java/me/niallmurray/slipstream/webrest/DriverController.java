@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,8 @@ public class DriverController {
   UserService userService;
   @Autowired
   TeamService teamService;
+  @Autowired
+  SseController sseController;
 
   @GetMapping("/{driverId}")
   @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -71,7 +74,7 @@ public class DriverController {
   }
 
   @PostMapping("/pick/{userId}")
-  public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, @Valid @RequestBody Map<String, Long> requestData) {
+  public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, @Valid @RequestBody Map<String, Long> requestData) throws IOException {
     System.out.println("postPickDriver driverID: " + requestData.get("driverId"));
     Long driverId = requestData.get("driverId");
     Long userLeagueId = userService.findById(userId).getTeam().getLeague().getId();
@@ -84,6 +87,7 @@ public class DriverController {
     Driver driver = driverService.findById(driverId);
     //Async send email to next to pick
 //    emailService.asyncPickNotificationEmail(userLeague);
+    sseController.pickMade();
     return ResponseEntity.ok(driver);
   }
 }

@@ -54,7 +54,7 @@ export default function Dashboard({userData}: DashboardProps) {
     const [isLeagueFull, setIsLeagueFull]
         = useState<boolean | undefined | null>(false);
     const [isDraftInProgress, setIsDraftInProgress]
-        = useState<boolean | undefined>(false);
+        = useState<boolean | undefined>();
     // const [currentPickNumber, setCurrentPickNumber]
     //     = useState<number | undefined | null>();
     const [isLeagueActive, setIsLeagueActive]
@@ -166,6 +166,29 @@ export default function Dashboard({userData}: DashboardProps) {
         });
     }
 
+    const handleServerPickEvents = () => {
+        let data = "";
+        const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
+        let eventData = null;
+
+        eventSource.addEventListener("pick_made", (event) => {
+            data = event.type;
+            eventData = event.data;
+            // eventData = JSON.parse(event.data);
+            // console.log("data1")
+            // console.log(data)
+            console.log("eventData1")
+            // console.log(event)
+            console.log(event.timeStamp)
+            console.log(eventData)
+            queryClient.invalidateQueries();
+        });
+        // console.log("data2")
+        // console.log(data)
+        // console.log("eventData2")
+        // console.log(eventData)
+    }
+
     useEffect(() => {
         if (!userData) {
             navigate("/login");
@@ -176,9 +199,9 @@ export default function Dashboard({userData}: DashboardProps) {
         // if (isDraftInProgress && !isUsersTurnToPick) {
         //     setToggleNextToPickQuery(true);
         // }
-        if (isDraftInProgress) {
-            handleServerEvents()
-        }
+        // if (isDraftInProgress) {
+        //     handleServerEvents()
+        // }
 
         if (userData?.id == nextUserToPick?.id || nextUserToPick?.isTestUser) {
             setIsUsersTurnToPick(true);
@@ -215,6 +238,7 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsLeagueActive(true);
         }
 
+        // handleServerPickEvents();
     }, [userData, loadingLeagueData, leagueData, isLeagueFull, isPracticeLeague, isDraftInProgress, isUsersTurnToPick, isLeagueActive, nextUserToPick, undraftedDrivers, currentPickNumber, lastDriverPicked]);
 
     const handleCreateTeam = (formValue: { teamName: string }) => {
@@ -365,7 +389,9 @@ export default function Dashboard({userData}: DashboardProps) {
             .then(() => setIsUsersTurnToPick(false))
         // .then(() => setToggleNextToPickQuery(true));
         // setIsUsersTurnToPick(false);
-        window.location.reload();
+        // window.location.reload();
+        handleServerPickEvents();
+
     }
 
     const isLoading = loadingOpenLeague || loadingLeagueData;
