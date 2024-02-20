@@ -166,23 +166,51 @@ export default function Dashboard({userData}: DashboardProps) {
         });
     }
 
-    const handleServerPickEvents = () => {
-        let data = "";
-        const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
-        let eventData = null;
+    // const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
+    // eventSource.addEventListener("pick_made", (event) => {
+    //     console.log("eventData1")
+    //     console.log(event.data)
+    //     if (event.data && event.data !== userId) {
+    //         navigate("/dashboard");
+    //     }
+    // });
 
+    const handleServerPickEvents = () => {
+        // let data = "";
+        // const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
+        // let eventData = null;
+
+        const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
         eventSource.addEventListener("pick_made", (event) => {
-            data = event.type;
-            eventData = event.data;
-            // eventData = JSON.parse(event.data);
-            // console.log("data1")
-            // console.log(data)
             console.log("eventData1")
-            // console.log(event)
-            console.log(event.timeStamp)
-            console.log(eventData)
-            queryClient.invalidateQueries();
+            console.log(event.data)
+            if (event.data &&
+                event.data != userId) {
+                navigate("/home");
+            }
         });
+
+        // eventSource.addEventListener("pick_made", (event) => {
+        //     data = event.type;
+        //     eventData = event.data;
+        //     // eventData = JSON.parse(event.data);
+        //     // console.log("data1")
+        //     // console.log(data)
+        //     console.log("eventData2")
+        //     // console.log(event)
+        //     console.log(event.timeStamp)
+        //     console.log(data)
+        //     console.log(eventData)
+        //     queryClient.invalidateQueries()
+        //         .then(() => {
+        //                 if (data) {
+        //                     console.log("refresh")
+        //                     // window.location.reload();
+        //                     navigate("/home");
+        //                 }
+        //             }
+        //         );
+        // });
         // console.log("data2")
         // console.log(data)
         // console.log("eventData2")
@@ -249,24 +277,12 @@ export default function Dashboard({userData}: DashboardProps) {
 
         createTeam.mutateAsync({userId, teamName})
             .then(() => {
-                    queryClient.invalidateQueries("allTeamsInLeague")
+                    queryClient.invalidateQueries()
                         .then(() => {
-                                setLeagueTeams(teamsInLeague);
-                                setLeagueSize(leagueTeams?.length);
-                            }
-                        )
-                        .then(() => {
-                            if (isLeagueFull) {
+                            if (leagueSize === 10) {
                                 window.location.reload();
                             }
                         })
-                    // .then(() => {
-                    // navigate("/dashboard");
-                    // queryClient.invalidateQueries()
-                    //     .then(() => {
-                    //         leagueSize++
-                    //         window.location.reload()
-                    //     });
                 },
                 (error) => {
                     const resMessage =
@@ -280,8 +296,6 @@ export default function Dashboard({userData}: DashboardProps) {
                     setMessage(resMessage);
                 }
             )
-        // .then(() => queryClient.invalidateQueries());
-        // setToggle(prevState => !prevState);
     };
 
     const handleDeleteUserTeam = () => {
@@ -390,6 +404,7 @@ export default function Dashboard({userData}: DashboardProps) {
         // .then(() => setToggleNextToPickQuery(true));
         // setIsUsersTurnToPick(false);
         // window.location.reload();
+
         handleServerPickEvents();
 
     }

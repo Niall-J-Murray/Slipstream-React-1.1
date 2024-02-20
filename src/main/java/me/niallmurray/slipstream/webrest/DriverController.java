@@ -87,7 +87,8 @@ public class DriverController {
     Driver driver = driverService.findById(driverId);
     //Async send email to next to pick
 //    emailService.asyncPickNotificationEmail(userLeague);
-    sseController.pickMade();
+    sseController.pickMade(userId);
+//    sseController.pickMade();
     return ResponseEntity.ok(driver);
   }
 }

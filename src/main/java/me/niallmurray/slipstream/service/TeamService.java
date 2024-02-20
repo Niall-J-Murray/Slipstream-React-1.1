@@ -153,7 +153,7 @@ public class TeamService {
     league.setCurrentPickNumber(league.getCurrentPickNumber() + 1);
     league.setLastDriverPickedName(driver.getFirstName() + " " + driver.getSurname());
     league.setLastPickTime(LocalDateTime.now()
-            .format(DateTimeFormatter.ofPattern("dd-MM-yy HH:mm")));
+            .format(DateTimeFormatter.ofPattern("HH:mm (dd-MM-yyyy)")));
 
     userService.save(user);
     teamRepository.save(team);
