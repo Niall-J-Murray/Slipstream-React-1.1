@@ -37,14 +37,11 @@ interface DashboardProps {
 //  Tweak query refetch logic & finish websocket integration
 //  ---
 //  Check draft add test team and draft picking functions after dashboard refactor.
-//  Fix draft instructions to display according to user status.
 //  Finish loading spinner graphic, and pause page loading until all data is fetched.
 //  Fix data missing data on page reloads.
 //  Check test teams disappearing mid-draft after user logout.
 //  Add toggles to show/hide certain boxes.
-//  Fix layouts for consistency.
 //  Change "Register" to "Sign Up", "Login" to "Sign In" and "Log Out"...
-
 
 export default function Dashboard({userData}: DashboardProps) {
     const [showDraftPickTips, setShowDraftPickTips]
