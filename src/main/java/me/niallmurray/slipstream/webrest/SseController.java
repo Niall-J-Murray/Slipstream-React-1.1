@@ -29,6 +29,15 @@ public class SseController {
     return sseEmitter;
   }
 
+  @GetMapping("/test-pick-made")
+  public SseEmitter testPickMade(Long userId) throws IOException {
+    SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
+    if (userId != null) {
+      sseEmitter.send("Pick made by user: " + userId);
+    }
+    return sseEmitter;
+  }
+
   @GetMapping("/pick-made")
   public SseEmitter pickMade(Long userId) throws IOException {
 //  public SseEmitter pickMade() throws IOException {

@@ -148,14 +148,14 @@ export default function Dashboard({userData}: DashboardProps) {
     const handleServerEvents = () => {
         // const data = null;
         const data = new FormData();
-        const eventSource = new EventSource("http://localhost:8080/api/sse/eventEmitter");
+        const source = new EventSource("http://localhost:8080/api/sse/eventEmitter");
         let guidValue = null;
 
-        eventSource.addEventListener("GUI_ID", (event) => {
+        source.addEventListener("GUI_ID", (event) => {
             guidValue = JSON.parse(event.data);
             console.log(`Guid from server: ${guidValue}`);
             data.append("guid", guidValue);
-            eventSource.addEventListener(guidValue, (event) => {
+            source.addEventListener(guidValue, (event) => {
                 const result = JSON.parse(event.data);
                 console.log("result")
                 console.log(result)
@@ -171,14 +171,18 @@ export default function Dashboard({userData}: DashboardProps) {
     //         navigate("/dashboard");
     //     }
     // });
+    const source = new EventSource("http://localhost:8080/api/sse/test-pick-made");
+    source.onmessage = function (event) {
+        console.log("event.data");
+        console.log(event.data);
+    };
 
     const handleServerPickEvents = () => {
         // let data = "";
         // const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
         // let eventData = null;
 
-        const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
-        eventSource.addEventListener("pick_made", (event) => {
+        source.addEventListener("pick_made", (event) => {
             console.log("eventData1")
             console.log(event.data)
             if (event.data &&
@@ -402,8 +406,8 @@ export default function Dashboard({userData}: DashboardProps) {
         // setIsUsersTurnToPick(false);
         // window.location.reload();
 
-        handleServerPickEvents();
-
+        // handleServerPickEvents();
+        console.log("pick made")
     }
 
     const isLoading = loadingOpenLeague || loadingLeagueData;
