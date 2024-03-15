@@ -74,7 +74,7 @@ public class DriverController {
   }
 
   @PostMapping("/pick/{userId}")
-  public ResponseEntity<Driver> postPickDriver(@PathVariable Long userId, @Valid @RequestBody Map<String, Long> requestData) throws IOException {
+  public ResponseEntity<Boolean> postPickDriver(@PathVariable Long userId, @Valid @RequestBody Map<String, Long> requestData) throws IOException {
     System.out.println("postPickDriver driverID: " + requestData.get("driverId"));
     Long driverId = requestData.get("driverId");
     Long userLeagueId = userService.findById(userId).getTeam().getLeague().getId();
@@ -87,9 +87,10 @@ public class DriverController {
     Driver driver = driverService.findById(driverId);
     //Async send email to next to pick
 //    emailService.asyncPickNotificationEmail(userLeague);
-    sseController.testPickMade(userId);
+    sseController.testPickMade(userId,driver.getSurname());
 //    sseController.pickMade(userId);
 //    sseController.pickMade();
-    return ResponseEntity.ok(driver);
+//    return ResponseEntity.ok(driver);
+    return ResponseEntity.ok(true);
   }
 }

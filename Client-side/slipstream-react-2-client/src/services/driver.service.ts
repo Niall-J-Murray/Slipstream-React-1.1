@@ -9,7 +9,7 @@ export const getUserBoard = () => {
     return axios.get(API_URL + "driver", {headers: authHeader()});
 };
 
-export const getDriverData = async (data): Promise<IDriver> => {
+export const getDriverData = async (data:any): Promise<IDriver> => {
     console.log("getDriverData")
     console.log(data)
     console.log(data.driverId)

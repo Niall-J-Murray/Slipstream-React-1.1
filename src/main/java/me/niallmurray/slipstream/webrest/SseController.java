@@ -30,11 +30,12 @@ public class SseController {
   }
 
   @GetMapping("/test-pick-made")
-  public SseEmitter testPickMade(Long userId) throws IOException {
+  public SseEmitter testPickMade(Long userId, String surname) throws IOException {
     SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
     if (userId != null) {
-      sseEmitter.send("Pick made by user: " + userId);
+      sseEmitter.send(surname);
     }
+    sseEmitter.complete();
     return sseEmitter;
   }
 

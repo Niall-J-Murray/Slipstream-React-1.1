@@ -92,7 +92,7 @@ export default function DraftInProgress({
                 <div className="col-start-1 col-span-3 draft-span">
                     <div>
                         Last pick was made at:
-                        <br/>{lastPickTime ? lastPickTime : "No picks made yet"}
+                        <br/>{lastPickTime ? lastPickTime?.toString() : "No picks made yet"}
                     </div>
                     <div className={"pick-instructions-wait"}>
                         Next to pick:
@@ -105,7 +105,7 @@ export default function DraftInProgress({
                         Last driver picked:
                     </div>
                     <div>
-                        {lastDriverPicked ? lastDriverPicked : "No picks made yet"}
+                        {lastDriverPicked ? lastDriverPicked.toString() : "No picks made yet"}
                     </div>
                     {/*<div>*/}
                     {/*    <button onClick={(e) => handlePick(e, selectedDriver?.driverId)}*/}

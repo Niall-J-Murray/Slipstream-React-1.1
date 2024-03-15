@@ -76,8 +76,44 @@ export default function Dashboard({userData}: DashboardProps) {
     const [message, setMessage]
         = useState<string>("");
 
-    const [toggleNextToPickQuery, setToggleNextToPickQuery]
-        = useState<boolean | undefined>(false);
+    const [listening, setListening] = useState(false);
+    const [data, setData] = useState([]);
+    let eventSource = undefined;
+
+    useEffect(() => {
+        if (!listening) {
+            eventSource = new EventSource("http://localhost:8080/api/sse/test-pick-made");
+
+            eventSource.onopen = (event) => {
+                console.log("connection opened")
+            }
+
+            eventSource.onmessage = (event) => {
+                console.log("result", event.data);
+                setData(old => [...old, event.data])
+            }
+
+            eventSource.onerror = (event) => {
+                console.log("event.target.readyState")
+                console.log(event.target.readyState)
+                if (event.target.readyState === EventSource.CLOSED) {
+                    console.log('eventsource closed (' + event.target.readyState + ')')
+                }
+                eventSource.close();
+            }
+
+            setListening(true);
+        }
+
+        return () => {
+            eventSource.close();
+            console.log("eventsource closed")
+        }
+
+    }, [])
+
+    // const [toggleNextToPickQuery, setToggleNextToPickQuery]
+    //     = useState<boolean | undefined>(false);
 
 
     const initialValues: {
@@ -85,6 +121,7 @@ export default function Dashboard({userData}: DashboardProps) {
     } = {
         teamName: "",
     };
+
 
     const validationSchema: Yup.ObjectSchema<object> = Yup.object().shape({
         teamName: Yup.string()
@@ -145,23 +182,23 @@ export default function Dashboard({userData}: DashboardProps) {
     const createTestTeam = useCreateTestTeam(leagueId);
     const deleteTestTeams = useDeleteTestTeams(leagueId);
 
-    const handleServerEvents = () => {
-        // const data = null;
-        const data = new FormData();
-        const source = new EventSource("http://localhost:8080/api/sse/eventEmitter");
-        let guidValue = null;
-
-        source.addEventListener("GUI_ID", (event) => {
-            guidValue = JSON.parse(event.data);
-            console.log(`Guid from server: ${guidValue}`);
-            data.append("guid", guidValue);
-            source.addEventListener(guidValue, (event) => {
-                const result = JSON.parse(event.data);
-                console.log("result")
-                console.log(result)
-            })
-        });
-    }
+    // const handleServerEvents = () => {
+    //     // const data = null;
+    //     const data = new FormData();
+    //     const source = new EventSource("http://localhost:8080/api/sse/eventEmitter");
+    //     let guidValue = null;
+    //
+    //     source.addEventListener("GUI_ID", (event) => {
+    //         guidValue = JSON.parse(event.data);
+    //         console.log(`Guid from server: ${guidValue}`);
+    //         data.append("guid", guidValue);
+    //         source.addEventListener(guidValue, (event) => {
+    //             const result = JSON.parse(event.data);
+    //             console.log("result")
+    //             console.log(result)
+    //         })
+    //     });
+    // }
 
     // const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
     // eventSource.addEventListener("pick_made", (event) => {
@@ -171,60 +208,57 @@ export default function Dashboard({userData}: DashboardProps) {
     //         navigate("/dashboard");
     //     }
     // });
-    const source = new EventSource("http://localhost:8080/api/sse/test-pick-made");
-    source.onmessage = function (event) {
-        console.log("event.data");
-        console.log(event.data);
-    };
 
-    const handleServerPickEvents = () => {
-        // let data = "";
-        // const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
-        // let eventData = null;
 
-        source.addEventListener("pick_made", (event) => {
-            console.log("eventData1")
-            console.log(event.data)
-            if (event.data &&
-                event.data != userId) {
-                navigate("/home");
-            }
-        });
+    // const handleServerPickEvents = () => {
+    //     // let data = "";
+    //     // const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
+    //     // let eventData = null;
+    //
+    //     source.addEventListener("pick_made", (event) => {
+    //         console.log("eventData1")
+    //         console.log(event.data)
+    //         if (event.data &&
+    //             event.data != userId) {
+    //             navigate("/home");
+    //         }
+    //     });
 
-        // eventSource.addEventListener("pick_made", (event) => {
-        //     data = event.type;
-        //     eventData = event.data;
-        //     // eventData = JSON.parse(event.data);
-        //     // console.log("data1")
-        //     // console.log(data)
-        //     console.log("eventData2")
-        //     // console.log(event)
-        //     console.log(event.timeStamp)
-        //     console.log(data)
-        //     console.log(eventData)
-        //     queryClient.invalidateQueries()
-        //         .then(() => {
-        //                 if (data) {
-        //                     console.log("refresh")
-        //                     // window.location.reload();
-        //                     navigate("/home");
-        //                 }
-        //             }
-        //         );
-        // });
-        // console.log("data2")
-        // console.log(data)
-        // console.log("eventData2")
-        // console.log(eventData)
-    }
+    // eventSource.addEventListener("pick_made", (event) => {
+    //     data = event.type;
+    //     eventData = event.data;
+    //     // eventData = JSON.parse(event.data);
+    //     // console.log("data1")
+    //     // console.log(data)
+    //     console.log("eventData2")
+    //     // console.log(event)
+    //     console.log(event.timeStamp)
+    //     console.log(data)
+    //     console.log(eventData)
+    //     queryClient.invalidateQueries()
+    //         .then(() => {
+    //                 if (data) {
+    //                     console.log("refresh")
+    //                     // window.location.reload();
+    //                     navigate("/home");
+    //                 }
+    //             }
+    //         );
+    // });
+    // console.log("data2")
+    // console.log(data)
+    // console.log("eventData2")
+    // console.log(eventData)
+    // }
+
 
     useEffect(() => {
         if (!userData) {
             navigate("/login");
         }
 
-        console.log("isDraftInProgress")
-        console.log(isDraftInProgress)
+        // console.log("isDraftInProgress")
+        // console.log(isDraftInProgress)
         // if (isDraftInProgress && !isUsersTurnToPick) {
         //     setToggleNextToPickQuery(true);
         // }
@@ -235,6 +269,15 @@ export default function Dashboard({userData}: DashboardProps) {
         if (userData?.id == nextUserToPick?.id || nextUserToPick?.isTestUser) {
             setIsUsersTurnToPick(true);
         }
+        // else
+        // {
+        //     console.log("is pick source")
+        //     const source = new EventSource("http://localhost:8080/api/sse/test-pick-made");
+        //     source.onmessage = function (event) {
+        //         console.log("event.data");
+        //         console.log(event.data);
+        //     };
+        // }
 
         setLeagueTeams(teamsInLeague);
         setLeagueSize(leagueTeams?.length);
@@ -407,6 +450,7 @@ export default function Dashboard({userData}: DashboardProps) {
         // window.location.reload();
 
         // handleServerPickEvents();
+
         console.log("pick made")
     }
 
@@ -455,7 +499,7 @@ export default function Dashboard({userData}: DashboardProps) {
                             togglePracticeOptions={togglePracticeOptions}
                         />
                         :
-                        <DraftControls
+                        <><DraftControls
                             userData={userData}
                             leagueData={leagueData}
                             isPracticeLeague={isPracticeLeague}
@@ -471,8 +515,14 @@ export default function Dashboard({userData}: DashboardProps) {
                             togglePracticeOptions={togglePracticeOptions}
                             togglePracticeLeague={togglePracticeLeague}
                             addTestTeam={addTestTeam}
-                            handlePick={handlePick}
-                        />
+                            handlePick={handlePick}/>
+                            <hr/>
+                            <div className="App-header">
+                                Received Data
+                                {data.map(d => <span key={d}>{d}</span>
+                                )}
+                            </div>
+                        </>
                     }
                 </div>
                 <div className="col-start-3 col-span-3">

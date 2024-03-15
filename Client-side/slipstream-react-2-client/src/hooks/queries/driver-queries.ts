@@ -7,7 +7,7 @@ import {
 } from "../../services/driver.service.ts";
 import {useMutation, useQuery, useQueryClient} from "react-query";
 
-const useGetQueryClient = () =>
+const UseGetQueryClient = () =>
     useQueryClient();
 
 export const useDriverStandings = () =>
@@ -55,7 +55,11 @@ export const usePickDriver = () =>
     useMutation({
         mutationKey: ["pickDriver"],
         mutationFn: postPickDriver,
-        onSuccess: () => window.location.reload(),
+        onSuccess: () => {
+            // UseGetQueryClient().invalidateQueries()
+            //     .then(() => window.location.reload())
+            window.location.reload()
+        },
     });
 
 
