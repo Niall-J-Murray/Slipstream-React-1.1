@@ -78,7 +78,7 @@ export default function Dashboard({userData}: DashboardProps) {
 
     const [listening, setListening] = useState(false);
     const [data, setData] = useState([]);
-    let eventSource = undefined;
+    let eventSource: EventSource | undefined = undefined;
 
     useEffect(() => {
         if (!listening) {
@@ -95,11 +95,14 @@ export default function Dashboard({userData}: DashboardProps) {
 
             eventSource.onerror = (event) => {
                 console.log("event.target.readyState")
-                console.log(event.target.readyState)
-                if (event.target.readyState === EventSource.CLOSED) {
-                    console.log('eventsource closed (' + event.target.readyState + ')')
-                }
-                eventSource.close();
+                console.log(event.target)
+                // if (event.target.readyState === EventSource.CLOSED) {
+                //     console.log('eventsource closed (' + event.target.readyState + ')')
+                // }
+                // if (event.target === EventSource.CLOSED) {
+                //     console.log('eventsource closed (' + event + ')')
+                // }
+                eventSource?.close();
             }
 
             setListening(true);
