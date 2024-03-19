@@ -24,3 +24,17 @@ export const getUpdateStandings = async () => {
     return await axios.get(API_DATA_URL + "/updateStandings", {headers: authHeader()})
         .then(response => response.data);
 };
+
+export const postDeleteTeam = async (teamId: string) => {
+    return await axios
+        .post(API_DATA_URL + "/deleteTeam/" + teamId,
+            {teamId: teamId})
+        .then(response => response.data);
+};
+
+export const postDeleteUser = async (userId: string | number | undefined) => {
+    return await axios
+        .post(API_DATA_URL + "/deleteUser/" + userId,
+            {userId: userId})
+        .then(response => response.data);
+};

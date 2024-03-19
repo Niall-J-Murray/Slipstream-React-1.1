@@ -14,6 +14,7 @@ import {useUserData} from "./hooks/queries/user-queries.ts";
 import {hideLoader, showLoader} from "./services/loading.service.ts";
 import IUser from "./types/user.type.ts";
 import TestPage from "./feature/TestPage";
+import SseTestPage from "./feature/SseTestPage";
 
 export default function App() {
     const [currentUser, setCurrentUser]
@@ -84,6 +85,7 @@ export default function App() {
                     <Route path="/admin" element={<Admin userData={userData}/>}/>
                     <Route path="/logout" element={<Logout userData={userData}/>}/>
                     <Route path="/test" element={<TestPage userData={userData}/>}/>
+                    <Route path="/sse" element={<SseTestPage/>}/>
                 </Routes>
             </div>
         </>

@@ -11,8 +11,10 @@ export default function UserTable({allUsers}) {
                     </caption>
                     <thead>
                     <tr>
+                        <th>UID</th>
                         <th>Username</th>
                         <th>Team Name</th>
+                        <th>TID</th>
                         <th>Email</th>
                         <th>Last Logout</th>
                     </tr>
@@ -21,8 +23,10 @@ export default function UserTable({allUsers}) {
                     {users?.map((user: IUser) => {
                         return (
                             <tr key={user.id}>
+                                <td>{user.id}</td>
                                 <td>{user.username}</td>
                                 <td>{user.team? user.team?.teamName : "No active team"}</td>
+                                <td>{user.team? user.team?.id : "N/A"}</td>
                                 <td>{user.email}</td>
                                 <td>{user.lastLogout}</td>
                             </tr>

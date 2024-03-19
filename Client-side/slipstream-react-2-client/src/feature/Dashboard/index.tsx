@@ -80,8 +80,8 @@ export default function Dashboard({userData}: DashboardProps) {
     const [message, setMessage]
         = useState<string>("");
 
-    const [listening, setListening]
-        = useState(false);
+    // const [listening, setListening]
+    //     = useState(false);
     // const [data, setData] = useState<any[]>([]);
     // let eventSource: EventSource | undefined = undefined;
 
@@ -242,67 +242,135 @@ export default function Dashboard({userData}: DashboardProps) {
     //         navigate("/dashboard");
     //     }
     // });
-    let data = "";
-    let eventData: null = null;
+    // let data = "";
+    // let eventData: null = null;
 
-    const handleServerPickEvents = () => {
-        // let data = "";
-        // let eventData: null = null;
-        const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
+    // const handleServerPickEvents = () => {
+    //     // let data = "";
+    //     // let eventData: null = null;
+    //     const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
+    //
+    //     if (!listening) {
+    //         bugout.log('listening:');
+    //         eventSource.addEventListener("pick_made", (event) => {
+    //             bugout.log("eventData1")
+    //             bugout.log(event.data)
+    //             eventData = event.data
+    //             data = JSON.stringify(eventData)
+    //             if (event.data &&
+    //                 event.data != userId) {
+    //                 navigate("/home");
+    //             } else {
+    //                 navigate("/logout");
+    //             }
+    //         });
+    //         bugout.log(eventData)
+    //         bugout.log(data)
+    //         bugout.downloadLog()
+    //         eventSource?.close();
+    //     }
+    //     setListening(true);
+    //     return () => {
+    //         eventSource?.close();
+    //         console.log("eventsource closed")
+    //         console.log("data2")
+    //         console.log(data)
+    //         console.log("eventData2")
+    //         console.log(eventData)
+    //
+    //     }
+    // }
 
+
+    // eventSource.addEventListener("pick_made", (event) => {
+    //     data = event.type;
+    //     eventData = event.data;
+    //     // eventData = JSON.parse(event.data);
+    //     // console.log("data1")
+    //     // console.log(data)
+    //     console.log("eventData2")
+    //     // console.log(event)
+    //     console.log(event.timeStamp)
+    //     console.log(data)
+    //     console.log(eventData)
+    //     queryClient.invalidateQueries()
+    //         .then(() => {
+    //                 if (data) {
+    //                     console.log("refresh")
+    //                     // window.location.reload();
+    //                     navigate("/home");
+    //                 }
+    //             }
+    //         );
+    // });
+    const [listening, setListening] = useState(false);
+    const [data, setData] = useState([]);
+    let eventSource = undefined;
+
+    const handleServerEvents = () => {
         if (!listening) {
-            bugout.log('listening:');
-            eventSource.addEventListener("pick_made", (event) => {
-                bugout.log("eventData1")
-                bugout.log(event.data)
-                eventData = event.data
-                data = JSON.stringify(eventData)
-                if (event.data &&
-                    event.data != userId) {
-                    navigate("/home");
-                } else {
-                    navigate("/logout");
-                }
-            });
-            bugout.log(eventData)
-            bugout.log(data)
-            bugout.downloadLog()
-            eventSource?.close();
-        }
-        setListening(true);
-        // eventSource.addEventListener("pick_made", (event) => {
-        //     data = event.type;
-        //     eventData = event.data;
-        //     // eventData = JSON.parse(event.data);
-        //     // console.log("data1")
-        //     // console.log(data)
-        //     console.log("eventData2")
-        //     // console.log(event)
-        //     console.log(event.timeStamp)
-        //     console.log(data)
-        //     console.log(eventData)
-        //     queryClient.invalidateQueries()
-        //         .then(() => {
-        //                 if (data) {
-        //                     console.log("refresh")
-        //                     // window.location.reload();
-        //                     navigate("/home");
-        //                 }
-        //             }
-        //         );
-        // });
+            // eventSource = new EventSource("http://localhost:8080/api/sse/time");
+            eventSource = new EventSource("http://localhost:8080/api/sse/pick-made-test");
 
+            eventSource.onopen = (event) => {
+                console.log("connection opened")
+            }
+
+            eventSource.onmessage = (event) => {
+                console.log("result", event.data);
+                setData(old => [...old, event.data])
+            }
+
+            eventSource.onerror = (event) => {
+                console.log(event.target.readyState)
+                if (event.target.readyState === EventSource.CLOSED) {
+                    console.log('eventsource closed (' + event.target.readyState + ')')
+                }
+                eventSource.close();
+            }
+
+            setListening(true);
+        }
 
         return () => {
-            eventSource?.close();
+            eventSource.close();
             console.log("eventsource closed")
-            console.log("data2")
-            console.log(data)
-            console.log("eventData2")
-            console.log(eventData)
-
         }
-    }
+
+    };
+
+
+    // useEffect(() => {
+    //     if (!listening) {
+    //         // eventSource = new EventSource("http://localhost:8080/api/sse/time");
+    //         eventSource = new EventSource("http://localhost:8080/api/sse/pick-made-test");
+    //
+    //         eventSource.onopen = (event) => {
+    //             console.log("connection opened")
+    //         }
+    //
+    //         eventSource.onmessage = (event) => {
+    //             console.log("result", event.data);
+    //             setData(old => [...old, event.data])
+    //         }
+    //
+    //         eventSource.onerror = (event) => {
+    //             console.log(event.target.readyState)
+    //             if (event.target.readyState === EventSource.CLOSED) {
+    //                 console.log('eventsource closed (' + event.target.readyState + ')')
+    //             }
+    //             eventSource.close();
+    //         }
+    //
+    //         setListening(true);
+    //     }
+    //
+    //     return () => {
+    //         eventSource.close();
+    //         console.log("eventsource closed")
+    //     }
+    //
+    // }, [])
 
 
     useEffect(() => {
@@ -502,7 +570,9 @@ export default function Dashboard({userData}: DashboardProps) {
         // setIsUsersTurnToPick(false);
         // window.location.reload();
 
-        handleServerPickEvents();
+        // handleServerPickEvents();
+
+        handleServerEvents()
 
         console.log("pick made")
     }
@@ -521,9 +591,10 @@ export default function Dashboard({userData}: DashboardProps) {
         return (<Login userData={userData} error={error}/>);
     }
 
-    bugout.log('test log2:', data.toString(), eventData);
+    // bugout.log('test log2:', data.toString(), eventData);
 // bugout.downloadLog()
 // const PreDraftDashboard = () => {
+
     function PreDraftDashboard() {
         return (
             <>
@@ -572,11 +643,13 @@ export default function Dashboard({userData}: DashboardProps) {
                                 addTestTeam={addTestTeam}
                                 handlePick={handlePick}/>
                             <hr/>
-                            <div className="App-header">
-                                Received Data
-                                {data}
-                                {/*{data.map(d => <span key={d}>{d}</span>*/}
-                                {/*)}*/}
+                            <div className="App">
+                                <header className="App-header">
+                                    Received Data
+                                    {data.map(d =>
+                                        <div key={d}>{d}</div>
+                                    )}
+                                </header>
                             </div>
                         </>
                     }

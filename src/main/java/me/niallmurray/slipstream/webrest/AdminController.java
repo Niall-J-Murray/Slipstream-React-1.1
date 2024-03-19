@@ -2,6 +2,7 @@ package me.niallmurray.slipstream.webrest;
 
 import me.niallmurray.slipstream.domain.Driver;
 import me.niallmurray.slipstream.domain.League;
+import me.niallmurray.slipstream.domain.Team;
 import me.niallmurray.slipstream.domain.User;
 import me.niallmurray.slipstream.dto.DriverStanding;
 import me.niallmurray.slipstream.dto.DriverStandingResponse;
@@ -13,6 +14,7 @@ import me.niallmurray.slipstream.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,12 +39,6 @@ public class AdminController {
   @GetMapping("/allUsers")
   public ResponseEntity<List<User>> getAllUsers() {
     List<User> allUserAccounts = adminService.getAllUserAccounts();
-//    modelMap.addAttribute("users", allUserAccounts);
-//    modelMap.addAttribute("leagues", leagueService.findAll());
-////    modelMap.addAttribute("activeUsers", activeUserStore.getUsers());
-//    modelMap.addAttribute("allDrivers", driverService.sortDriversStanding());
-//    modelMap.addAttribute("isLoggedIn", true);
-//    modelMap.addAttribute("isAdmin", true);
     return ResponseEntity.ok(allUserAccounts);
   }
 
@@ -91,4 +87,34 @@ public class AdminController {
     System.out.println("Leagues updated!");
     return "Leagues Updated Response";
   }
+
+  @PostMapping("/deleteTeam/{teamId}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<String> postDeleteTeam(@PathVariable String teamId) {
+    System.out.println("postDeleteTeam: " + teamId);
+    Team team = teamService.findById(Long.valueOf(teamId));
+    String teamname = team.getTeamName();
+    if (team != null) {
+      teamService.deleteTeam(team);
+    } else {
+      teamname = "Team not found";
+    }
+    return ResponseEntity.ok(teamname);
+  }
+
+  @PostMapping("/deleteUser/{userId}")
+//  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<String> postDeleteUser(@PathVariable String userId) {
+    System.out.println("postDeleteUser: " + userId);
+    String username;
+    if (userId != null) {
+      User user = adminService.deleteUser(Long.valueOf(userId));
+      username = user.getUsername();
+    } else {
+      username = "User not found";
+    }
+    return ResponseEntity.ok(username);
+  }
+
+
 }

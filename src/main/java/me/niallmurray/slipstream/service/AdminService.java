@@ -17,4 +17,10 @@ public class AdminService {
   public List<User> getAllUserAccounts() {
     return userService.findAll();
   }
+
+  @Secured({"ROLE_ADMIN"})
+  public User deleteUser(Long userId) {
+    User user = userService.findById(userId);
+    return userService.delete(user);
+  }
 }

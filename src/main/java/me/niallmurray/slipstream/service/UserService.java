@@ -97,7 +97,8 @@ public class UserService {
     return userRepository.findByEmail(email);
   }
 
-  public void delete(User user) {
+  public User delete(User user) {
     userRepository.delete(user);
+    return user;
   }
 }

@@ -1,4 +1,4 @@
-import {getAddDrivers, getUpdateStandings} from "../../../services/admin.service.ts";
+import {getAddDrivers, getUpdateStandings, postDeleteTeam, postDeleteUser} from "../../../services/admin.service.ts";
 import {useState} from "react";
 import {NavigateFunction, useNavigate} from "react-router-dom";
 
@@ -13,6 +13,10 @@ export default function AdminControls() {
         = useState<boolean>(false);
     const [message, setMessage]
         = useState<string>("");
+    const [teamId, setTeamId]
+        = useState<string | number | undefined>();
+    const [userId, setUserId]
+        = useState<string | number | undefined>();
     // const [updateSuccessful, setUpdateSuccessful]
     //     = useState<boolean>(false);
     // const [updateMessage, setUpdateMessage]
@@ -75,7 +79,6 @@ export default function AdminControls() {
                 }
             );
         // setUpdateSuccessful(true);
-
     }
 
     // function getMessage() {
@@ -86,6 +89,60 @@ export default function AdminControls() {
     //     }
     // };
 
+    const handleDeleteTeam = (teamId) => {
+        console.log("handleDeleteTeam")
+        console.log(teamId)
+        setMessage("");
+        setLoading(true);
+
+        postDeleteTeam(teamId)
+            .then(
+                () => {
+                    navigate("/admin");
+                    window.location.reload();
+                },
+                (error) => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+
+                    setLoading(false);
+                    setMessage(resMessage);
+                }
+            );
+        // setUpdateSuccessful(true);
+    }
+
+    const handleDeleteUser = (userId: string | number | undefined) => {
+        console.log("handleDeleteUser")
+        console.log(userId)
+        setMessage("");
+        setLoading(true);
+
+        postDeleteUser(userId)
+            .then(
+                () => {
+                    navigate("/admin");
+                    window.location.reload();
+                },
+                (error) => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+
+                    setLoading(false);
+                    setMessage(resMessage);
+                }
+            );
+        // setUpdateSuccessful(true);
+    }
+
     return (
         <>
             <table className="league-table" id="email">
@@ -94,6 +151,7 @@ export default function AdminControls() {
                 <tr>
                     <th>Email Type</th>
                     <th>Address</th>
+                    <th>Delete Team</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -113,7 +171,7 @@ export default function AdminControls() {
                     </td>
                     <td>
                         <div>
-                            <label htmlFor="emailAddress">Recipient: </label>
+                            <label htmlFor="emailAddress">Recipient:</label>
                         </div>
                         <div>
                             <input type="email" name="emailAddress" id="emailAddress"/>
@@ -122,10 +180,27 @@ export default function AdminControls() {
                             <button type="submit" className="btn btn-danger navbar-btn">Send Email</button>
                         </div>
                     </td>
+                    <td>
+                        <div>
+                            <label htmlFor="teamId">Team ID:</label>
+                        </div>
+                        <div>
+                            <input type="text" name="teamId" id="teamId"
+                                   onChange={e => setTeamId(e.target.value)}/>
+                        </div>
+                        <div className={"p-1"}>
+                            <button className="btn btn-proceed"
+                                    type={"submit"}
+                                    onClick={() => handleDeleteTeam(teamId)}>
+                                <span>Delete Team</span>
+                            </button>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <th>API</th>
                     <th>Response</th>
+                    <th>Delete User</th>
                 </tr>
                 <tr>
                     <td>
@@ -136,7 +211,8 @@ export default function AdminControls() {
                                 <span>Add Drivers</span>
                             </button>
                         </div>
-                        <div className={"p-1"}>                            <button className="btn btn-proceed"
+                        <div className={"p-1"}>
+                            <button className="btn btn-proceed"
                                     type={"submit"}
                                     onClick={() => handleUpdateStandings()}>
                                 <span>Update Standings</span>
@@ -149,6 +225,24 @@ export default function AdminControls() {
                             <div>{message ? message : ""}</div>
                             {/*<div onLoad={() => getMessage()}>{updateMessage}</div>*/}
                             {/*<div>{updateSuccessful ? sessionStorage.getItem("updateMessage") : ""}</div>*/}
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <label htmlFor="userId">User ID:</label>
+                        </div>
+                        <div>
+                            <input type="text" name="userId" id="userId"
+                                   onChange={e => setUserId(e.target.value)}/>
+                        </div>
+                        <div className="padding: 3px">
+                            <div className={"p-1"}>
+                                <button className="btn btn-proceed"
+                                        type={"submit"}
+                                        onClick={() => handleDeleteUser(userId)}>
+                                    <span>Delete User</span>
+                                </button>
+                            </div>
                         </div>
                     </td>
                 </tr>
