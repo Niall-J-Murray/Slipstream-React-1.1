@@ -34,6 +34,10 @@ public class SseController {
     SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
     if (userId != null) {
       sseEmitter.send(surname);
+//      String message = SseEmitter.event().name("driverName").data(surname).toString();
+//      sseEmitter.send(SseEmitter.event().name("driverName").data(surname));
+//      System.out.println(message);
+      System.out.println("driver name: " + surname);
     }
     sseEmitter.complete();
     return sseEmitter;

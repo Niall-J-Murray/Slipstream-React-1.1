@@ -77,7 +77,7 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<string>("");
 
     const [listening, setListening] = useState(false);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<any[]>([]);
     let eventSource: EventSource | undefined = undefined;
 
     useEffect(() => {
@@ -86,12 +86,34 @@ export default function Dashboard({userData}: DashboardProps) {
 
             eventSource.onopen = (event) => {
                 console.log("connection opened")
+                console.log("event.type")
+                console.log(event.type)
+                console.log("event.target")
+                console.log(event.target)
             }
 
-            eventSource.onmessage = (event) => {
-                console.log("result", event.data);
-                setData(old => [...old, event.data])
-            }
+
+            eventSource.addEventListener("message", (event) => {
+                console.log("eventData1")
+                console.log(event.data)
+                data.push(event.data)
+                setData(data)
+            });
+                // if (event.data && event.data !== userId) {
+                //     navigate("/dashboard");
+                // }
+
+
+            // eventSource.onmessage = (event) => {
+            //     console.log("message received")
+            //     console.log("result", event.data);
+            //     console.log(event.type);
+            //     // setData(old => [...old, event.data])
+            //     data.push(event.data)
+            //     setData(data)
+            //     // console.log("data")
+            //     // console.log(data)
+            // }
 
             eventSource.onerror = (event) => {
                 console.log("event.target.readyState")
@@ -109,12 +131,16 @@ export default function Dashboard({userData}: DashboardProps) {
         }
 
         return () => {
-            eventSource.close();
+            eventSource?.close();
             console.log("eventsource closed")
         }
 
     }, [])
 
+    if (data.length) {
+        console.log("data")
+        console.log(data)
+    }
     // const [toggleNextToPickQuery, setToggleNextToPickQuery]
     //     = useState<boolean | undefined>(false);
 
@@ -502,26 +528,28 @@ export default function Dashboard({userData}: DashboardProps) {
                             togglePracticeOptions={togglePracticeOptions}
                         />
                         :
-                        <><DraftControls
-                            userData={userData}
-                            leagueData={leagueData}
-                            isPracticeLeague={isPracticeLeague}
-                            isLeagueFull={isLeagueFull}
-                            showDraftPickTips={showDraftPickTips}
-                            selectedDriver={selectedDriver}
-                            lastPickTime={lastPickTime}
-                            lastDriverPicked={lastDriverPicked}
-                            isLeagueActive={isLeagueActive}
-                            currentPickNumber={currentPickNumber}
-                            isUsersTurnToPick={isUsersTurnToPick}
-                            nextUserToPick={nextUserToPick}
-                            togglePracticeOptions={togglePracticeOptions}
-                            togglePracticeLeague={togglePracticeLeague}
-                            addTestTeam={addTestTeam}
-                            handlePick={handlePick}/>
+                        <>
+                            <DraftControls
+                                userData={userData}
+                                leagueData={leagueData}
+                                isPracticeLeague={isPracticeLeague}
+                                isLeagueFull={isLeagueFull}
+                                showDraftPickTips={showDraftPickTips}
+                                selectedDriver={selectedDriver}
+                                lastPickTime={lastPickTime}
+                                lastDriverPicked={lastDriverPicked}
+                                isLeagueActive={isLeagueActive}
+                                currentPickNumber={currentPickNumber}
+                                isUsersTurnToPick={isUsersTurnToPick}
+                                nextUserToPick={nextUserToPick}
+                                togglePracticeOptions={togglePracticeOptions}
+                                togglePracticeLeague={togglePracticeLeague}
+                                addTestTeam={addTestTeam}
+                                handlePick={handlePick}/>
                             <hr/>
                             <div className="App-header">
                                 Received Data
+                                {data}
                                 {data.map(d => <span key={d}>{d}</span>
                                 )}
                             </div>

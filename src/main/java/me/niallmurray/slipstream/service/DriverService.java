@@ -63,16 +63,15 @@ public class DriverService {
   public List<Driver> sortDriversStanding() {
     List<Driver> driverStandings = driverRepository.findAllByOrderByStandingAsc();
     for (Driver driver : driverStandings) {
-      asteriskReplacedDrivers(driver, "de Vries");
-      asteriskReplacedDrivers(driver, "Ricciardo");
-      asteriskReplacedDrivers(driver, "Lawson");
+      asteriskReplacedDrivers(driver, "Bearman");
+
     }
     return driverStandings;
   }
 
   public void asteriskReplacedDrivers(Driver driver, String surname) {
     if (driver.getSurname().equalsIgnoreCase(surname)) {
-      driver.setSurname(driver.getSurname() + "*");
+      driver.setSurname(driver.getSurname() + "*(inactive)");
     }
   }
 

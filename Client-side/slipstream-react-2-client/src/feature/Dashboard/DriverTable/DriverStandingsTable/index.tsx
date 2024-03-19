@@ -34,12 +34,10 @@ export default function DriverStandingsTable() {
                 </tbody>
             </table>
             <div>
-                <h6>
+                <h4>
                     * Driver Changes:
-                    <br/>Ricciardo replaced de Vries on July 11th 2023.
-                    <br/>Lawson replaced Ricciardo on August 27th 2023.
-                    <br/>Ricciardo replaced Lawson on October 20th 2023.
-                </h6>
+                    <br/>Bearman substituted for Sainz from 8th-10th March 2024.
+                </h4>
             </div>
         </>
     );
