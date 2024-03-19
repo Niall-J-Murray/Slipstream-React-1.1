@@ -36,7 +36,7 @@ export default function DriverStandingsTable() {
             <div>
                 <h4>
                     * Driver Changes:
-                    <br/>Bearman substituted for Sainz from 8th-10th March 2024.
+                    <br/>Bearman temporarily substituted for Sainz from 8th-10th March 2024.
                 </h4>
             </div>
         </>

@@ -28,7 +28,7 @@ export default function LeaguesTable() {
                     <th>Size</th>
                     <th>Creation Time</th>
                     <th>Active Time</th>
-                    <th>Practice League</th>
+                    <th>Test?</th>
                 </tr>
                 </thead>
                 <tbody>

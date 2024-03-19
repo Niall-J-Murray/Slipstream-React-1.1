@@ -22,7 +22,7 @@ export default function UserTable({allUsers}) {
                         return (
                             <tr key={user.id}>
                                 <td>{user.username}</td>
-                                <td>{user.team?.teamName}</td>
+                                <td>{user.team? user.team?.teamName : "No active team"}</td>
                                 <td>{user.email}</td>
                                 <td>{user.lastLogout}</td>
                             </tr>

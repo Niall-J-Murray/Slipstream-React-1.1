@@ -46,18 +46,18 @@ public class SseController {
   @GetMapping("/pick-made")
   public SseEmitter pickMade(Long userId) throws IOException {
 //  public SseEmitter pickMade() throws IOException {
-    if (userId != null) {
+//    if (userId != null) {
       SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
 //    String key = "SSE Test " + Math.random();
       String key = String.valueOf(userId);
       sseEmitters.put(key, sseEmitter);
 //    sseEmitter.send(SseEmitter.event().name("pick_made").data("test"));
-      sseEmitter.send(SseEmitter.event().name("pick_made").data(userId));
+      sseEmitter.send(SseEmitter.event().name("pick_made").data(key));
       sseEmitter.onCompletion(() -> sseEmitters.remove(key));
       sseEmitter.onTimeout(() -> sseEmitters.remove(key));
       System.out.println("sseEmitter user ID: " + key);
       return sseEmitter;
-    }
-    return null;
+//    }
+//    return null;
   }
 }

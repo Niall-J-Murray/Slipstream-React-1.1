@@ -27,6 +27,8 @@ import PreDraftLeagueTable from "./LeagueTable/PreDraftLeagueTable";
 import {hideLoader, showLoader} from "../../services/loading.service.ts";
 import Login from "../Login";
 
+import {Debugout} from 'debugout.js';
+
 interface DashboardProps {
     userData: undefined | IUser
 }
@@ -44,6 +46,8 @@ interface DashboardProps {
 //  Change "Register" to "Sign Up", "Login" to "Sign In" and "Log Out"...
 
 export default function Dashboard({userData}: DashboardProps) {
+
+    const bugout = new Debugout();
     const [showDraftPickTips, setShowDraftPickTips]
         = useState<boolean | undefined>(true);
     const [isPracticeLeague, setIsPracticeLeague]
@@ -76,71 +80,72 @@ export default function Dashboard({userData}: DashboardProps) {
     const [message, setMessage]
         = useState<string>("");
 
-    const [listening, setListening] = useState(false);
-    const [data, setData] = useState<any[]>([]);
-    let eventSource: EventSource | undefined = undefined;
+    const [listening, setListening]
+        = useState(false);
+    // const [data, setData] = useState<any[]>([]);
+    // let eventSource: EventSource | undefined = undefined;
 
-    useEffect(() => {
-        if (!listening) {
-            eventSource = new EventSource("http://localhost:8080/api/sse/test-pick-made");
+    // useEffect(() => {
+    //     if (!listening) {
+    //         eventSource = new EventSource("http://localhost:8080/api/sse/test-pick-made");
+    //
+    //         eventSource.onopen = (event) => {
+    //             console.log("connection opened")
+    //             console.log("event.type")
+    //             console.log(event.type)
+    //             console.log("event.target")
+    //             console.log(event.target)
+    //         }
+    //
+    //
+    //         eventSource.addEventListener("message", (event) => {
+    //             console.log("eventData1")
+    //             console.log(event.data)
+    //             data.push(event.data)
+    //             setData(data)
+    //         });
+    //         // if (event.data && event.data !== userId) {
+    //         //     navigate("/dashboard");
+    //         // }
+    //
+    //
+    //         // eventSource.onmessage = (event) => {
+    //         //     console.log("message received")
+    //         //     console.log("result", event.data);
+    //         //     console.log(event.type);
+    //         //     // setData(old => [...old, event.data])
+    //         //     data.push(event.data)
+    //         //     setData(data)
+    //         //     // console.log("data")
+    //         //     // console.log(data)
+    //         // }
+    //
+    //         eventSource.onerror = (event) => {
+    //             console.log("event.target.readyState")
+    //             console.log(event.target)
+    //             // if (event.target.readyState === EventSource.CLOSED) {
+    //             //     console.log('eventsource closed (' + event.target.readyState + ')')
+    //             // }
+    //             // if (event.target === EventSource.CLOSED) {
+    //             //     console.log('eventsource closed (' + event + ')')
+    //             // }
+    //             eventSource?.close();
+    //         }
+    //
+    //         setListening(true);
+    //     }
+    //
+    //     return () => {
+    //         eventSource?.close();
+    //         console.log("eventsource closed")
+    //     }
+    //
+    // }, [])
 
-            eventSource.onopen = (event) => {
-                console.log("connection opened")
-                console.log("event.type")
-                console.log(event.type)
-                console.log("event.target")
-                console.log(event.target)
-            }
-
-
-            eventSource.addEventListener("message", (event) => {
-                console.log("eventData1")
-                console.log(event.data)
-                data.push(event.data)
-                setData(data)
-            });
-                // if (event.data && event.data !== userId) {
-                //     navigate("/dashboard");
-                // }
-
-
-            // eventSource.onmessage = (event) => {
-            //     console.log("message received")
-            //     console.log("result", event.data);
-            //     console.log(event.type);
-            //     // setData(old => [...old, event.data])
-            //     data.push(event.data)
-            //     setData(data)
-            //     // console.log("data")
-            //     // console.log(data)
-            // }
-
-            eventSource.onerror = (event) => {
-                console.log("event.target.readyState")
-                console.log(event.target)
-                // if (event.target.readyState === EventSource.CLOSED) {
-                //     console.log('eventsource closed (' + event.target.readyState + ')')
-                // }
-                // if (event.target === EventSource.CLOSED) {
-                //     console.log('eventsource closed (' + event + ')')
-                // }
-                eventSource?.close();
-            }
-
-            setListening(true);
-        }
-
-        return () => {
-            eventSource?.close();
-            console.log("eventsource closed")
-        }
-
-    }, [])
-
-    if (data.length) {
-        console.log("data")
-        console.log(data)
-    }
+    // if (data.length) {
+    //     console.log("data")
+    //     console.log(data)
+    // }
     // const [toggleNextToPickQuery, setToggleNextToPickQuery]
     //     = useState<boolean | undefined>(false);
 
@@ -237,48 +242,67 @@ export default function Dashboard({userData}: DashboardProps) {
     //         navigate("/dashboard");
     //     }
     // });
+    let data = "";
+    let eventData: null = null;
+
+    const handleServerPickEvents = () => {
+        // let data = "";
+        // let eventData: null = null;
+        const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
+
+        if (!listening) {
+            bugout.log('listening:');
+            eventSource.addEventListener("pick_made", (event) => {
+                bugout.log("eventData1")
+                bugout.log(event.data)
+                eventData = event.data
+                data = JSON.stringify(eventData)
+                if (event.data &&
+                    event.data != userId) {
+                    navigate("/home");
+                } else {
+                    navigate("/logout");
+                }
+            });
+            bugout.log(eventData)
+            bugout.log(data)
+            bugout.downloadLog()
+            eventSource?.close();
+        }
+        setListening(true);
+        // eventSource.addEventListener("pick_made", (event) => {
+        //     data = event.type;
+        //     eventData = event.data;
+        //     // eventData = JSON.parse(event.data);
+        //     // console.log("data1")
+        //     // console.log(data)
+        //     console.log("eventData2")
+        //     // console.log(event)
+        //     console.log(event.timeStamp)
+        //     console.log(data)
+        //     console.log(eventData)
+        //     queryClient.invalidateQueries()
+        //         .then(() => {
+        //                 if (data) {
+        //                     console.log("refresh")
+        //                     // window.location.reload();
+        //                     navigate("/home");
+        //                 }
+        //             }
+        //         );
+        // });
 
 
-    // const handleServerPickEvents = () => {
-    //     // let data = "";
-    //     // const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
-    //     // let eventData = null;
-    //
-    //     source.addEventListener("pick_made", (event) => {
-    //         console.log("eventData1")
-    //         console.log(event.data)
-    //         if (event.data &&
-    //             event.data != userId) {
-    //             navigate("/home");
-    //         }
-    //     });
+        return () => {
+            eventSource?.close();
+            console.log("eventsource closed")
+            console.log("data2")
+            console.log(data)
+            console.log("eventData2")
+            console.log(eventData)
 
-    // eventSource.addEventListener("pick_made", (event) => {
-    //     data = event.type;
-    //     eventData = event.data;
-    //     // eventData = JSON.parse(event.data);
-    //     // console.log("data1")
-    //     // console.log(data)
-    //     console.log("eventData2")
-    //     // console.log(event)
-    //     console.log(event.timeStamp)
-    //     console.log(data)
-    //     console.log(eventData)
-    //     queryClient.invalidateQueries()
-    //         .then(() => {
-    //                 if (data) {
-    //                     console.log("refresh")
-    //                     // window.location.reload();
-    //                     navigate("/home");
-    //                 }
-    //             }
-    //         );
-    // });
-    // console.log("data2")
-    // console.log(data)
-    // console.log("eventData2")
-    // console.log(eventData)
-    // }
+        }
+    }
 
 
     useEffect(() => {
@@ -478,7 +502,7 @@ export default function Dashboard({userData}: DashboardProps) {
         // setIsUsersTurnToPick(false);
         // window.location.reload();
 
-        // handleServerPickEvents();
+        handleServerPickEvents();
 
         console.log("pick made")
     }
@@ -487,7 +511,7 @@ export default function Dashboard({userData}: DashboardProps) {
     const error = errOpenLeague || errLeagueData;
 
     if (isLoading) {
-        return <>{() => showLoader()}</>
+        return <>{showLoader()}</>
         // showLoader();
     } else {
         hideLoader();
@@ -497,7 +521,8 @@ export default function Dashboard({userData}: DashboardProps) {
         return (<Login userData={userData} error={error}/>);
     }
 
-
+    bugout.log('test log2:', data.toString(), eventData);
+// bugout.downloadLog()
 // const PreDraftDashboard = () => {
     function PreDraftDashboard() {
         return (
@@ -550,8 +575,8 @@ export default function Dashboard({userData}: DashboardProps) {
                             <div className="App-header">
                                 Received Data
                                 {data}
-                                {data.map(d => <span key={d}>{d}</span>
-                                )}
+                                {/*{data.map(d => <span key={d}>{d}</span>*/}
+                                {/*)}*/}
                             </div>
                         </>
                     }

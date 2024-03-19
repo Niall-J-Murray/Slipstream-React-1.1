@@ -88,6 +88,7 @@ public class DriverController {
     //Async send email to next to pick
 //    emailService.asyncPickNotificationEmail(userLeague);
     sseController.testPickMade(userId,driver.getSurname());
+    sseController.pickMade(userId);
 //    sseController.pickMade(userId);
 //    sseController.pickMade();
 //    return ResponseEntity.ok(driver);

@@ -93,14 +93,14 @@ export default function AdminControls() {
                 <thead>
                 <tr>
                     <th>Email Type</th>
-                    <th>Email Address</th>
+                    <th>Address</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td>
                         <div>
-                            <label htmlFor="emailType">Choose an email type:</label>
+                            <label htmlFor="emailType">Choose email type:</label>
                         </div>
                         <div>
                             <select name="emailType" id="emailType">
@@ -113,7 +113,7 @@ export default function AdminControls() {
                     </td>
                     <td>
                         <div>
-                            <label htmlFor="emailAddress">Enter Recipient Address: </label>
+                            <label htmlFor="emailAddress">Recipient: </label>
                         </div>
                         <div>
                             <input type="email" name="emailAddress" id="emailAddress"/>

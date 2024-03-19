@@ -54,7 +54,7 @@ export default function App() {
     const error = errUserAuth || errUserData;
 
     if (isLoading) {
-        return <>{() => showLoader()}</>
+        return <>{showLoader()}</>
         // showLoader();
     } else {
         hideLoader();

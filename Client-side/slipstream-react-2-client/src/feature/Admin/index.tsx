@@ -50,10 +50,10 @@ export default function Admin({userData}: AdminProps) {
                         <div className="grid grid-cols-5 gap-2">
                             {isAdmin(userData) ?
                                 <>
-                                    <div className="col-start-2 col-span-1">
+                                    <div className="col-start-2 col-span-2">
                                         <AdminControls/>
                                     </div>
-                                    <div className="col-start-3 col-span-2">
+                                    <div className="col-start-2 col-span-3">
                                         <LeaguesTable/>
                                     </div>
                                     <div className="col-start-2 col-span-3">
