@@ -90,7 +90,7 @@ public class SseController {
 
   //  @GetMapping("/time")
   @GetMapping("/pick-made-test")
-  @CrossOrigin
+//  @CrossOrigin
 //  public SseEmitter streamDateTime(Long userId) throws IOException {
   public SseEmitter pickMadeTest(Long userId) throws IOException {
 

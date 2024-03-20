@@ -306,15 +306,17 @@ export default function Dashboard({userData}: DashboardProps) {
     const [listening, setListening] = useState(false);
     const [data, setData] = useState([]);
     let eventSource = undefined;
+    eventSource = new EventSource("http://localhost:8080/api/sse/pick-made-test");
+    eventSource.onopen = (event) => {
+        console.log("connection opened")
+    }
 
     const handleServerEvents = () => {
         if (!listening) {
             // eventSource = new EventSource("http://localhost:8080/api/sse/time");
-            eventSource = new EventSource("http://localhost:8080/api/sse/pick-made-test");
 
-            eventSource.onopen = (event) => {
-                console.log("connection opened")
-            }
+
+
 
             eventSource.onmessage = (event) => {
                 console.log("result", event.data);
@@ -322,20 +324,24 @@ export default function Dashboard({userData}: DashboardProps) {
             }
 
             eventSource.onerror = (event) => {
+                console.log("event.target.readyState")
                 console.log(event.target.readyState)
                 if (event.target.readyState === EventSource.CLOSED) {
                     console.log('eventsource closed (' + event.target.readyState + ')')
                 }
                 eventSource.close();
             }
-
+            console.log("pick made")
+            console.log("data")
+            console.log(data)
             setListening(true);
         }
-        console.log("pick made")
-        return () => {
-            eventSource.close();
-            console.log("eventsource closed")
-        }
+        eventSource.close();
+        console.log("eventsource closed")
+        // return () => {
+        //     eventSource.close();
+        //     console.log("eventsource closed")
+        // }
     };
 
 
