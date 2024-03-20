@@ -24,18 +24,18 @@ export default function LoginForm({error}: LoginFormProps) {
         password: "",
     };
 
-    const validationSchema = Yup.object().shape({
-        username: Yup.string().required("This field is required!"),
-        password: Yup.string().required("This field is required!"),
-    });
+    const validationSchema = Yup.object()
+        .shape({
+            username: Yup.string().required("This field is required!"),
+            password: Yup.string().required("This field is required!"),
+        });
 
     const handleLogin = (formValue: { username: string; password: string }) => {
         const {username, password} = formValue;
-
         setMessage("");
         setLoading(true);
 
-        login(username, password)
+        login(username.trim(), password.trim())
             .then(
                 () => {
                     navigate("/dashboard");

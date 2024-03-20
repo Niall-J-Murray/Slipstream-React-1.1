@@ -331,12 +331,11 @@ export default function Dashboard({userData}: DashboardProps) {
 
             setListening(true);
         }
-
+        console.log("pick made")
         return () => {
             eventSource.close();
             console.log("eventsource closed")
         }
-
     };
 
 
@@ -574,7 +573,7 @@ export default function Dashboard({userData}: DashboardProps) {
 
         handleServerEvents()
 
-        console.log("pick made")
+        // console.log("pick made")
     }
 
     const isLoading = loadingOpenLeague || loadingLeagueData;

@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -93,7 +91,8 @@ public class SseController {
   //  @GetMapping("/time")
   @GetMapping("/pick-made-test")
   @CrossOrigin
-  public SseEmitter streamDateTime(Long userId) {
+//  public SseEmitter streamDateTime(Long userId) throws IOException {
+  public SseEmitter pickMadeTest(Long userId) throws IOException {
 
     SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
 
@@ -103,22 +102,26 @@ public class SseController {
 
     sseEmitter.onError((ex) -> LOGGER.info("SseEmitter got error:", ex));
 
-    executor.execute(() -> {
-      for (int i = 0; i < 15; i++) {
-        try {
+//    executor.execute(() -> {
+//      for (int i = 0; i < 15; i++) {
+//        try {
 //          sseEmitter.send(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")));
-          if (userId != null) {
-            sseEmitter.send(userId.toString());
-            System.out.println("sseEmitter user ID: " + userId.toString());
-          }
-          sleep(1, sseEmitter);
-        } catch (IOException e) {
-          e.printStackTrace();
-          sseEmitter.completeWithError(e);
-        }
-      }
-      sseEmitter.complete();
-    });
+//          if (userId != null) {
+//            sseEmitter.send(userId.toString());
+//            System.out.println("sseEmitter user ID: " + userId.toString());
+//          }
+//          sleep(1, sseEmitter);
+//        } catch (IOException e) {
+//          e.printStackTrace();
+//          sseEmitter.completeWithError(e);
+//        }
+//      }
+//      sseEmitter.complete();
+//    });
+    if (userId != null) {
+      sseEmitter.send(userId.toString());
+      System.out.println("sseEmitter user ID: " + userId.toString());
+    }
 
     LOGGER.info("Controller exits");
     return sseEmitter;
