@@ -56,14 +56,10 @@ export default function Dashboard({userData}: DashboardProps) {
         = useState<boolean | undefined | null>(false);
     const [isDraftInProgress, setIsDraftInProgress]
         = useState<boolean | undefined>();
-    // const [currentPickNumber, setCurrentPickNumber]
-    //     = useState<number | undefined | null>();
     const [isLeagueActive, setIsLeagueActive]
         = useState<boolean | undefined | null>();
     const [isUsersTurnToPick, setIsUsersTurnToPick]
         = useState<boolean>(false);
-    // const [isWaitingForPick, setIsWaitingForPick]
-    //     = useState<boolean | undefined | null>();
     const [leagueSize, setLeagueSize]
         = useState<number | undefined | null>(0);
     const [leagueTeams, setLeagueTeams]
@@ -80,82 +76,11 @@ export default function Dashboard({userData}: DashboardProps) {
     const [message, setMessage]
         = useState<string>("");
 
-    // const [listening, setListening]
-    //     = useState(false);
-    // const [data, setData] = useState<any[]>([]);
-    // let eventSource: EventSource | undefined = undefined;
-
-    // useEffect(() => {
-    //     if (!listening) {
-    //         eventSource = new EventSource("http://localhost:8080/api/sse/test-pick-made");
-    //
-    //         eventSource.onopen = (event) => {
-    //             console.log("connection opened")
-    //             console.log("event.type")
-    //             console.log(event.type)
-    //             console.log("event.target")
-    //             console.log(event.target)
-    //         }
-    //
-    //
-    //         eventSource.addEventListener("message", (event) => {
-    //             console.log("eventData1")
-    //             console.log(event.data)
-    //             data.push(event.data)
-    //             setData(data)
-    //         });
-    //         // if (event.data && event.data !== userId) {
-    //         //     navigate("/dashboard");
-    //         // }
-    //
-    //
-    //         // eventSource.onmessage = (event) => {
-    //         //     console.log("message received")
-    //         //     console.log("result", event.data);
-    //         //     console.log(event.type);
-    //         //     // setData(old => [...old, event.data])
-    //         //     data.push(event.data)
-    //         //     setData(data)
-    //         //     // console.log("data")
-    //         //     // console.log(data)
-    //         // }
-    //
-    //         eventSource.onerror = (event) => {
-    //             console.log("event.target.readyState")
-    //             console.log(event.target)
-    //             // if (event.target.readyState === EventSource.CLOSED) {
-    //             //     console.log('eventsource closed (' + event.target.readyState + ')')
-    //             // }
-    //             // if (event.target === EventSource.CLOSED) {
-    //             //     console.log('eventsource closed (' + event + ')')
-    //             // }
-    //             eventSource?.close();
-    //         }
-    //
-    //         setListening(true);
-    //     }
-    //
-    //     return () => {
-    //         eventSource?.close();
-    //         console.log("eventsource closed")
-    //     }
-    //
-    // }, [])
-
-    // if (data.length) {
-    //     console.log("data")
-    //     console.log(data)
-    // }
-    // const [toggleNextToPickQuery, setToggleNextToPickQuery]
-    //     = useState<boolean | undefined>(false);
-
-
     const initialValues: {
         teamName: string;
     } = {
         teamName: "",
     };
-
 
     const validationSchema: Yup.ObjectSchema<object> = Yup.object().shape({
         teamName: Yup.string()
@@ -189,14 +114,7 @@ export default function Dashboard({userData}: DashboardProps) {
         isLoading: loadingLeagueData,
         error: errLeagueData,
     } = useLeagueData(leagueId);
-    // } = useLeagueData(leagueId, toggleNextToPickQuery);
 
-    // let currentPickNumber: undefined | number | null;
-    // let nextUserToPick: undefined | IUser;
-    // if (!isUsersTurnToPick){
-    //   currentPickNumber = useNextPickNumber(leagueId).data;
-    //     nextUserToPick = useNextUserToPick(leagueId).data;
-    // }
 
     const queryClient = useQueryClient();
     const driversInTeam = useDriversInTeam;
@@ -216,194 +134,16 @@ export default function Dashboard({userData}: DashboardProps) {
     const createTestTeam = useCreateTestTeam(leagueId);
     const deleteTestTeams = useDeleteTestTeams(leagueId);
 
-    // const handleServerEvents = () => {
-    //     // const data = null;
-    //     const data = new FormData();
-    //     const source = new EventSource("http://localhost:8080/api/sse/eventEmitter");
-    //     let guidValue = null;
-    //
-    //     source.addEventListener("GUI_ID", (event) => {
-    //         guidValue = JSON.parse(event.data);
-    //         console.log(`Guid from server: ${guidValue}`);
-    //         data.append("guid", guidValue);
-    //         source.addEventListener(guidValue, (event) => {
-    //             const result = JSON.parse(event.data);
-    //             console.log("result")
-    //             console.log(result)
-    //         })
-    //     });
-    // }
-
-    // const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
-    // eventSource.addEventListener("pick_made", (event) => {
-    //     console.log("eventData1")
-    //     console.log(event.data)
-    //     if (event.data && event.data !== userId) {
-    //         navigate("/dashboard");
-    //     }
-    // });
-    // let data = "";
-    // let eventData: null = null;
-
-    // const handleServerPickEvents = () => {
-    //     // let data = "";
-    //     // let eventData: null = null;
-    //     const eventSource = new EventSource("http://localhost:8080/api/sse/pick-made");
-    //
-    //     if (!listening) {
-    //         bugout.log('listening:');
-    //         eventSource.addEventListener("pick_made", (event) => {
-    //             bugout.log("eventData1")
-    //             bugout.log(event.data)
-    //             eventData = event.data
-    //             data = JSON.stringify(eventData)
-    //             if (event.data &&
-    //                 event.data != userId) {
-    //                 navigate("/home");
-    //             } else {
-    //                 navigate("/logout");
-    //             }
-    //         });
-    //         bugout.log(eventData)
-    //         bugout.log(data)
-    //         bugout.downloadLog()
-    //         eventSource?.close();
-    //     }
-    //     setListening(true);
-    //     return () => {
-    //         eventSource?.close();
-    //         console.log("eventsource closed")
-    //         console.log("data2")
-    //         console.log(data)
-    //         console.log("eventData2")
-    //         console.log(eventData)
-    //
-    //     }
-    // }
-
-
-    // eventSource.addEventListener("pick_made", (event) => {
-    //     data = event.type;
-    //     eventData = event.data;
-    //     // eventData = JSON.parse(event.data);
-    //     // console.log("data1")
-    //     // console.log(data)
-    //     console.log("eventData2")
-    //     // console.log(event)
-    //     console.log(event.timeStamp)
-    //     console.log(data)
-    //     console.log(eventData)
-    //     queryClient.invalidateQueries()
-    //         .then(() => {
-    //                 if (data) {
-    //                     console.log("refresh")
-    //                     // window.location.reload();
-    //                     navigate("/home");
-    //                 }
-    //             }
-    //         );
-    // });
-    const [listening, setListening] = useState(false);
-    const [data, setData] = useState([]);
-    let eventSource = undefined;
-    eventSource = new EventSource("http://localhost:8080/api/sse/pick-made-test");
-    eventSource.onopen = (event) => {
-        console.log("connection opened")
-    }
-
-    const handleServerEvents = () => {
-        if (!listening) {
-            // eventSource = new EventSource("http://localhost:8080/api/sse/time");
-
-
-
-
-            eventSource.onmessage = (event) => {
-                console.log("result", event.data);
-                setData(old => [...old, event.data])
-            }
-
-            eventSource.onerror = (event) => {
-                console.log("event.target.readyState")
-                console.log(event.target.readyState)
-                if (event.target.readyState === EventSource.CLOSED) {
-                    console.log('eventsource closed (' + event.target.readyState + ')')
-                }
-                eventSource.close();
-            }
-            console.log("pick made")
-            console.log("data")
-            console.log(data)
-            setListening(true);
-        }
-        eventSource.close();
-        console.log("eventsource closed")
-        // return () => {
-        //     eventSource.close();
-        //     console.log("eventsource closed")
-        // }
-    };
-
-
-    // useEffect(() => {
-    //     if (!listening) {
-    //         // eventSource = new EventSource("http://localhost:8080/api/sse/time");
-    //         eventSource = new EventSource("http://localhost:8080/api/sse/pick-made-test");
-    //
-    //         eventSource.onopen = (event) => {
-    //             console.log("connection opened")
-    //         }
-    //
-    //         eventSource.onmessage = (event) => {
-    //             console.log("result", event.data);
-    //             setData(old => [...old, event.data])
-    //         }
-    //
-    //         eventSource.onerror = (event) => {
-    //             console.log(event.target.readyState)
-    //             if (event.target.readyState === EventSource.CLOSED) {
-    //                 console.log('eventsource closed (' + event.target.readyState + ')')
-    //             }
-    //             eventSource.close();
-    //         }
-    //
-    //         setListening(true);
-    //     }
-    //
-    //     return () => {
-    //         eventSource.close();
-    //         console.log("eventsource closed")
-    //     }
-    //
-    // }, [])
-
-
     useEffect(() => {
         if (!userData) {
             navigate("/login");
         }
 
-        // console.log("isDraftInProgress")
-        // console.log(isDraftInProgress)
-        // if (isDraftInProgress && !isUsersTurnToPick) {
-        //     setToggleNextToPickQuery(true);
-        // }
-        // if (isDraftInProgress) {
-        //     handleServerEvents()
-        // }
-
         if (userData?.id == nextUserToPick?.id || nextUserToPick?.isTestUser) {
             setIsUsersTurnToPick(true);
+        } else {
+            queryClient.invalidateQueries()
         }
-        // else
-        // {
-        //     console.log("is pick source")
-        //     const source = new EventSource("http://localhost:8080/api/sse/test-pick-made");
-        //     source.onmessage = function (event) {
-        //         console.log("event.data");
-        //         console.log(event.data);
-        //     };
-        // }
 
         setLeagueTeams(teamsInLeague);
         setLeagueSize(leagueTeams?.length);
@@ -420,13 +160,8 @@ export default function Dashboard({userData}: DashboardProps) {
             }
         }
 
-        // if (isDraftInProgress) {
-        //     setToggle(prevState => !prevState);
-        // }
-
         setLastDriverPicked(leagueData?.lastDriverPickedName)
         setLastPickTime(leagueData?.lastPickTime);
-
         setSelectedDriver(undraftedDrivers?.find((driver: IDriver) =>
             driver !== undefined));
 
@@ -436,7 +171,6 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsLeagueActive(true);
         }
 
-        // handleServerPickEvents();
     }, [userData, loadingLeagueData, leagueData, isLeagueFull, isPracticeLeague, isDraftInProgress, isUsersTurnToPick, isLeagueActive, nextUserToPick, undraftedDrivers, currentPickNumber, lastDriverPicked]);
 
     const handleCreateTeam = (formValue: { teamName: string }) => {
@@ -571,15 +305,7 @@ export default function Dashboard({userData}: DashboardProps) {
             // .then(() => queryClient.invalidateQueries(["leagueData","nextPickNumber","nextUserToPick"]))
             .then(() => queryClient.invalidateQueries())
             .then(() => setIsUsersTurnToPick(false))
-        // .then(() => setToggleNextToPickQuery(true));
-        // setIsUsersTurnToPick(false);
-        // window.location.reload();
 
-        // handleServerPickEvents();
-
-        handleServerEvents()
-
-        // console.log("pick made")
     }
 
     const isLoading = loadingOpenLeague || loadingLeagueData;
@@ -587,7 +313,6 @@ export default function Dashboard({userData}: DashboardProps) {
 
     if (isLoading) {
         return <>{showLoader()}</>
-        // showLoader();
     } else {
         hideLoader();
     }
@@ -647,15 +372,6 @@ export default function Dashboard({userData}: DashboardProps) {
                                 togglePracticeLeague={togglePracticeLeague}
                                 addTestTeam={addTestTeam}
                                 handlePick={handlePick}/>
-                            <hr/>
-                            <div className="App">
-                                <header className="App-header">
-                                    Received Data
-                                    {data.map(d =>
-                                        <div key={d}>{d}</div>
-                                    )}
-                                </header>
-                            </div>
                         </>
                     }
                 </div>
