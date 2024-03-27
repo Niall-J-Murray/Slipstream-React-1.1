@@ -5,10 +5,7 @@ import {
     getUndraftedDrivers,
     postPickDriver,
 } from "../../services/driver.service.ts";
-import {useMutation, useQuery, useQueryClient} from "react-query";
-
-const UseGetQueryClient = () =>
-    useQueryClient();
+import {useMutation, useQuery} from "react-query";
 
 export const useDriverStandings = () =>
     useQuery({

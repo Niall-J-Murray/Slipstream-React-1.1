@@ -3,7 +3,7 @@ import View from "../View";
 import BackgroundImage from "../BackgroundImage";
 import Body from "../Body";
 
-export default function Layout({children}) {
+export default function Layout({children}:any) {
     return (
         <>
             <View props>

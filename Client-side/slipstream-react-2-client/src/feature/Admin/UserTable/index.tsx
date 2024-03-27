@@ -1,6 +1,6 @@
 import IUser from "../../../types/user.type.ts";
 
-export default function UserTable({allUsers}) {
+export default function UserTable({allUsers}:any) {
     const users: IUser[] = allUsers;
     return (
         <>

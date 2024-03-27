@@ -25,6 +25,7 @@ export default function RegistrationForm({userData}: RegistrationFormProps) {
         username: "",
         email: "",
         password: "",
+        accessToken:"",
     };
 
 
@@ -81,7 +82,7 @@ export default function RegistrationForm({userData}: RegistrationFormProps) {
 
     function handleLogin() {
 
-        login(sessionStorage.getItem("usrnm"), sessionStorage.getItem("pwrd"))
+        login(sessionStorage.getItem("usrnm")!, sessionStorage.getItem("pwrd")!)
             .then(
                 () => {
                     navigate("/home");

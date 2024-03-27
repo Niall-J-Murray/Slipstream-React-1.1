@@ -27,7 +27,7 @@ import PreDraftLeagueTable from "./LeagueTable/PreDraftLeagueTable";
 import {hideLoader, showLoader} from "../../services/loading.service.ts";
 import Login from "../Login";
 
-import {Debugout} from 'debugout.js';
+// import {Debugout} from 'debugout.js';
 
 interface DashboardProps {
     userData: undefined | IUser
@@ -47,7 +47,7 @@ interface DashboardProps {
 
 export default function Dashboard({userData}: DashboardProps) {
 
-    const bugout = new Debugout();
+    // const bugout = new Debugout();
     const [showDraftPickTips, setShowDraftPickTips]
         = useState<boolean | undefined>(true);
     const [isPracticeLeague, setIsPracticeLeague]
@@ -143,6 +143,7 @@ export default function Dashboard({userData}: DashboardProps) {
             setIsUsersTurnToPick(true);
         } else {
             queryClient.invalidateQueries()
+                .then(()=>setIsUsersTurnToPick(false));
         }
 
         setLeagueTeams(teamsInLeague);
@@ -364,7 +365,6 @@ export default function Dashboard({userData}: DashboardProps) {
                                 selectedDriver={selectedDriver}
                                 lastPickTime={lastPickTime}
                                 lastDriverPicked={lastDriverPicked}
-                                isLeagueActive={isLeagueActive}
                                 currentPickNumber={currentPickNumber}
                                 isUsersTurnToPick={isUsersTurnToPick}
                                 nextUserToPick={nextUserToPick}
