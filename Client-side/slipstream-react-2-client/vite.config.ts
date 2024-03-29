@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react-swc'
 // https://vitejs.dev/config/
 export default defineConfig({
     define: {
-        global: {},
+        define: { _global: ({}), }
     },
     plugins: [UnoCSS(), react()],
     server: {
