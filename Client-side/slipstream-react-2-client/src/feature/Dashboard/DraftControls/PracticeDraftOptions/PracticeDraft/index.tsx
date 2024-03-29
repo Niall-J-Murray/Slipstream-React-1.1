@@ -7,7 +7,7 @@ interface PracticeDraftProps {
     togglePracticeOptions: () => void
 }
 
-export default function PracticeDraft({isPracticeLeague, isLeagueFull, togglePracticeLeague, addTestTeam, showDraftPickTips, togglePracticeOptions}: PracticeDraftProps) {
+export default function PracticeDraft({isPracticeLeague, isLeagueFull, togglePracticeLeague, addTestTeam}: PracticeDraftProps) {
     // const [leagueSize, setLeagueSize] = useState()
     // useEffect(() => {
     //     setLeagueSize(leagueData?.teams?.length)

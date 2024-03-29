@@ -89,7 +89,7 @@ export default function AdminControls() {
     //     }
     // };
 
-    const handleDeleteTeam = (teamId) => {
+    const handleDeleteTeam = (teamId: string | number | undefined) => {
         console.log("handleDeleteTeam")
         console.log(teamId)
         setMessage("");
@@ -186,7 +186,8 @@ export default function AdminControls() {
                         </div>
                         <div>
                             <input type="text" name="teamId" id="teamId"
-                                   onChange={e => setTeamId(e.target.value)}/>
+                                   onChange={e =>
+                                       setTeamId(e.target.value)}/>
                         </div>
                         <div className={"p-1"}>
                             <button className="btn btn-proceed"

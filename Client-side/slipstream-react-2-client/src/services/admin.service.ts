@@ -25,7 +25,7 @@ export const getUpdateStandings = async () => {
         .then(response => response.data);
 };
 
-export const postDeleteTeam = async (teamId: string) => {
+export const postDeleteTeam = async (teamId: string | number | undefined) => {
     return await axios
         .post(API_DATA_URL + "/deleteTeam/" + teamId,
             {teamId: teamId})
