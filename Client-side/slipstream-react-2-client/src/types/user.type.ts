@@ -6,6 +6,7 @@ export default interface IUser {
     username: string,
     email: string,
     password: string,
+    accessToken: string,
     roles?: Array<IRole>,
     isTestUser?: boolean | null,
     emailsReceived?: number | null,
