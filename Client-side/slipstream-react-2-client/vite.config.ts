@@ -9,6 +9,7 @@ export default defineConfig({
     },
     plugins: [UnoCSS(), react()],
     server: {
+        host:true,
         port: 8081,
         proxy: {
             '/api': {
