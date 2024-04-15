@@ -35,3 +35,9 @@ build/
 ### ENV Files ###
 .env
 application.properties
+
+### Docker Files ###
+.docker
+.dockerignore
+docker-compose.yml
+Dockerfile
