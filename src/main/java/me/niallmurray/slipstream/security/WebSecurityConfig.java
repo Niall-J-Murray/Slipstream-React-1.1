@@ -67,6 +67,7 @@ public class WebSecurityConfig {
                             .requestMatchers("/api/driver/**").permitAll()
                             .requestMatchers("/api/sse/**").permitAll()
                             .requestMatchers("/ws-message/**").permitAll()
+                            .requestMatchers("/home/**").permitAll()
                             .anyRequest().authenticated()
             );
     http.authenticationProvider(authenticationProvider());
